@@ -15,3 +15,6 @@ list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 include(FindPythonModule)
 find_python_module(numpy REQUIRED)
 find_python_module(scipy REQUIRED)
+
+add_subdirectory(PothosSciPy)
+add_subdirectory(Testing)
