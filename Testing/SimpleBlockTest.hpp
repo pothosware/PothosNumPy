@@ -33,7 +33,7 @@ static void simpleBlockTest(const SimpleBlockTestParams<T>& testParams)
     static constexpr size_t dimension = 2;
     auto dtype = Pothos::DType(typeid(T), dimension);
 
-    std::cout << "Testing " << dtype.toString() << std::endl;
+    std::cout << "Testing " << testParams.blockRegistryPath << "(" << dtype.toString() << ")" << std::endl;
 
     auto feeder = Pothos::BlockRegistry::make(
                       "/blocks/feeder_source",

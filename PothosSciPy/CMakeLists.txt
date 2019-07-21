@@ -2,9 +2,45 @@ POTHOS_PYTHON_UTIL(
     TARGET SciPyBlocks
     SOURCES
         __init__.py
-        NumPySqrt.py
+        SimpleBlocks.py
     FACTORIES
+        "/scipy/numpy/sin:NumPySin"
+        "/scipy/numpy/cos:NumPyCos"
+        "/scipy/numpy/tan:NumPyTan"
+        "/scipy/numpy/arcsin:NumPyArcSin"
+        "/scipy/numpy/arccos:NumPyArcCos"
+        "/scipy/numpy/arctan:NumPyArcTan"
+        "/scipy/numpy/hypot:NumPyHypot"
+        "/scipy/numpy/arctan2:NumPyArcTan2"
+        "/scipy/numpy/degrees:NumPyDegrees"
+        "/scipy/numpy/radians:NumPyRadians"
+        "/scipy/numpy/sinh:NumPySinh"
+        "/scipy/numpy/cosh:NumPyCosh"
+        "/scipy/numpy/tanh:NumPyTanh"
+        "/scipy/numpy/arcsinh:NumPyArcSinh"
+        "/scipy/numpy/arccosh:NumPyArcCosh"
+        "/scipy/numpy/arctanh:NumPyArcTanh"
+        "/scipy/numpy/floor:NumPyFloor"
+        "/scipy/numpy/ceil:NumPyCeil"
+        "/scipy/numpy/trunc:NumPyTrunc"
+        "/scipy/numpy/exp:NumPyExp"
+        "/scipy/numpy/expm1:NumPyExpM1"
+        "/scipy/numpy/exp2:NumPyExp2"
+        "/scipy/numpy/log:NumPyLog"
+        "/scipy/numpy/log10:NumPyLog10"
+        "/scipy/numpy/log2:NumPyLog2"
+        "/scipy/numpy/log1p:NumPyLog1P"
+        "/scipy/numpy/logaddexp:NumPyLogAddExp"
+        "/scipy/numpy/logaddexp2:NumPyLogAddExp2"
+        "/scipy/numpy/sinc:NumpySinc"
+        "/scipy/numpy/reciprocal:NumPyReciprocal"
+        "/scipy/numpy/positive:NumPyPositive"
+        "/scipy/numpy/negative:NumPyNegative"
+        "/scipy/numpy/conjugate:NumPyConjugate"
         "/scipy/numpy/sqrt:NumPySqrt"
+        "/scipy/numpy/cbrt:NumPyCbrt"
+        "/scipy/numpy/square:NumPySquare"
+        "/scipy/numpy/absolute:NumPyAbsolute"
     DESTINATION PothosSciPy
     ENABLE_DOCS
 )
