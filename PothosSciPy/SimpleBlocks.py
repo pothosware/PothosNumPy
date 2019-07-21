@@ -135,3 +135,6 @@ def NumPySquare(dtype):
 
 def NumPyAbsolute(dtype):
     return SimpleBlock(dtype, numpy.absolute)
+
+def NumPyInvert(dtype):
+    return SimpleBlock(dtype, numpy.invert)

@@ -41,6 +41,7 @@ POTHOS_PYTHON_UTIL(
         "/scipy/numpy/cbrt:NumPyCbrt"
         "/scipy/numpy/square:NumPySquare"
         "/scipy/numpy/absolute:NumPyAbsolute"
+        "/scipy/numpy/invert:NumPyInvert"
     DESTINATION PothosSciPy
     ENABLE_DOCS
 )
