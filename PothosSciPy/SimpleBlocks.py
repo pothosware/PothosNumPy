@@ -4,7 +4,7 @@
 import Pothos
 
 import numpy
-import scipy
+import scipy.signal
 
 class SimpleBlock(Pothos.Block):
     def __init__(self, dtype, func):
@@ -138,3 +138,9 @@ def NumPyAbsolute(dtype):
 
 def NumPyInvert(dtype):
     return SimpleBlock(dtype, numpy.invert)
+
+def SciPySignalCubic(dtype):
+    return SimpleBlock(dtype, scipy.signal.cubic)
+
+def SciPySignalQuadratic(dtype):
+    return SimpleBlock(dtype, scipy.signal.quadratic)

@@ -42,6 +42,8 @@ POTHOS_PYTHON_UTIL(
         "/scipy/numpy/square:NumPySquare"
         "/scipy/numpy/absolute:NumPyAbsolute"
         "/scipy/numpy/invert:NumPyInvert"
+        "/scipy/signal/cubic:SciPySignalCubic"
+        "/scipy/signal/quadratic:SciPySignalQuadratic"
     DESTINATION PothosSciPy
     ENABLE_DOCS
 )
