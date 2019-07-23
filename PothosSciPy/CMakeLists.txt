@@ -42,6 +42,8 @@ POTHOS_PYTHON_UTIL(
         "/scipy/numpy/square:NumPySquare"
         "/scipy/numpy/absolute:NumPyAbsolute"
         "/scipy/numpy/invert:NumPyInvert"
+        "/scipy/constants/lambda2nu:SciPyLambda2Nu"
+        "/scipy/constants/nu2lambda:SciPyNu2Lambda"
         "/scipy/signal/cubic:SciPySignalCubic"
         "/scipy/signal/quadratic:SciPySignalQuadratic"
     DESTINATION PothosSciPy

@@ -19,14 +19,6 @@ struct SciPyPhysicalConstant
 };
 static const std::string ManagedClassProxyPath = "scipy/PhysicalConstants";
 
-static Pothos::ProxyMap getAllSciPyConstants()
-{
-    auto pythonEnv = Pothos::ProxyEnvironment::make("python");
-    auto module = pythonEnv->findProxy("PothosSciPy");
-
-    return module.call<Pothos::ProxyMap>("getAllSciPyConstants");
-}
-
 static Pothos::Proxy getSciPyPhysicalConstant(const std::string& name)
 {
     auto pythonEnv = Pothos::ProxyEnvironment::make("python");
@@ -89,9 +81,6 @@ pothos_static_block(registerSciPyConstants)
         .template registerField<SciPyPhysicalConstant, double>("Uncertainty", &SciPyPhysicalConstant::uncertainty)
         .commit(ManagedClassProxyPath);
 
-    Pothos::PluginRegistry::addCall(
-        "/scipy/constants/constants_dict",
-        &getAllSciPyConstants);
     Pothos::PluginRegistry::addCall(
         "/scipy/constants/get_physical_constant",
         &getSciPyPhysicalConstant);

@@ -11,16 +11,6 @@
 
 #include <iostream>
 
-// TODO
-POTHOS_TEST_BLOCK("/scipy/tests", TestConstantsDict)
-{
-    auto constantsDictPlugin = Pothos::PluginRegistry::get("/scipy/constants/constants_dict");
-    auto constantsDictGetter = constantsDictPlugin.getObject().extract<Pothos::Callable>();
-    auto constantsDict = constantsDictGetter.call<Pothos::ProxyMap>();
-
-    std::cout << constantsDict.size() << std::endl;
-}
-
 POTHOS_TEST_BLOCK("/scipy/tests", TestPhysicalConstant)
 {
     auto plugin = Pothos::PluginRegistry::get("/scipy/constants/get_physical_constant");
