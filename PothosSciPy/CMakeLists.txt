@@ -3,6 +3,7 @@ POTHOS_PYTHON_UTIL(
     SOURCES
         __init__.py
         SimpleBlocks.py
+        SplineBlocks.py
     FACTORIES
         "/scipy/numpy/sin:NumPySin"
         "/scipy/numpy/cos:NumPyCos"
@@ -44,7 +45,9 @@ POTHOS_PYTHON_UTIL(
         "/scipy/numpy/invert:NumPyInvert"
         "/scipy/constants/lambda2nu:SciPyLambda2Nu"
         "/scipy/constants/nu2lambda:SciPyNu2Lambda"
+        "/scipy/signal/bspline:SciPySignalBSpline"
         "/scipy/signal/cubic:SciPySignalCubic"
+        "/scipy/signal/gauss_spline:SciPySignalGaussSpline"
         "/scipy/signal/quadratic:SciPySignalQuadratic"
     DESTINATION PothosSciPy
     ENABLE_DOCS

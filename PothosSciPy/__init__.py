@@ -2,3 +2,4 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 from .SimpleBlocks import *
+from .SplineBlocks import *
