@@ -2,6 +2,9 @@ POTHOS_PYTHON_UTIL(
     TARGET SciPyBlocks
     SOURCES
         __init__.py
+        NumPyLoad.py
+        NumPySave.py
+        NumPySaveZ.py
         SimpleBlocks.py
         SplineBlocks.py
     FACTORIES
@@ -43,6 +46,10 @@ POTHOS_PYTHON_UTIL(
         "/scipy/numpy/square:NumPySquare"
         "/scipy/numpy/absolute:NumPyAbsolute"
         "/scipy/numpy/invert:NumPyInvert"
+        "/scipy/numpy/load:NumPyLoad"
+        "/scipy/numpy/save:NumPySave"
+        "/scipy/numpy/savez:NumPySaveZ"
+        "/scipy/numpy/savez_compressed:NumPySaveZCompressed"
         "/scipy/constants/lambda2nu:SciPyLambda2Nu"
         "/scipy/constants/nu2lambda:SciPyNu2Lambda"
         "/scipy/signal/bspline:SciPySignalBSpline"
