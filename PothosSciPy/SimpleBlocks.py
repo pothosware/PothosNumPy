@@ -148,9 +148,3 @@ def SciPyConstantsNu2Lambda(dtype):
 
 def SciPySignalQuadratic(dtype):
     return SimpleBlock(dtype, scipy.signal.quadratic)
-
-def SciPySignalCubic(dtype):
-    return SimpleBlock(dtype, scipy.signal.cubic)
-
-def SciPySignalQuadratic(dtype):
-    return SimpleBlock(dtype, scipy.signal.quadratic)

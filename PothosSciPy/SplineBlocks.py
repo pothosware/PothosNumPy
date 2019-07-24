@@ -6,21 +6,27 @@ import Pothos
 import scipy.signal
 
 class SplineBlock(Pothos.Block):
-    def __init__(self, dtype, order, func):
+    def __init__(self, dtype, order, func, canChangeOrder):
         Pothos.Block.__init__(self)
         self.setupInput("0", dtype)
         self.setupOutput("0", dtype)
 
         self.__func = func
-        self.setOrder(order)
+        self.__canChangeOrder = canChangeOrder
+        self.__setOrder(order)
 
     def getOrder(self):
         return self.__order
 
     def setOrder(self, order):
+        if not self.__canChangeOrder:
+            raise RuntimeError("Cannot change order.")
         if order <= 0:
             raise IndexError("Spline orders must be positive.")
 
+        self.__setOrder(order)
+
+    def __setOrder(self, order):
         self.__order = order
 
     def work(self):
@@ -38,7 +44,13 @@ class SplineBlock(Pothos.Block):
 #
 
 def SciPySignalBSpline(dtype, order):
-    return SplineBlock(dtype, order, scipy.signal.bspline)
+    return SplineBlock(dtype, order, scipy.signal.bspline, True)
+
+def SciPySignalCubic(dtype):
+    return SimpleBlock(dtype, 3, scipy.signal.cubic, False)
+
+def SciPySignalQuadratic(dtype):
+    return SimpleBlock(dtype, 4, scipy.signal.quadratic, False)
 
 def SciPySignalGaussSpline(dtype, order):
-    return SplineBlock(dtype, order, scipy.signal.gauss_spline)
+    return SplineBlock(dtype, order, scipy.signal.gauss_spline, True)
