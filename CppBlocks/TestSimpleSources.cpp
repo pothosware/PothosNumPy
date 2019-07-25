@@ -113,6 +113,47 @@ static void testZeros()
         true);
 }
 
+template <typename T>
+static inline EnableIfComplex<T, T> getFullFillValue()
+{
+    using S = typename T::value_type;
+
+    return T{S(10),S(20)};
+}
+
+template <typename T>
+static inline EnableIfNotComplex<T, T> getFullFillValue()
+{
+    return T(5);
+}
+
+template <typename T>
+static void testFull()
+{
+    using std::placeholders::_1;
+
+    constexpr size_t dimension = 2;
+    Pothos::DType dtype(typeid(T), dimension);
+    std::cout << "Testing " << dtype.toString() << std::endl;
+
+    auto full = Pothos::BlockRegistry::make(
+                     "/scipy/numpy/full",
+                    dtype,
+                    getFullFillValue<T>());
+
+    testSimpleSource(
+        full,
+        dtype,
+        std::bind(testAllValuesEqual<T>, _1, getFullFillValue<T>()),
+        true);
+
+    // Check the getter and setter.
+    full.call("setFillValue", (getFullFillValue<T>() + T(1)));
+    testEqual(
+        T(getFullFillValue<T>() + T(1)),
+        full.template call<T>("getFillValue"));
+}
+
 //
 // Registered tests
 //
@@ -147,4 +188,20 @@ POTHOS_TEST_BLOCK("/scipy/tests", TestZeros)
     testZeros<double>();
     testZeros<std::complex<float>>();
     testZeros<std::complex<double>>();
+}
+
+POTHOS_TEST_BLOCK("/scipy/tests", TestFull)
+{
+    testFull<std::int8_t>();
+    testFull<std::int16_t>();
+    testFull<std::int32_t>();
+    testFull<std::int64_t>();
+    testFull<std::uint8_t>();
+    testFull<std::uint16_t>();
+    testFull<std::uint32_t>();
+    testFull<std::uint64_t>();
+    testFull<float>();
+    testFull<double>();
+    testFull<std::complex<float>>();
+    testFull<std::complex<double>>();
 }

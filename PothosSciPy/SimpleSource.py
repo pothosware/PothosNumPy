@@ -28,6 +28,18 @@ class SimpleSource(Pothos.Block):
 
         self.output(0).produce(N)
 
+class Full(SimpleSource):
+    def __init__(self, dtype, fillValue):
+        SimpleSource.__init__(self, dtype, numpy.full, fillValue)
+
+        self.__fillValue = fillValue
+
+    def getFillValue(self):
+        return self.__fillValue
+
+    def setFillValue(self, fillValue):
+        self.__fillValue = fillValue
+
 #
 # Factories exposed to C++ layer
 #
@@ -37,3 +49,7 @@ def NumPyOnes(dtype):
 
 def NumPyZeros(dtype):
     return SimpleSource(dtype, numpy.zeros)
+
+# TODO: enforce that fillValue is valid for the given dtype
+def NumPyFull(dtype, fillValue):
+    return Full(dtype, fillValue)
