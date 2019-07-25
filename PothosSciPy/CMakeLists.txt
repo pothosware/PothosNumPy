@@ -6,6 +6,7 @@ POTHOS_PYTHON_UTIL(
         NumPySave.py
         NumPySaveZ.py
         SimpleBlocks.py
+        SimpleSource.py
         SplineBlocks.py
     FACTORIES
         "/scipy/numpy/sin:NumPySin"
@@ -50,6 +51,9 @@ POTHOS_PYTHON_UTIL(
         "/scipy/numpy/save:NumPySave"
         "/scipy/numpy/savez:NumPySaveZ"
         "/scipy/numpy/savez_compressed:NumPySaveZCompressed"
+        "/scipy/numpy/ones:NumPyOnes"
+        "/scipy/numpy/zeros:NumPyZeros"
+        "/scipy/numpy/full:NumPyFull"
         "/scipy/constants/lambda2nu:SciPyLambda2Nu"
         "/scipy/constants/nu2lambda:SciPyNu2Lambda"
         "/scipy/signal/bspline:SciPySignalBSpline"

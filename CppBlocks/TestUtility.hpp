@@ -11,7 +11,55 @@
 #include <algorithm>
 #include <complex>
 #include <cstring>
+#include <type_traits>
 #include <vector>
+
+//
+// Useful typedefs
+//
+
+template <typename T>
+struct IsComplex : std::false_type {};
+
+template <typename T>
+struct IsComplex<std::complex<T>> : std::true_type {};
+
+template <typename T, typename U>
+using EnableIfInteger = typename std::enable_if<!IsComplex<T>::value && !std::is_floating_point<T>::value, U>::type;
+
+template <typename T, typename U>
+using EnableIfFloat = typename std::enable_if<!IsComplex<T>::value && std::is_floating_point<T>::value, U>::type;
+
+template <typename T, typename U>
+using EnableIfComplex = typename std::enable_if<IsComplex<T>::value, U>::type;
+
+template <typename T, typename U>
+using EnableIfNotComplex = typename std::enable_if<!IsComplex<T>::value, U>::type;
+
+//
+// Utility functions
+//
+
+template <typename T>
+static inline EnableIfInteger<T, void> testEqual(T x, T y)
+{
+    POTHOS_TEST_EQUAL(x, y);
+}
+
+template <typename T>
+static inline EnableIfFloat<T, void> testEqual(T x, T y)
+{
+    POTHOS_TEST_CLOSE(x, y, 1e-6);
+}
+
+#include <iostream>
+
+template <typename T>
+static inline EnableIfComplex<T, void> testEqual(T x, T y)
+{
+    testEqual(x.real(), y.real());
+    testEqual(x.imag(), y.imag());
+}
 
 template <typename T>
 static Pothos::BufferChunk stdVectorToBufferChunk(

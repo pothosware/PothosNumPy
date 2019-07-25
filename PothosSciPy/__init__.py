@@ -5,4 +5,5 @@ from .NumPyLoad import *
 from .NumPySave import *
 from .NumPySaveZ import *
 from .SimpleBlocks import *
+from .SimpleSource import *
 from .SplineBlocks import *
