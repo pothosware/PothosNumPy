@@ -137,6 +137,7 @@ static typename std::enable_if<std::is_floating_point<T>::value, void>::type tes
     const std::vector<T>& expectedOutputs,
     T epsilon = 1e-6)
 {
+    POTHOS_TEST_TRUE(bufferChunk.elements() > 0);
     auto pOut = bufferChunk.as<const T*>();
     for (size_t i = 0; i < bufferChunk.elements(); i++)
     {
@@ -152,6 +153,7 @@ static typename std::enable_if<std::is_integral<T>::value, void>::type testBuffe
     const Pothos::BufferChunk& bufferChunk,
     const std::vector<T>& expectedOutputs)
 {
+    POTHOS_TEST_TRUE(bufferChunk.elements() > 0);
     auto pOut = bufferChunk.as<const T*>();
     for (size_t i = 0; i < bufferChunk.elements(); i++)
     {
