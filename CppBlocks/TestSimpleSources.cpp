@@ -141,17 +141,31 @@ static void testFull()
                     dtype,
                     getFullFillValue<T>());
 
+    const T testValue1 = getFullFillValue<T>();
+    const T testValue2 = testValue1 + T(1);
+
+    // Check the initial value.
+    testEqual(
+        testValue1,
+        full.template call<T>("getFillValue"));
+
     testSimpleSource(
         full,
         dtype,
-        std::bind(testAllValuesEqual<T>, _1, getFullFillValue<T>()),
+        std::bind(testAllValuesEqual<T>, _1, testValue1),
         true);
 
-    // Check the getter and setter.
-    full.call("setFillValue", (getFullFillValue<T>() + T(1)));
+    // Set the value, test it, and try again with the new value.
+    full.call("setFillValue", testValue2);
     testEqual(
-        T(getFullFillValue<T>() + T(1)),
+        testValue2,
         full.template call<T>("getFillValue"));
+
+    testSimpleSource(
+        full,
+        dtype,
+        std::bind(testAllValuesEqual<T>, _1, testValue2),
+        true);
 }
 
 //

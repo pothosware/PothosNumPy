@@ -10,9 +10,13 @@ class SimpleSource(Pothos.Block):
         Pothos.Block.__init__(self)
         self.setupOutput("0", dtype)
 
-        self.__func = func
-        self.__numpyDType = Pothos.Buffer.dtype_to_numpy(dtype)
-        self.__args = args
+        self.func = func
+        self.numpyDType = Pothos.Buffer.dtype_to_numpy(dtype)
+
+        # Store as a list so setters can access the arguments. This
+        # can still be passed in as parameters with *self.args as
+        # with a tuple.
+        self.args = list(args)
 
     def work(self):
         out0 = self.output(0).buffer()
@@ -21,24 +25,24 @@ class SimpleSource(Pothos.Block):
         if N == 0:
             return
 
-        if self.__args is None:
-            out0[:] = self.__func(N, dtype=self.__numpyDType)
+        if self.args is None:
+            out0[:] = self.func(N, dtype=self.numpyDType)
         else:
-            out0[:] = self.__func(N, *self.__args, dtype=self.__numpyDType)
+            out0[:] = self.func(N, *self.args, dtype=self.numpyDType)
 
         self.output(0).produce(N)
 
 class Full(SimpleSource):
     def __init__(self, dtype, fillValue):
         SimpleSource.__init__(self, dtype, numpy.full, fillValue)
-
-        self.__fillValue = fillValue
+        self.setFillValue(fillValue)
 
     def getFillValue(self):
-        return self.__fillValue
+        return self.fillValue
 
     def setFillValue(self, fillValue):
-        self.__fillValue = fillValue
+        self.fillValue = fillValue
+        self.args[0] = fillValue
 
 #
 # Factories exposed to C++ layer
