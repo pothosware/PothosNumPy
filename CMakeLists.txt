@@ -39,7 +39,7 @@ BUILD_PYTHON_MODULE(
         Python/RegisteredCallHelpers.py
         Python/Save.py
         Python/SaveZ.py
-        Python/SimpleBlocks.py
+        Python/SimpleBlock.py
         Python/Source.py
     CPP_SOURCES
         Cpp/Factory.cpp
