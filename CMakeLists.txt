@@ -16,21 +16,26 @@ include(FindPythonModule)
 find_python_module(numpy REQUIRED)
 find_python_module(scipy REQUIRED)
 
-#add_subdirectory(PothosSciPy)
-#add_subdirectory(CppBlocks)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 include(BuildPythonModule)
 BUILD_PYTHON_MODULE(
     TARGET SciPyBlocks
     DESTINATION PothosSciPy
     SOURCES
-        PothosSciPy/__init__.py
-        PothosSciPy/NumPyLoad.py
-        PothosSciPy/NumPySave.py
-        PothosSciPy/NumPySaveZ.py
-        PothosSciPy/SimpleBlocks.py
-        PothosSciPy/SimpleSource.py
-        PothosSciPy/SplineBlocks.py
+        Python/__init__.py
+        Python/NumPyLoad.py
+        Python/NumPySave.py
+        Python/NumPySaveZ.py
+        Python/SimpleBlocks.py
+        Python/SimpleSource.py
+        Python/SplineBlocks.py
     CPP_SOURCES
-        Factory.cpp
+
+        Cpp/Factory.cpp
+        Cpp/SciPyConstants.cpp
+
+        Testing/TestConstants.cpp
+        Testing/TestSimpleBlocks.cpp
+        Testing/TestSimpleSources.cpp
 )
