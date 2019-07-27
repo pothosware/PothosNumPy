@@ -44,6 +44,70 @@ class Full(SimpleSource):
         self.fillValue = fillValue
         self.args[0] = fillValue
 
+class Range(SimpleSource):
+    def __init__(self, dtype, func, start, stop, step):
+        SimpleSource.__init__(self, dtype, func, start, stop, step)
+
+        self.setStart(start)
+        self.setStop(stop)
+        self.setStep(step)
+
+    def __refreshArgs(self):
+        self.args = (self.start, self.stop, self.step)
+
+    def getStart(self):
+        return self.start
+
+    def setStart(self, start)
+        self.start = start
+        self.__refreshArgs()
+
+    def getStop(self):
+        return self.stop
+
+    def setStop(self, stop)
+        self.stop = stop
+        self.__refreshArgs()
+
+    def getStep(self):
+        return self.step
+
+    def setStep(self, step)
+        self.step = step
+        self.__refreshArgs()
+
+class Space(SimpleSource):
+    def __init__(self, dtype, func, start, stop, numValues):
+        SimpleSource.__init__(self, dtype, func, start, stop, numValues)
+
+        self.setStart(start)
+        self.setStop(stop)
+        self.setNumValues(numValues)
+
+    def __refreshArgs(self):
+        self.args = (self.start, self.stop, self.numValues)
+
+    def getStart(self):
+        return self.start
+
+    def setStart(self, start)
+        self.start = start
+        self.__refreshArgs()
+
+    def getStop(self):
+        return self.stop
+
+    def setStop(self, stop)
+        self.stop = stop
+        self.__refreshArgs()
+
+    def getNumValues(self):
+        return self.numValues
+
+    def setNumValues(self, numValues)
+        self.numValues = numValues
+        self.__refreshArgs()
+
 #
 # Factories exposed to C++ layer
 #
@@ -57,3 +121,15 @@ def NumPyZeros(dtype):
 # TODO: enforce that fillValue is valid for the given dtype
 def NumPyFull(dtype, fillValue):
     return Full(dtype, fillValue)
+
+def NumPyARange(dtype, start, stop, step):
+    return Range(dtype, numpy.arange, start, stop, step)
+
+def NumPyLinSpace(dtype, start, stop, numValues):
+    return Space(dtype, numpy.linspace, start, stop, numValues)
+
+def NumPyLogSpace(dtype, start, stop, numValues):
+    return Space(dtype, numpy.logspace, start, stop, numValues)
+
+def NumPyGeomSpace(dtype, start, stop, numValues):
+    return Space(dtype, numpy.geomspace, start, stop, numValues)

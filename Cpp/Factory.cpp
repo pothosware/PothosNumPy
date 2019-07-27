@@ -83,8 +83,14 @@ static const std::vector<Pothos::BlockRegistry> blockRegistries =
     BLOCK_REGISTRY("/scipy/numpy/ones", "NumPyOnes"),
     BLOCK_REGISTRY("/scipy/numpy/zeros", "NumPyZeros"),
     BLOCK_REGISTRY("/scipy/numpy/full", "NumPyFull"),
+    BLOCK_REGISTRY("/scipy/numpy/arange", "NumPyARange"),
+    BLOCK_REGISTRY("/scipy/numpy/linspace", "NumPyLinSpace"),
+    BLOCK_REGISTRY("/scipy/numpy/logspace", "NumPyLogSpace"),
+    BLOCK_REGISTRY("/scipy/numpy/geomspace", "NumPyGeomSpace"),
+
     BLOCK_REGISTRY("/scipy/constants/lambda2nu", "SciPyLambda2Nu"),
     BLOCK_REGISTRY("/scipy/constants/nu2lambda", "SciPyNu2Lambda"),
+
     BLOCK_REGISTRY("/scipy/signal/bspline", "SciPySignalBSpline"),
     BLOCK_REGISTRY("/scipy/signal/cubic", "SciPySignalCubic"),
     BLOCK_REGISTRY("/scipy/signal/gauss_spline", "SciPySignalGaussSpline"),
