@@ -28,7 +28,7 @@ BUILD_PYTHON_MODULE(
         Python/Save.py
         Python/SaveZ.py
         Python/SimpleBlocks.py
-        Python/SimpleSource.py
+        Python/Source.py
     CPP_SOURCES
         Cpp/Factory.cpp
 
