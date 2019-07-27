@@ -6,6 +6,8 @@
 
 #include <Pothos/Framework/BufferChunk.hpp>
 #include <Pothos/Framework/DType.hpp>
+#include <Pothos/Plugin.hpp>
+#include <Pothos/Proxy.hpp>
 #include <Pothos/Testing.hpp>
 
 #include <algorithm>
@@ -51,8 +53,6 @@ static inline EnableIfFloat<T, void> testEqual(T x, T y)
 {
     POTHOS_TEST_CLOSE(x, y, 1e-6);
 }
-
-#include <iostream>
 
 template <typename T>
 static inline EnableIfComplex<T, void> testEqual(T x, T y)
@@ -159,6 +159,17 @@ static typename std::enable_if<std::is_integral<T>::value, void>::type testBuffe
             expectedOutputs[i],
             pOut[i]);
     }
+}
+
+template <typename ReturnType, typename... ArgsType>
+ReturnType getAndCallPlugin(
+    const std::string& proxyPath,
+    ArgsType&&... args)
+{
+    auto plugin = Pothos::PluginRegistry::get(proxyPath);
+    auto getter = plugin.getObject().extract<Pothos::Callable>();
+
+    return getter.call<ReturnType>(args...);
 }
 
 #endif /* INCLUDED_TEST_UTILITY_HPP */
