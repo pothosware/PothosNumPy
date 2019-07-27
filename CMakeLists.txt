@@ -42,6 +42,7 @@ BUILD_PYTHON_MODULE(
         Python/SaveZ.py
         Python/SimpleBlock.py
         Python/Source.py
+        Python/TwoToOneBlock.py
     CPP_SOURCES
         Cpp/Factory.cpp
         Cpp/RegisteredCalls.cpp

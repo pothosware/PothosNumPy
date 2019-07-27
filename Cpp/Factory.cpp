@@ -88,5 +88,8 @@ static const std::vector<Pothos::BlockRegistry> blockRegistries =
     BLOCK_REGISTRY("/numpy/logspace", "LogSpace"),
     BLOCK_REGISTRY("/numpy/geomspace", "GeomSpace"),
     BLOCK_REGISTRY("/numpy/flip", "Flip"),
-    BLOCK_REGISTRY("/numpy/roll", "Roll")
+    BLOCK_REGISTRY("/numpy/roll", "Roll"),
+    BLOCK_REGISTRY("/numpy/bitwise_and", "BitwiseAnd"),
+    BLOCK_REGISTRY("/numpy/bitwise_or", "BitwiseOr"),
+    BLOCK_REGISTRY("/numpy/bitwise_xor", "BitwiseXor"),
 };
