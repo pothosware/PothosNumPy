@@ -16,5 +16,21 @@ include(FindPythonModule)
 find_python_module(numpy REQUIRED)
 find_python_module(scipy REQUIRED)
 
-add_subdirectory(PothosSciPy)
-add_subdirectory(CppBlocks)
+#add_subdirectory(PothosSciPy)
+#add_subdirectory(CppBlocks)
+
+include(BuildPythonModule)
+BUILD_PYTHON_MODULE(
+    TARGET SciPyBlocks
+    DESTINATION PothosSciPy
+    SOURCES
+        PothosSciPy/__init__.py
+        PothosSciPy/NumPyLoad.py
+        PothosSciPy/NumPySave.py
+        PothosSciPy/NumPySaveZ.py
+        PothosSciPy/SimpleBlocks.py
+        PothosSciPy/SimpleSource.py
+        PothosSciPy/SplineBlocks.py
+    CPP_SOURCES
+        Factory.cpp
+)
