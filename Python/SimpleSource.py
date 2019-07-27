@@ -29,7 +29,7 @@ class SimpleSource(Pothos.Block):
 
         self.output(0).produce(N)
 
-class Full(SimpleSource):
+class FullClass(SimpleSource):
     def __init__(self, dtype, fillValue):
         SimpleSource.__init__(self, dtype, numpy.full, fillValue)
         self.setFillValue(fillValue)
@@ -39,7 +39,7 @@ class Full(SimpleSource):
 
     def setFillValue(self, fillValue):
         self.fillValue = fillValue
-        self.args = (fillValue)
+        self.args = [fillValue]
 
 class Range(SimpleSource):
     def __init__(self, dtype, func, start, stop, step):
@@ -117,7 +117,7 @@ def Zeros(dtype):
 
 # TODO: enforce that fillValue is valid for the given dtype
 def Full(dtype, fillValue):
-    return Full(dtype, fillValue)
+    return FullClass(dtype, fillValue)
 
 def ARange(dtype, start, stop, step):
     return Range(dtype, numpy.arange, start, stop, step)
