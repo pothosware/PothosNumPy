@@ -13,6 +13,8 @@
 #include <algorithm>
 #include <complex>
 #include <cstring>
+#include <sstream>
+#include <string>
 #include <type_traits>
 #include <vector>
 
@@ -172,6 +174,44 @@ ReturnType getAndCallPlugin(
     auto getter = plugin.getObject().extract<Pothos::Callable>();
 
     return getter.call<ReturnType>(args...);
+}
+
+//
+// For debugging purposes
+//
+
+template <typename T>
+std::string stdVectorToString(const std::vector<T>& vec)
+{
+    std::ostringstream ostream;
+    for(const T& val: vec)
+    {
+        if(&val != &vec[0])
+        {
+            ostream << " ";
+        }
+        ostream << val;
+    }
+
+    return ostream.str();
+}
+
+template <typename T>
+std::string bufferChunkToString(const Pothos::BufferChunk& bufferChunk)
+{
+    std::ostringstream ostream;
+
+    const T* buff = bufferChunk.as<const T*>();
+    for(size_t i = 0; i < bufferChunk.elements(); ++i)
+    {
+        if(0 != i)
+        {
+            ostream << " ";
+        }
+        ostream << buff[i];
+    }
+
+    return ostream.str();
 }
 
 #endif /* INCLUDED_TEST_UTILITY_HPP */

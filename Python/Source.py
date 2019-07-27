@@ -29,6 +29,33 @@ class SimpleSource(Pothos.Block):
 
         self.output(0).produce(N)
 
+class PostBufferSource(Pothos.Block):
+    def __init__(self, dtype, func, *args):
+        Pothos.Block.__init__(self)
+        self.setupOutput("0", dtype)
+
+        self.func = func
+        self.numpyDType = Pothos.Buffer.dtype_to_numpy(dtype)
+
+        self.args = args
+
+    def work(self):
+        N = len(self.output(0).buffer())
+
+        # Even though we're posting the buffer, N will be 0 in a situation
+        # where we shouldn't have output, so go along with that.
+        if N == 0:
+            return
+
+        out = None
+
+        if self.args is None:
+            out = self.func(N, dtype=self.numpyDType)
+        else:
+            out = self.func(N, *self.args, dtype=self.numpyDType)
+
+        self.postBuffer(out)
+
 class FullClass(SimpleSource):
     def __init__(self, dtype, fillValue):
         SimpleSource.__init__(self, dtype, numpy.full, fillValue)

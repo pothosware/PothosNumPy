@@ -10,6 +10,8 @@
 #include <Pothos/Plugin.hpp>
 #include <Pothos/Proxy.hpp>
 
+#include <Poco/Thread.h>
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -30,7 +32,7 @@ static void simpleBlockTest(const SimpleBlockTestParams<T>& testParams)
         testParams.inputs.size(),
         testParams.expectedOutputs.size());
 
-    static constexpr size_t dimension = 2;
+    static constexpr size_t dimension = 1;
     auto dtype = Pothos::DType(typeid(T), dimension);
 
     std::cout << "Testing " << testParams.blockRegistryPath << "(" << dtype.toString() << ")" << std::endl;
@@ -58,7 +60,9 @@ static void simpleBlockTest(const SimpleBlockTestParams<T>& testParams)
         topology.connect(feeder, 0, testBlock, 0);
         topology.connect(testBlock, 0, collector, 0);
         topology.commit();
-        POTHOS_TEST_TRUE(topology.waitInactive(0.01));
+
+        // When this block exits, the flowgraph will stop.
+        Poco::Thread::sleep(10);
     }
 
     // Check the outputs.

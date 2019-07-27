@@ -36,6 +36,7 @@ BUILD_PYTHON_MODULE(
     SOURCES
         Python/__init__.py
         Python/Load.py
+        Python/PostBufferBlock.py
         Python/RegisteredCallHelpers.py
         Python/Save.py
         Python/SaveZ.py

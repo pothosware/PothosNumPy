@@ -13,20 +13,22 @@
 #include <cmath>
 #include <complex>
 #include <string>
+#include <vector>
 
 template <typename T>
 using TestFunc = T(*)(T);
 
 template <typename T>
+using VectorTestFunc = std::vector<T>(*)(const std::vector<T>&);
+
+template <typename T>
 static std::vector<T> getArcTrigParams(size_t numInputs)
 {
-    return linspace<T>(0.0f, 1.0f, numInputs);
+    return linspace<T>(-0.5f, 0.5f, numInputs);
 }
 
 template <typename T>
-static SimpleBlockTestParams<T> getTestParamsForFunc(
-    const std::string& blockRegistryPath,
-    TestFunc<T> func)
+static SimpleBlockTestParams<T> getBaseTestParams(const std::string& blockRegistryPath)
 {
     static const size_t numInputs = 123;
 
@@ -41,11 +43,31 @@ static SimpleBlockTestParams<T> getTestParamsForFunc(
     };
     testParams.expectedOutputs.reserve(numInputs);
 
+    return testParams;
+}
+
+template <typename T>
+static SimpleBlockTestParams<T> getTestParamsForFunc(
+    const std::string& blockRegistryPath,
+    TestFunc<T> func)
+{
+    auto testParams = getBaseTestParams<T>(blockRegistryPath);
     std::transform(
         testParams.inputs.begin(),
         testParams.inputs.end(),
         std::back_inserter(testParams.expectedOutputs),
         func);
+
+    return testParams;
+}
+
+template <typename T>
+static SimpleBlockTestParams<T> getTestParamsForVectorFunc(
+    const std::string& blockRegistryPath,
+    VectorTestFunc<T> func)
+{
+    auto testParams = getBaseTestParams<T>(blockRegistryPath);
+    testParams.expectedOutputs = func(testParams.inputs);
 
     return testParams;
 }
@@ -58,6 +80,13 @@ static void testSimpleBlocksFloatingPoint()
     auto reciprocal = [](T input){return T(1.0f) / input;};
     auto negative = [](T input){return std::abs(input) * T(-1.0f);};
     auto square = [](T input){return std::pow(input, T(2.0f));};
+
+    auto flip = [](const std::vector<T>& input)
+    {
+        std::vector<T> output(input);
+        std::reverse(output.begin(), output.end());
+        return output;
+    };
 
     simpleBlockTest(getTestParamsForFunc<T>(
         "/numpy/sin",
@@ -128,6 +157,9 @@ static void testSimpleBlocksFloatingPoint()
     simpleBlockTest(getTestParamsForFunc<T>(
         "/numpy/absolute",
         std::abs));
+    simpleBlockTest(getTestParamsForVectorFunc<T>(
+        "/numpy/flip",
+        flip));
 }
 
 // TODO: test all other types
