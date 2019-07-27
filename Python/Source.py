@@ -1,12 +1,16 @@
 # Copyright (c) 2019 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
+from . import Utility
+
 import Pothos
 
 import numpy
 
 class SimpleSource(Pothos.Block):
     def __init__(self, dtype, func, *args):
+        Utility.validateDType(dtype)
+
         Pothos.Block.__init__(self)
         self.setupOutput("0", dtype)
 
@@ -31,6 +35,8 @@ class SimpleSource(Pothos.Block):
 
 class PostBufferSource(Pothos.Block):
     def __init__(self, dtype, func, *args):
+        Utility.validateDType(dtype)
+
         Pothos.Block.__init__(self)
         self.setupOutput("0", dtype)
 
@@ -65,6 +71,8 @@ class FullClass(SimpleSource):
         return self.fillValue
 
     def setFillValue(self, fillValue):
+        Utility.validateParameter(fillValue, self.numpyDType)
+
         self.fillValue = fillValue
         self.args = [fillValue]
 
@@ -83,6 +91,8 @@ class Range(SimpleSource):
         return self.start
 
     def setStart(self, start):
+        Utility.validateParameter(start, self.numpyDType)
+
         self.start = start
         self.__refreshArgs()
 
@@ -90,6 +100,8 @@ class Range(SimpleSource):
         return self.stop
 
     def setStop(self, stop):
+        Utility.validateParameter(stop, self.numpyDType)
+
         self.stop = stop
         self.__refreshArgs()
 
@@ -97,6 +109,8 @@ class Range(SimpleSource):
         return self.step
 
     def setStep(self, step):
+        Utility.validateParameter(step, self.numpyDType)
+
         self.step = step
         self.__refreshArgs()
 
@@ -115,6 +129,8 @@ class Space(SimpleSource):
         return self.start
 
     def setStart(self, start):
+        Utility.validateParameter(start, self.numpyDType)
+
         self.start = start
         self.__refreshArgs()
 
@@ -122,6 +138,8 @@ class Space(SimpleSource):
         return self.stop
 
     def setStop(self, stop):
+        Utility.validateParameter(stop, self.numpyDType)
+
         self.stop = stop
         self.__refreshArgs()
 
@@ -129,6 +147,8 @@ class Space(SimpleSource):
         return self.numValues
 
     def setNumValues(self, numValues):
+        Utility.validateParameter(numValues, self.numpyDType)
+
         self.numValues = numValues
         self.__refreshArgs()
 

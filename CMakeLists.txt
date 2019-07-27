@@ -43,6 +43,7 @@ BUILD_PYTHON_MODULE(
         Python/SimpleBlock.py
         Python/Source.py
         Python/TwoToOneBlock.py
+        Python/Utility.py
     CPP_SOURCES
         Cpp/Factory.cpp
         Cpp/RegisteredCalls.cpp

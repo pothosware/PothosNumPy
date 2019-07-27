@@ -1,6 +1,8 @@
 # Copyright (c) 2019 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
+from . import Utility
+
 import Pothos
 
 import numpy
@@ -9,6 +11,8 @@ import os
 # TODO: dimension enforcement?
 class SaveZ(Pothos.Block):
     def __init__(self, filepath, dtypes, keys, func):
+        Utility.validateDType(dtype)
+
         Pothos.Block.__init__(self)
 
         if (len(dtypes) != len(keys)) or (len(dtypes) != len(keys)):

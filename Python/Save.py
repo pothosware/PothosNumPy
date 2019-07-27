@@ -1,6 +1,8 @@
 # Copyright (c) 2019 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
+from . import Utility
+
 import Pothos
 
 import numpy
@@ -8,6 +10,8 @@ import os
 
 class Save(Pothos.Block):
     def __init__(self, dtype, filepath):
+        Utility.validateDType(dtype)
+
         Pothos.Block.__init__(self)
         self.setupInput("0", self.__dtype)
 

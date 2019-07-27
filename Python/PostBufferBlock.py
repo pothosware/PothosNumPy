@@ -1,6 +1,8 @@
 # Copyright (c) 2019 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
+from . import Utility
+
 import Pothos
 
 import numpy
@@ -9,6 +11,8 @@ import numpy
 # the entire input buffer must be processed and returned at once.
 class PostBufferBlock(Pothos.Block):
     def __init__(self, dtype, func, *args, useDType=True):
+        Utility.validateDType(dtype)
+
         Pothos.Block.__init__(self)
         self.setupInput("0", dtype)
         self.setupOutput("0", dtype)
@@ -50,6 +54,8 @@ class RollClass(PostBufferBlock):
         return self.shift
 
     def setShift(self, shift):
+        Utility.validateParameter(shift, self.numpyDType)
+
         self.shift = shift
         self.args = [self.shift]
 
