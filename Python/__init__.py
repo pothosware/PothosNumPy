@@ -1,9 +1,8 @@
 # Copyright (c) 2019 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
-from .NumPyLoad import *
-from .NumPySave import *
-from .NumPySaveZ import *
+from .Load import *
+from .Save import *
+from .SaveZ import *
 from .SimpleBlocks import *
 from .SimpleSource import *
-from .SplineBlocks import *

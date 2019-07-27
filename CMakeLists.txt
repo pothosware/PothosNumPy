@@ -2,7 +2,7 @@
 # Project setup
 ########################################################################
 cmake_minimum_required(VERSION 2.8.9)
-project(PothosSciPy CXX)
+project(PothosNumPy CXX)
 
 find_package(Pothos CONFIG REQUIRED)
 include(PothosPythonUtil)
@@ -20,22 +20,18 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 include(BuildPythonModule)
 BUILD_PYTHON_MODULE(
-    TARGET SciPyBlocks
-    DESTINATION PothosSciPy
+    TARGET NumPyBlocks
+    DESTINATION PothosNumPy
     SOURCES
         Python/__init__.py
-        Python/NumPyLoad.py
-        Python/NumPySave.py
-        Python/NumPySaveZ.py
+        Python/Load.py
+        Python/Save.py
+        Python/SaveZ.py
         Python/SimpleBlocks.py
         Python/SimpleSource.py
-        Python/SplineBlocks.py
     CPP_SOURCES
-
         Cpp/Factory.cpp
-        Cpp/SciPyConstants.cpp
 
-        Testing/TestConstants.cpp
         Testing/TestSimpleBlocks.cpp
         Testing/TestSimpleSources.cpp
 )

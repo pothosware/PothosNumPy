@@ -13,10 +13,7 @@ class SimpleSource(Pothos.Block):
         self.func = func
         self.numpyDType = Pothos.Buffer.dtype_to_numpy(dtype)
 
-        # Store as a list so setters can access the arguments. This
-        # can still be passed in as parameters with *self.args as
-        # with a tuple.
-        self.args = list(args)
+        self.args = args
 
     def work(self):
         out0 = self.output(0).buffer()
@@ -42,7 +39,7 @@ class Full(SimpleSource):
 
     def setFillValue(self, fillValue):
         self.fillValue = fillValue
-        self.args[0] = fillValue
+        self.args = (fillValue)
 
 class Range(SimpleSource):
     def __init__(self, dtype, func, start, stop, step):
@@ -58,21 +55,21 @@ class Range(SimpleSource):
     def getStart(self):
         return self.start
 
-    def setStart(self, start)
+    def setStart(self, start):
         self.start = start
         self.__refreshArgs()
 
     def getStop(self):
         return self.stop
 
-    def setStop(self, stop)
+    def setStop(self, stop):
         self.stop = stop
         self.__refreshArgs()
 
     def getStep(self):
         return self.step
 
-    def setStep(self, step)
+    def setStep(self, step):
         self.step = step
         self.__refreshArgs()
 
@@ -90,21 +87,21 @@ class Space(SimpleSource):
     def getStart(self):
         return self.start
 
-    def setStart(self, start)
+    def setStart(self, start):
         self.start = start
         self.__refreshArgs()
 
     def getStop(self):
         return self.stop
 
-    def setStop(self, stop)
+    def setStop(self, stop):
         self.stop = stop
         self.__refreshArgs()
 
     def getNumValues(self):
         return self.numValues
 
-    def setNumValues(self, numValues)
+    def setNumValues(self, numValues):
         self.numValues = numValues
         self.__refreshArgs()
 
@@ -112,24 +109,24 @@ class Space(SimpleSource):
 # Factories exposed to C++ layer
 #
 
-def NumPyOnes(dtype):
+def Ones(dtype):
     return SimpleSource(dtype, numpy.ones)
 
-def NumPyZeros(dtype):
+def Zeros(dtype):
     return SimpleSource(dtype, numpy.zeros)
 
 # TODO: enforce that fillValue is valid for the given dtype
-def NumPyFull(dtype, fillValue):
+def Full(dtype, fillValue):
     return Full(dtype, fillValue)
 
-def NumPyARange(dtype, start, stop, step):
+def ARange(dtype, start, stop, step):
     return Range(dtype, numpy.arange, start, stop, step)
 
-def NumPyLinSpace(dtype, start, stop, numValues):
+def LinSpace(dtype, start, stop, numValues):
     return Space(dtype, numpy.linspace, start, stop, numValues)
 
-def NumPyLogSpace(dtype, start, stop, numValues):
+def LogSpace(dtype, start, stop, numValues):
     return Space(dtype, numpy.logspace, start, stop, numValues)
 
-def NumPyGeomSpace(dtype, start, stop, numValues):
+def GeomSpace(dtype, start, stop, numValues):
     return Space(dtype, numpy.geomspace, start, stop, numValues)

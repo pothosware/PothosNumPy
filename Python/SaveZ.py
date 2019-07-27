@@ -46,8 +46,8 @@ class SaveZ(Pothos.Block):
             self.__buffers[key] += allInputs[key].buffer()
             allInputs[key].consume(elems)
 
-def NumPySaveZ(filepath, dtypes, keys):
+def SaveZ(filepath, dtypes, keys):
     return SaveZ(filepath, dtypes, keys, numpy.savez)
 
-def NumPySaveZCompressed(filepath, dtypes, keys):
+def SaveZCompressed(filepath, dtypes, keys):
     return SaveZ(filepath, dtypes, keys, numpy.savez_compressed)

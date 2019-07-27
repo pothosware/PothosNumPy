@@ -83,7 +83,7 @@ static void testOnes()
     std::cout << "Testing " << dtype.toString() << std::endl;
 
     auto ones = Pothos::BlockRegistry::make(
-                    "/scipy/numpy/ones",
+                    "/numpy/ones",
                     dtype);
 
     testSimpleSource(
@@ -103,7 +103,7 @@ static void testZeros()
     std::cout << "Testing " << dtype.toString() << std::endl;
 
     auto zeros = Pothos::BlockRegistry::make(
-                     "/scipy/numpy/zeros",
+                     "/numpy/zeros",
                     dtype);
  
     testSimpleSource(
@@ -137,7 +137,7 @@ static void testFull()
     std::cout << "Testing " << dtype.toString() << std::endl;
 
     auto full = Pothos::BlockRegistry::make(
-                     "/scipy/numpy/full",
+                     "/numpy/full",
                     dtype,
                     getFullFillValue<T>());
 
@@ -172,7 +172,7 @@ static void testFull()
 // Registered tests
 //
 
-POTHOS_TEST_BLOCK("/scipy/tests", TestOnes)
+POTHOS_TEST_BLOCK("/numpy/tests", TestOnes)
 {
     testOnes<std::int8_t>();
     testOnes<std::int16_t>();
@@ -188,7 +188,7 @@ POTHOS_TEST_BLOCK("/scipy/tests", TestOnes)
     testOnes<std::complex<double>>();
 }
 
-POTHOS_TEST_BLOCK("/scipy/tests", TestZeros)
+POTHOS_TEST_BLOCK("/numpy/tests", TestZeros)
 {
     testZeros<std::int8_t>();
     testZeros<std::int16_t>();
@@ -204,7 +204,7 @@ POTHOS_TEST_BLOCK("/scipy/tests", TestZeros)
     testZeros<std::complex<double>>();
 }
 
-POTHOS_TEST_BLOCK("/scipy/tests", TestFull)
+POTHOS_TEST_BLOCK("/numpy/tests", TestFull)
 {
     testFull<std::int8_t>();
     testFull<std::int16_t>();

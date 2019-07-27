@@ -4,8 +4,6 @@
 import Pothos
 
 import numpy
-import scipy.constants
-import scipy.signal
 
 class SimpleBlock(Pothos.Block):
     def __init__(self, dtype, func):
@@ -29,122 +27,113 @@ class SimpleBlock(Pothos.Block):
 # Factories exposed to C++ layer
 #
 
-def NumPySin(dtype):
+def Sin(dtype):
     return SimpleBlock(dtype, numpy.sin)
 
-def NumPyCos(dtype):
+def Cos(dtype):
     return SimpleBlock(dtype, numpy.cos)
 
-def NumPyTan(dtype):
+def Tan(dtype):
     return SimpleBlock(dtype, numpy.tan)
 
-def NumPyArcSin(dtype):
+def ArcSin(dtype):
     return SimpleBlock(dtype, numpy.arcsin)
 
-def NumPyArcCos(dtype):
+def ArcCos(dtype):
     return SimpleBlock(dtype, numpy.arccos)
 
-def NumPyArcTan(dtype):
+def ArcTan(dtype):
     return SimpleBlock(dtype, numpy.arctan)
 
-def NumPyHypot(dtype):
+def Hypot(dtype):
     return SimpleBlock(dtype, numpy.hypot)
 
-def NumPyArcTan2(dtype):
+def ArcTan2(dtype):
     return SimpleBlock(dtype, numpy.arctan2)
 
-def NumPyDegrees(dtype):
+def Degrees(dtype):
     return SimpleBlock(dtype, numpy.degrees)
 
-def NumPyRadians(dtype):
+def Radians(dtype):
     return SimpleBlock(dtype, numpy.radians)
 
-def NumPySinh(dtype):
+def Sinh(dtype):
     return SimpleBlock(dtype, numpy.sinh)
 
-def NumPyCosh(dtype):
+def Cosh(dtype):
     return SimpleBlock(dtype, numpy.cosh)
 
-def NumPyTanh(dtype):
+def Tanh(dtype):
     return SimpleBlock(dtype, numpy.tanh)
 
-def NumPyArcSinh(dtype):
+def ArcSinh(dtype):
     return SimpleBlock(dtype, numpy.arcsinh)
 
-def NumPyArcCosh(dtype):
+def ArcCosh(dtype):
     return SimpleBlock(dtype, numpy.arccosh)
 
-def NumPyFloor(dtype):
+def Floor(dtype):
     return SimpleBlock(dtype, numpy.floor)
 
-def NumPyCeil(dtype):
+def Ceil(dtype):
     return SimpleBlock(dtype, numpy.ceil)
 
-def NumPyTrunc(dtype):
+def Trunc(dtype):
     return SimpleBlock(dtype, numpy.trunc)
 
-def NumPyExp(dtype):
+def Exp(dtype):
     return SimpleBlock(dtype, numpy.exp)
 
-def NumPyExpM1(dtype):
+def ExpM1(dtype):
     return SimpleBlock(dtype, numpy.expm1)
 
-def NumPyExp2(dtype):
+def Exp2(dtype):
     return SimpleBlock(dtype, numpy.exp2)
 
-def NumPyLog(dtype):
+def Log(dtype):
     return SimpleBlock(dtype, numpy.log)
 
-def NumPyLog2(dtype):
+def Log2(dtype):
     return SimpleBlock(dtype, numpy.log2)
 
-def NumPyLog10(dtype):
+def Log10(dtype):
     return SimpleBlock(dtype, numpy.log10)
 
-def NumPyLog1P(dtype):
+def Log1P(dtype):
     return SimpleBlock(dtype, numpy.log1p)
 
-def NumPyLogAddExp(dtype):
+def LogAddExp(dtype):
     return SimpleBlock(dtype, numpy.logaddexp)
 
-def NumPyLogAddExp2(dtype):
+def LogAddExp2(dtype):
     return SimpleBlock(dtype, numpy.logaddexp2)
 
-def NumPySinc(dtype):
+def Sinc(dtype):
     return SimpleBlock(dtype, numpy.sinc)
 
-def NumPyReciprocal(dtype):
+def Reciprocal(dtype):
     return SimpleBlock(dtype, numpy.reciprocal)
 
-def NumPyPositive(dtype):
+def Positive(dtype):
     return SimpleBlock(dtype, numpy.positive)
 
-def NumPyNegative(dtype):
+def Negative(dtype):
     return SimpleBlock(dtype, numpy.negative)
 
-def NumPyConjugate(dtype):
+def Conjugate(dtype):
     return SimpleBlock(dtype, numpy.conjugate)
 
-def NumPySqrt(dtype):
+def Sqrt(dtype):
     return SimpleBlock(dtype, numpy.sqrt)
 
-def NumPyCbrt(dtype):
+def Cbrt(dtype):
     return SimpleBlock(dtype, numpy.cbrt)
 
-def NumPySquare(dtype):
+def Square(dtype):
     return SimpleBlock(dtype, numpy.square)
 
-def NumPyAbsolute(dtype):
+def Absolute(dtype):
     return SimpleBlock(dtype, numpy.absolute)
 
-def NumPyInvert(dtype):
+def Invert(dtype):
     return SimpleBlock(dtype, numpy.invert)
-
-def SciPyConstantsLambda2Nu(dtype):
-    return SimpleBlock(dtype, scipy.constants.lambda2nu)
-
-def SciPyConstantsNu2Lambda(dtype):
-    return SimpleBlock(dtype, scipy.constants.nu2lambda)
-
-def SciPySignalQuadratic(dtype):
-    return SimpleBlock(dtype, scipy.signal.quadratic)

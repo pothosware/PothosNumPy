@@ -60,78 +60,78 @@ static void testSimpleBlocksFloatingPoint()
     auto square = [](T input){return std::pow(input, T(2.0f));};
 
     simpleBlockTest(getTestParamsForFunc<T>(
-        "/scipy/numpy/sin",
+        "/numpy/sin",
         std::sin));
     simpleBlockTest(getTestParamsForFunc<T>(
-        "/scipy/numpy/cos",
+        "/numpy/cos",
         std::cos));
     simpleBlockTest(getTestParamsForFunc<T>(
-        "/scipy/numpy/tan",
+        "/numpy/tan",
         std::tan));
     simpleBlockTest(getTestParamsForFunc<T>(
-        "/scipy/numpy/arcsin",
+        "/numpy/arcsin",
         std::asin));
     simpleBlockTest(getTestParamsForFunc<T>(
-        "/scipy/numpy/arccos",
+        "/numpy/arccos",
         std::acos));
     simpleBlockTest(getTestParamsForFunc<T>(
-        "/scipy/numpy/arctan",
+        "/numpy/arctan",
         std::atan));
     simpleBlockTest(getTestParamsForFunc<T>(
-        "/scipy/numpy/floor",
+        "/numpy/floor",
         std::floor));
     simpleBlockTest(getTestParamsForFunc<T>(
-        "/scipy/numpy/ceil",
+        "/numpy/ceil",
         std::ceil));
     simpleBlockTest(getTestParamsForFunc<T>(
-        "/scipy/numpy/trunc",
+        "/numpy/trunc",
         std::trunc));
     simpleBlockTest(getTestParamsForFunc<T>(
-        "/scipy/numpy/exp",
+        "/numpy/exp",
         std::exp));
     simpleBlockTest(getTestParamsForFunc<T>(
-        "/scipy/numpy/expm1",
+        "/numpy/expm1",
         std::expm1));
     simpleBlockTest(getTestParamsForFunc<T>(
-        "/scipy/numpy/exp2",
+        "/numpy/exp2",
         std::exp2));
     simpleBlockTest(getTestParamsForFunc<T>(
-        "/scipy/numpy/log",
+        "/numpy/log",
         std::log));
     simpleBlockTest(getTestParamsForFunc<T>(
-        "/scipy/numpy/log10",
+        "/numpy/log10",
         std::log10));
     simpleBlockTest(getTestParamsForFunc<T>(
-        "/scipy/numpy/log2",
+        "/numpy/log2",
         std::log2));
     simpleBlockTest(getTestParamsForFunc<T>(
-        "/scipy/numpy/log1p",
+        "/numpy/log1p",
         std::log1p));
     simpleBlockTest(getTestParamsForFunc<T>(
-        "/scipy/numpy/reciprocal",
+        "/numpy/reciprocal",
         reciprocal));
     simpleBlockTest(getTestParamsForFunc<T>(
-        "/scipy/numpy/positive",
+        "/numpy/positive",
         std::abs));
     simpleBlockTest(getTestParamsForFunc<T>(
-        "/scipy/numpy/negative",
+        "/numpy/negative",
         negative));
     simpleBlockTest(getTestParamsForFunc<T>(
-        "/scipy/numpy/sqrt",
+        "/numpy/sqrt",
         std::sqrt));
     simpleBlockTest(getTestParamsForFunc<T>(
-        "/scipy/numpy/cbrt",
+        "/numpy/cbrt",
         std::cbrt));
     simpleBlockTest(getTestParamsForFunc<T>(
-        "/scipy/numpy/square",
+        "/numpy/square",
         square));
     simpleBlockTest(getTestParamsForFunc<T>(
-        "/scipy/numpy/absolute",
+        "/numpy/absolute",
         std::abs));
 }
 
 // TODO: test all other types
-POTHOS_TEST_BLOCK("/scipy/tests", TestSimpleBlocks)
+POTHOS_TEST_BLOCK("/numpy/tests", TestSimpleBlocks)
 {
     testSimpleBlocksFloatingPoint<float>();
     testSimpleBlocksFloatingPoint<double>();
