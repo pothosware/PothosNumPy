@@ -172,7 +172,7 @@ static void testFull()
 // Registered tests
 //
 
-POTHOS_TEST_BLOCK("/numpy/tests", TestOnes)
+POTHOS_TEST_BLOCK("/numpy/tests", test_ones)
 {
     testOnes<std::int8_t>();
     testOnes<std::int16_t>();
@@ -188,7 +188,7 @@ POTHOS_TEST_BLOCK("/numpy/tests", TestOnes)
     testOnes<std::complex<double>>();
 }
 
-POTHOS_TEST_BLOCK("/numpy/tests", TestZeros)
+POTHOS_TEST_BLOCK("/numpy/tests", test_zeros)
 {
     testZeros<std::int8_t>();
     testZeros<std::int16_t>();
@@ -204,7 +204,7 @@ POTHOS_TEST_BLOCK("/numpy/tests", TestZeros)
     testZeros<std::complex<double>>();
 }
 
-POTHOS_TEST_BLOCK("/numpy/tests", TestFull)
+POTHOS_TEST_BLOCK("/numpy/tests", test_full)
 {
     testFull<std::int8_t>();
     testFull<std::int16_t>();

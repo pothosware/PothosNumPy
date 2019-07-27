@@ -131,7 +131,7 @@ static void testSimpleBlocksFloatingPoint()
 }
 
 // TODO: test all other types
-POTHOS_TEST_BLOCK("/numpy/tests", TestSimpleBlocks)
+POTHOS_TEST_BLOCK("/numpy/tests", test_simple_blocks)
 {
     testSimpleBlocksFloatingPoint<float>();
     testSimpleBlocksFloatingPoint<double>();
