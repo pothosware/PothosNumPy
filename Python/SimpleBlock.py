@@ -22,7 +22,7 @@ class SimpleBlock(Pothos.Block):
         out0 = self.output(0).buffer()
 
         n = min(len(in0), len(out0))
-        self.func(in0[:n], out0[:n])
+        out0[:n] = self.func(in0[:n])
 
         self.input(0).consume(n)
         self.output(0).produce(n)
