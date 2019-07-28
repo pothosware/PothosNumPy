@@ -38,6 +38,7 @@ static Pothos::Object FactoryFunc(
 
 static const std::vector<Pothos::BlockRegistry> blockRegistries =
 {
+    // One-to-one
     BLOCK_REGISTRY("/numpy/sin", "Sin"),
     BLOCK_REGISTRY("/numpy/cos", "Cos"),
     BLOCK_REGISTRY("/numpy/tan", "Tan"),
@@ -76,10 +77,19 @@ static const std::vector<Pothos::BlockRegistry> blockRegistries =
     BLOCK_REGISTRY("/numpy/square", "Square"),
     BLOCK_REGISTRY("/numpy/absolute", "Absolute"),
     BLOCK_REGISTRY("/numpy/invert", "Invert"),
-    BLOCK_REGISTRY("/numpy/load", "Load"),
-    BLOCK_REGISTRY("/numpy/save", "Save"),
-    BLOCK_REGISTRY("/numpy/savez", "SaveZ"),
-    BLOCK_REGISTRY("/numpy/savez_compressed", "SaveZCompressed"),
+    BLOCK_REGISTRY("/numpy/flip", "Flip"),
+    BLOCK_REGISTRY("/numpy/roll", "Roll"),
+    BLOCK_REGISTRY("/numpy/fft/fft", "FFT"),
+    BLOCK_REGISTRY("/numpy/fft/ifft", "IFFT"),
+    BLOCK_REGISTRY("/numpy/fft/rfft", "RFFT"),
+    BLOCK_REGISTRY("/numpy/fft/irfft", "IRFFT"),
+
+    // Two-to-one
+    BLOCK_REGISTRY("/numpy/bitwise_and", "BitwiseAnd"),
+    BLOCK_REGISTRY("/numpy/bitwise_or", "BitwiseOr"),
+    BLOCK_REGISTRY("/numpy/bitwise_xor", "BitwiseXor"),
+
+    // Sources
     BLOCK_REGISTRY("/numpy/ones", "Ones"),
     BLOCK_REGISTRY("/numpy/zeros", "Zeros"),
     BLOCK_REGISTRY("/numpy/full", "Full"),
@@ -87,9 +97,10 @@ static const std::vector<Pothos::BlockRegistry> blockRegistries =
     BLOCK_REGISTRY("/numpy/linspace", "LinSpace"),
     BLOCK_REGISTRY("/numpy/logspace", "LogSpace"),
     BLOCK_REGISTRY("/numpy/geomspace", "GeomSpace"),
-    BLOCK_REGISTRY("/numpy/flip", "Flip"),
-    BLOCK_REGISTRY("/numpy/roll", "Roll"),
-    BLOCK_REGISTRY("/numpy/bitwise_and", "BitwiseAnd"),
-    BLOCK_REGISTRY("/numpy/bitwise_or", "BitwiseOr"),
-    BLOCK_REGISTRY("/numpy/bitwise_xor", "BitwiseXor"),
+    BLOCK_REGISTRY("/numpy/load", "Load"),
+
+    // Sinks
+    BLOCK_REGISTRY("/numpy/save", "Save"),
+    BLOCK_REGISTRY("/numpy/savez", "SaveZ"),
+    BLOCK_REGISTRY("/numpy/savez_compressed", "SaveZCompressed"),
 };
