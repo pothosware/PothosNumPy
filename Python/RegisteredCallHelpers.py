@@ -1,6 +1,8 @@
 # Copyright (c) 2019 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
+from . import Utility
+
 import Pothos
 
 import json
@@ -28,3 +30,13 @@ def getNumPyConfigInfoJSONString():
         topLevel[key] = numpy.__config__.get_info(key)
 
     return json.dumps(topLevel)
+
+def getNumPyIntInfoFromPothosDType(pothosDType):
+    Utility.validateDType(pothosDType)
+
+    return numpy.iinfo(Pothos.Buffer.dtype_to_numpy(pothosDType))
+
+def getNumPyFloatInfoFromPothosDType(pothosDType):
+    Utility.validateDType(pothosDType)
+
+    return numpy.finfo(Pothos.Buffer.dtype_to_numpy(pothosDType))
