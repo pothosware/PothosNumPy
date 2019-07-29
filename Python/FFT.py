@@ -9,8 +9,9 @@ import numpy
 import numpy.fft
 
 class FFTClass(Pothos.Block):
-    def __init__(self, dtype, func, validateFunc, numBins, *args, warnIfSuboptimal=True):
-        validateFunc(dtype)
+    def __init__(self, inputDType, outputDType, func, validateFunc, numBins, *args, warnIfSuboptimal=True):
+        validateFunc(inputDType)
+        validateFunc(outputDType)
 
         # The FFT algorithm is fastest for powers of 2.
         if warnIfSuboptimal and not numpy.log2(numBins).is_integer():
@@ -22,14 +23,15 @@ class FFTClass(Pothos.Block):
 
         Pothos.Block.__init__(self)
 
-        self.numpyDType = Pothos.Buffer.dtype_to_numpy(dtype)
+        self.numpyInputDType = Pothos.Buffer.dtype_to_numpy(inputDType)
+        self.numpyOutputDType = Pothos.Buffer.dtype_to_numpy(outputDType)
         self.func = func
         self.args = args
         self.numBins = numBins
 
-        self.setupInput("0", dtype)
-        self.setupOutput("0", dtype)
-        self.input(0).setReserve(numBins * dtype.dimension())
+        self.setupInput("0", inputDType)
+        self.setupOutput("0", outputDType)
+        self.input(0).setReserve(numBins * inputDType.dimension())
 
     def work(self):
         elems = self.workInfo().minAllElements
@@ -39,7 +41,7 @@ class FFTClass(Pothos.Block):
         in0 = self.input(0)
         out0 = self.output(0)
 
-        output = self.func(in0.buffer(), *self.args).astype(self.numpyDType)
+        output = self.func(in0.buffer(), *self.args).astype(self.numpyOutputDType)
 
         in0.consume(self.numBins)
         out0.postBuffer(output)
@@ -51,13 +53,38 @@ class FFTClass(Pothos.Block):
 # TODO: enforce scalar
 
 def FFT(dtype, numBins):
-    return FFTClass(dtype, numpy.fft.fft, Utility.validateDType, numBins)
+    complexDType = Utility.DType("complex_"+dtype.toString())
+    return FFTClass(
+               complexDType,
+               complexDType,
+               numpy.fft.fft,
+               Utility.validateDType,
+               numBins)
 
 def IFFT(dtype, numBins):
-    return FFTClass(dtype, numpy.fft.ifft, Utility.validateDType, numBins)
+    complexDType = Utility.DType("complex_"+dtype.toString())
+    return FFTClass(
+               complexDType,
+               complexDType,
+               numpy.fft.ifft,
+               Utility.validateDType,
+               numBins)
 
 def RFFT(dtype, numBins):
-    return FFTClass(dtype, numpy.fft.rfft, Utility.validateDType, numBins)
+    complexDType = Utility.DType("complex_"+dtype.toString())
+    return FFTClass(
+               dtype,
+               complexDType,
+               numpy.fft.rfft,
+               Utility.validateDType,
+               numBins)
 
 def IRFFT(dtype, numBins):
-    return FFTClass(dtype, numpy.fft.irfft, Utility.validateDType, numBins, warnIfSuboptimal=False)
+    complexDType = Utility.DType("complex_"+dtype.toString())
+    return FFTClass(
+               complexDType,
+               dtype,
+               numpy.fft.irfft,
+               Utility.validateDType,
+               numBins,
+               warnIfSuboptimal=False)

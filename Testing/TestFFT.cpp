@@ -21,8 +21,6 @@
 template <typename T, typename U>
 struct BlockTestParams
 {
-    std::string fwdBlockRegistryPath;
-    std::string invBlockRegistryPath;
     std::vector<T> inputs;
     std::vector<U> outputs;
 };
@@ -32,14 +30,10 @@ struct BlockTestParams
 //
 
 template <typename T, typename U>
-static EnableIfBothComplex<T, U, BlockTestParams<T, U>> getTestParams(
-    const std::string& fwdBlockRegistryPath,
-    const std::string& invBlockRegistryPath)
+static EnableIfBothComplex<T, U, BlockTestParams<T, U>> getTestParams()
 {
     return
     {
-        fwdBlockRegistryPath,
-        invBlockRegistryPath,
         {
             // Primes
             {2.0f, 3.0f},
@@ -114,14 +108,10 @@ static EnableIfBothComplex<T, U, BlockTestParams<T, U>> getTestParams(
 }
 
 template <typename T, typename U>
-static EnableIfSecondComplex<T, U, BlockTestParams<T, U>> getTestParams(
-    const std::string& fwdBlockRegistryPath,
-    const std::string& invBlockRegistryPath)
+static EnableIfSecondComplex<T, U, BlockTestParams<T, U>> getTestParams()
 {
     return
     {
-        fwdBlockRegistryPath,
-        invBlockRegistryPath,
         {
             2.0f,
             3.0f,
@@ -196,45 +186,44 @@ static inline EnableIfComplex<T, T> getEpsilon()
 // Test code
 //
 
-template <typename T, typename U>
-static void testFFT(
-    const std::string& fwdBlockRegistryPath,
-    const std::string& invBlockRegistryPath)
+template <typename T>
+static void testFFT()
 {
-    const auto testParams = getTestParams<T, U>(
-                                fwdBlockRegistryPath,
-                                invBlockRegistryPath);
+    const std::string fwdBlockRegistryPath = "/numpy/fft/fft";
+    const std::string invBlockRegistryPath = "/numpy/fft/ifft";
+
+    const auto testParams = getTestParams<std::complex<T>, std::complex<T>>();
     POTHOS_TEST_TRUE(!testParams.inputs.empty());
     POTHOS_TEST_TRUE(!testParams.outputs.empty());
 
-    Pothos::DType inputDType(typeid(T));
-    Pothos::DType outputDType(typeid(T));
-    std::cout << "Testing " << inputDType.toString() << " to "
-                            << outputDType.toString() << std::endl;
+    Pothos::DType dtype(typeid(T));
+    Pothos::DType complexDType(typeid(std::complex<T>));
+    std::cout << "Testing " << complexDType.toString() << " to "
+                            << complexDType.toString() << std::endl;
 
     auto feeder = Pothos::BlockRegistry::make(
                       "/blocks/feeder_source",
-                      inputDType);
+                      complexDType);
     auto fwdFFTBlock = Pothos::BlockRegistry::make(
-                           testParams.fwdBlockRegistryPath,
-                           inputDType,
+                           fwdBlockRegistryPath,
+                           dtype,
                            testParams.inputs.size());
     auto invFFTBlock = Pothos::BlockRegistry::make(
-                           testParams.invBlockRegistryPath,
-                           outputDType,
+                           invBlockRegistryPath,
+                           dtype,
                            testParams.outputs.size());
     auto fwdCollector = Pothos::BlockRegistry::make(
                             "/blocks/collector_sink",
-                            outputDType);
+                            complexDType);
     auto invCollector = Pothos::BlockRegistry::make(
                             "/blocks/collector_sink",
-                            inputDType);
+                            complexDType);
 
     // Load the feeder
     feeder.call(
         "feedBuffer",
         stdVectorToBufferChunk(
-            inputDType,
+            complexDType,
             testParams.inputs));
 
     // Run the topology
@@ -255,7 +244,73 @@ static void testFFT(
     testBufferChunk(
         fwdCollector.call("getBuffer"),
         testParams.outputs,
-        getEpsilon<U>());
+        getEpsilon<std::complex<T>>());
+    std::cout << " * Testing " << invBlockRegistryPath << std::endl;
+    testBufferChunk(
+        invCollector.call("getBuffer"),
+        testParams.inputs,
+        getEpsilon<std::complex<T>>());
+}
+
+template <typename T>
+static void testRFFT()
+{
+    const std::string fwdBlockRegistryPath = "/numpy/fft/rfft";
+    const std::string invBlockRegistryPath = "/numpy/fft/irfft";
+
+    const auto testParams = getTestParams<T, std::complex<T>>();
+    POTHOS_TEST_TRUE(!testParams.inputs.empty());
+    POTHOS_TEST_TRUE(!testParams.outputs.empty());
+
+    Pothos::DType dtype(typeid(T));
+    Pothos::DType complexDType(typeid(std::complex<T>));
+    std::cout << "Testing " << dtype.toString() << " to "
+                            << complexDType.toString() << std::endl;
+
+    auto feeder = Pothos::BlockRegistry::make(
+                      "/blocks/feeder_source",
+                      dtype);
+    auto fwdFFTBlock = Pothos::BlockRegistry::make(
+                           fwdBlockRegistryPath,
+                           dtype,
+                           testParams.inputs.size());
+    auto invFFTBlock = Pothos::BlockRegistry::make(
+                           invBlockRegistryPath,
+                           dtype,
+                           testParams.outputs.size());
+    auto fwdCollector = Pothos::BlockRegistry::make(
+                            "/blocks/collector_sink",
+                            complexDType);
+    auto invCollector = Pothos::BlockRegistry::make(
+                            "/blocks/collector_sink",
+                            dtype);
+
+    // Load the feeder
+    feeder.call(
+        "feedBuffer",
+        stdVectorToBufferChunk(
+            dtype,
+            testParams.inputs));
+
+    // Run the topology
+    {
+        Pothos::Topology topology;
+        topology.connect(feeder, 0, fwdFFTBlock, 0);
+        topology.connect(fwdFFTBlock, 0, invFFTBlock, 0);
+        topology.connect(fwdFFTBlock, 0, fwdCollector, 0);
+        topology.connect(invFFTBlock, 0, invCollector, 0);
+        topology.commit();
+
+        // When this block exits, the flowgraph will stop.
+        Poco::Thread::sleep(10);
+    }
+
+    // Test the collectors
+    std::cout << " * Testing " << fwdBlockRegistryPath << std::endl;
+    testBufferChunk(
+        fwdCollector.call("getBuffer"),
+        testParams.outputs,
+        getEpsilon<std::complex<T>>());
     std::cout << " * Testing " << invBlockRegistryPath << std::endl;
     testBufferChunk(
         invCollector.call("getBuffer"),
@@ -265,13 +320,9 @@ static void testFFT(
 
 POTHOS_TEST_BLOCK("/numpy/tests", test_fft)
 {
-    const std::string fft = "/numpy/fft/fft";
-    const std::string ifft = "/numpy/fft/ifft";
-    const std::string rfft = "/numpy/fft/rfft";
-    const std::string irfft = "/numpy/fft/irfft";
+    testFFT<float>();
+    testFFT<double>();
 
-    testFFT<std::complex<float>, std::complex<float>>(fft, ifft);
-    testFFT<std::complex<double>, std::complex<double>>(fft, ifft);
-    testFFT<float, std::complex<float>>(rfft, irfft);
-    testFFT<double, std::complex<double>>(rfft, irfft);
+    testRFFT<float>();
+    testRFFT<double>();
 }
