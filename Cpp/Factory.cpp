@@ -79,6 +79,8 @@ static const std::vector<Pothos::BlockRegistry> blockRegistries =
     BLOCK_REGISTRY("/numpy/invert", "Invert"),
     BLOCK_REGISTRY("/numpy/flip", "Flip"),
     BLOCK_REGISTRY("/numpy/roll", "Roll"),
+    BLOCK_REGISTRY("/numpy/rint", "RInt"),
+    BLOCK_REGISTRY("/numpy/fix", "Fix"),
     BLOCK_REGISTRY("/numpy/fft/fft", "FFT"),
     BLOCK_REGISTRY("/numpy/fft/ifft", "IFFT"),
     BLOCK_REGISTRY("/numpy/fft/rfft", "RFFT"),

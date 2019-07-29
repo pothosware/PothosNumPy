@@ -152,3 +152,9 @@ def Absolute(dtype):
 
 def Invert(dtype):
     return OneToOneBlock(dtype, numpy.invert, useDType=False)
+
+def RInt(dtype):
+    return OneToOneBlock(dtype. numpy.rint)
+
+def Fix(dtype):
+    return OneToOneBlock(dtype. numpy.fix)
