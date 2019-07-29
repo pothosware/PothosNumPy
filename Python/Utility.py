@@ -70,13 +70,12 @@ def validateParameter(param, blockDType):
     else:
         validateScalarParamRange(param, blockDType)
 
-# TODO: figure out why this doesn't work
 def PythonLogger(name, *args):
     env = Pothos.ProxyEnvironment("managed")
     reg = env.findProxy("Pothos/Python/Logger")
-    return reg.callProxy(name, *args)
+    return reg(name, *args)
 
 def DType(*args):
     env = Pothos.ProxyEnvironment("managed")
     reg = env.findProxy("Pothos/DType")
-    return reg.call(*args)
+    return reg(*args)

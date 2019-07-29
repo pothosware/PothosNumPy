@@ -16,7 +16,7 @@ class FFTClass(Pothos.Block):
         if warnIfSuboptimal and not numpy.log2(numBins).is_integer():
             logger = Utility.PythonLogger(str(func))
             logger.log(
-                __func__.name,
+                str(func),
                 "numBins was specified as {0}, which is not a power of 2. This will result in suboptimal performance.".format(numBins),
                 "WARNING")
 
@@ -51,7 +51,6 @@ class FFTClass(Pothos.Block):
 # TODO: enforce scalar
 
 def FFT(dtype, numBins):
-    outputDType = Utility.DType("complex_"+dtype.toString())
     return FFTClass(dtype, numpy.fft.fft, Utility.validateDType, numBins)
 
 def IFFT(dtype, numBins):
