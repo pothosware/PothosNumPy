@@ -91,6 +91,13 @@ static const std::vector<Pothos::BlockRegistry> blockRegistries =
     BLOCK_REGISTRY("/numpy/bitwise_or", "BitwiseOr"),
     BLOCK_REGISTRY("/numpy/bitwise_xor", "BitwiseXor"),
 
+    // N-to-one
+    BLOCK_REGISTRY("/numpy/prod", "Prod"),
+    BLOCK_REGISTRY("/numpy/sum", "Sum"),
+    BLOCK_REGISTRY("/numpy/nanprod", "NanProd"),
+    BLOCK_REGISTRY("/numpy/nansum", "NanSum"),
+    BLOCK_REGISTRY("/numpy/diff", "Diff"),
+
     // Sources
     BLOCK_REGISTRY("/numpy/ones", "Ones"),
     BLOCK_REGISTRY("/numpy/zeros", "Zeros"),

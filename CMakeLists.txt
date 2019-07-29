@@ -37,6 +37,7 @@ BUILD_PYTHON_MODULE(
         Python/__init__.py
         Python/FFT.py
         Python/Load.py
+        Python/NToOneBlock.py
         Python/OneToOneBlock.py
         Python/PostBufferBlock.py
         Python/RegisteredCallHelpers.py

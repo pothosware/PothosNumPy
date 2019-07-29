@@ -6,36 +6,60 @@ import Pothos
 import numpy
 
 class NToOneBlock(Pothos.Block):
-    def __init__(self, dtype, func, *args):
+    def __init__(self, dtype, nchans, func, *args):
+        Utility.validateDType(dtype)
+
         Pothos.Block.__init__(self)
-        self.setupInput(0, dtype)
-        self.setupInput(1, dtype)
         self.setupOutput(0, dtype)
 
+        self.dtype = dtype
+        self.numpyDType = Pothos.Buffer.dtype_to_numpy(self.dtype)
+        self.nchans = 0
         self.func = func
         self.args = args
+
+        self.setNumChannels(nchans)
+
+    def getNumChannels(self):
+        return self.nchans
+
+    def setNumChannels(self, nchans):
+        if nchans <= 0:
+            raise ValueError("Number of channels must be positive.")
+
+        oldNChans = self.nchans
+        for i in range(oldNChans, nchans):
+            self.setupInput(i, self.dtype)
+
+        self.nchans = nchans
 
     def work(self):
         elems = self.workInfo().minAllElements
         if 0 == elems:
             return
 
-        in0 = self.input(0).buffer()
-        in1 = self.input(1).buffer()
-        out0 = self.output(0).buffer()
-        numpyDType = self.input(0).dtype()
+        N = elems * self.dtype.dimension()
+        allArrs = numpy.array([arr[:N].view() for arr in self.inputs()], dtype=self.numpyDType)
+        self.output(0).buffer()[:N] = self.func(allArrs, axis=0, dtype=self.numpyDType)
 
-        N = min(len(in0), len(in1), len(out0))
-
-        if (self.args is None) or (len(self.args) == 0):
-            out0[:N] = self.func(in0[:N], in1[:N], dtype=numpyDType)
-        else:
-            out0[:N] = self.func(in0[:N], in1[:N], *self.args, dtype=numpyDType)
-
-        self.input(0).consume(elems)
-        self.input(1).consume(elems)
-        self.output(0).produce(elems)
+        for port in self.inputs():
+            port.consume(elems)
 
 #
 # Factories exposed to C++ layer
 #
+
+def Prod(self, dtype, nchans):
+    return NToOneBlock(dtype, nchans, numpy.prod)
+
+def Sum(self, dtype, nchans):
+    return NToOneBlock(dtype, nchans, numpy.sum)
+
+def NanProd(self, dtype, nchans):
+    return NToOneBlock(dtype, nchans, numpy.nanprod)
+
+def NanSum(self, dtype, nchans):
+    return NToOneBlock(dtype, nchans, numpy.nansum)
+
+def Diff(self, dtype, nchans):
+    return NToOneBlock(dtype, nchans, numpy.diff)
