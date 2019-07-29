@@ -49,6 +49,7 @@ BUILD_PYTHON_MODULE(
         Cpp/Factory.cpp
         Cpp/RegisteredCalls.cpp
 
+        Testing/TestFFT.cpp
         Testing/TestRegisteredCalls.cpp
         Testing/TestSimpleBlocks.cpp
         Testing/TestSimpleSources.cpp

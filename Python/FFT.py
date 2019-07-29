@@ -9,11 +9,20 @@ import numpy
 import numpy.fft
 
 class FFTClass(Pothos.Block):
-    def __init__(self, dtype, func, validateFunc, numBins, *args):
+    def __init__(self, dtype, func, validateFunc, numBins, *args, warnIfSuboptimal=True):
         validateFunc(dtype)
+
+        # The FFT algorithm is fastest for powers of 2.
+        if warnIfSuboptimal and not numpy.log2(numBins).is_integer():
+            logger = Utility.PythonLogger(str(func))
+            logger.log(
+                __func__.name,
+                "numBins was specified as {0}, which is not a power of 2. This will result in suboptimal performance.".format(numBins),
+                "WARNING")
 
         Pothos.Block.__init__(self)
 
+        self.numpyDType = Pothos.Buffer.dtype_to_numpy(dtype)
         self.func = func
         self.args = args
         self.numBins = numBins
@@ -30,7 +39,7 @@ class FFTClass(Pothos.Block):
         in0 = self.input(0)
         out0 = self.output(0)
 
-        output = self.func(in0.buffer(), *self.args)
+        output = self.func(in0.buffer(), *self.args).astype(self.numpyDType)
 
         in0.consume(self.numBins)
         out0.postBuffer(output)
@@ -39,7 +48,10 @@ class FFTClass(Pothos.Block):
 # Factories exposed to C++ layer
 #
 
+# TODO: enforce scalar
+
 def FFT(dtype, numBins):
+    outputDType = Utility.DType("complex_"+dtype.toString())
     return FFTClass(dtype, numpy.fft.fft, Utility.validateDType, numBins)
 
 def IFFT(dtype, numBins):
@@ -49,4 +61,4 @@ def RFFT(dtype, numBins):
     return FFTClass(dtype, numpy.fft.rfft, Utility.validateDType, numBins)
 
 def IRFFT(dtype, numBins):
-    return FFTClass(dtype, numpy.fft.irfft, Utility.validateDType, numBins)
+    return FFTClass(dtype, numpy.fft.irfft, Utility.validateDType, numBins, warnIfSuboptimal=False)
