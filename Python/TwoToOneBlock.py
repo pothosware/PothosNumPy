@@ -8,9 +8,9 @@ import numpy
 class TwoToOneBlock(Pothos.Block):
     def __init__(self, dtype, func, *args):
         Pothos.Block.__init__(self)
-        self.setupInput("0", dtype)
-        self.setupInput("1", dtype)
-        self.setupOutput("0", dtype)
+        self.setupInput(0, dtype)
+        self.setupInput(1, dtype)
+        self.setupOutput(0, dtype)
 
         self.func = func
         self.args = args

@@ -29,8 +29,8 @@ class FFTClass(Pothos.Block):
         self.args = args
         self.numBins = numBins
 
-        self.setupInput("0", inputDType)
-        self.setupOutput("0", outputDType)
+        self.setupInput(0, inputDType)
+        self.setupOutput(0, outputDType)
         self.input(0).setReserve(numBins * inputDType.dimension())
 
     def work(self):

@@ -12,8 +12,8 @@ class OneToOneBlock(Pothos.Block):
         Utility.validateDType(dtype)
 
         Pothos.Block.__init__(self)
-        self.setupInput("0", dtype)
-        self.setupOutput("0", dtype)
+        self.setupInput(0, dtype)
+        self.setupOutput(0, dtype)
 
         self.func = func
         self.args = args
