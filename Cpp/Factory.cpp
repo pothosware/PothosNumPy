@@ -89,7 +89,7 @@ static const std::vector<Pothos::BlockRegistry> blockRegistries =
     BLOCK_REGISTRY("/numpy/fft/rfft", "RFFT"),
     BLOCK_REGISTRY("/numpy/fft/irfft", "IRFFT"),
     BLOCK_REGISTRY("/numpy/fft/sort", "Sort"),
-    BLOCK_REGISTRY("/numpy/fft/sort", "SortComplex"),
+    BLOCK_REGISTRY("/numpy/fft/sort_complex", "SortComplex"),
 
     // Two-to-one
     BLOCK_REGISTRY("/numpy/bitwise_and", "BitwiseAnd"),
