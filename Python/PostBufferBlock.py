@@ -67,3 +67,12 @@ def Flip(dtype):
 # TODO: test
 def Roll(dtype, shift):
     return RollClass(dtype, shift)
+
+def Unique(dtype):
+    return PostBufferBlock(dtype, numpy.unique, useDType=False)
+
+def Sort(dtype):
+    return PostBufferBlock(dtype, numpy.sort, useDType=False)
+
+def SortComplex(dtype):
+    return PostBufferBlock(dtype, numpy.sort_complex, useDType=False)

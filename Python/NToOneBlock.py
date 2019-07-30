@@ -5,6 +5,8 @@ import Pothos
 
 import numpy
 
+# TODO: support functions that take in two inputs instead of a single 2D
+# input
 class NToOneBlock(Pothos.Block):
     def __init__(self, dtype, nchans, func, *args):
         Utility.validateDType(dtype)

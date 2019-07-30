@@ -71,6 +71,8 @@ static const std::vector<Pothos::BlockRegistry> blockRegistries =
     BLOCK_REGISTRY("/numpy/reciprocal", "Reciprocal"),
     BLOCK_REGISTRY("/numpy/positive", "Positive"),
     BLOCK_REGISTRY("/numpy/negative", "Negative"),
+    BLOCK_REGISTRY("/numpy/Real", "real"),
+    BLOCK_REGISTRY("/numpy/Imag", "imag"),
     BLOCK_REGISTRY("/numpy/conjugate", "Conjugate"),
     BLOCK_REGISTRY("/numpy/sqrt", "Sqrt"),
     BLOCK_REGISTRY("/numpy/cbrt", "Cbrt"),
@@ -81,15 +83,19 @@ static const std::vector<Pothos::BlockRegistry> blockRegistries =
     BLOCK_REGISTRY("/numpy/roll", "Roll"),
     BLOCK_REGISTRY("/numpy/rint", "RInt"),
     BLOCK_REGISTRY("/numpy/fix", "Fix"),
+    BLOCK_REGISTRY("/numpy/i0", "I0"),
     BLOCK_REGISTRY("/numpy/fft/fft", "FFT"),
     BLOCK_REGISTRY("/numpy/fft/ifft", "IFFT"),
     BLOCK_REGISTRY("/numpy/fft/rfft", "RFFT"),
     BLOCK_REGISTRY("/numpy/fft/irfft", "IRFFT"),
+    BLOCK_REGISTRY("/numpy/fft/sort", "Sort"),
+    BLOCK_REGISTRY("/numpy/fft/sort", "SortComplex"),
 
     // Two-to-one
     BLOCK_REGISTRY("/numpy/bitwise_and", "BitwiseAnd"),
     BLOCK_REGISTRY("/numpy/bitwise_or", "BitwiseOr"),
     BLOCK_REGISTRY("/numpy/bitwise_xor", "BitwiseXor"),
+    BLOCK_REGISTRY("/numpy/heaviside", "Heaviside"),
 
     // N-to-one
     BLOCK_REGISTRY("/numpy/prod", "Prod"),

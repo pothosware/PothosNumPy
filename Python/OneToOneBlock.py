@@ -135,6 +135,12 @@ def Positive(dtype):
 def Negative(dtype):
     return OneToOneBlock(dtype, numpy.negative, useDType=False)
 
+def Real(dtype):
+    return OneToOneBlock(dtype, numpy.real, useDType=False)
+
+def Imag(dtype):
+    return OneToOneBlock(dtype, numpy.imag, useDType=False)
+
 def Conjugate(dtype):
     return OneToOneBlock(dtype, numpy.conjugate, useDType=False)
 
@@ -158,3 +164,7 @@ def RInt(dtype):
 
 def Fix(dtype):
     return OneToOneBlock(dtype. numpy.fix)
+
+# TODO: disallow int types
+def I0(dtype):
+    return OneToOneBlock(dtype, numpy.i0, useDType=False)

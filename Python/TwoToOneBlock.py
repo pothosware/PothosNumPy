@@ -48,3 +48,6 @@ def BitwiseOr(dtype):
 
 def BitwiseXor(dtype):
     return TwoToOneBlock(dtype, numpy.bitwise_xor)
+
+def Heaviside(dtype):
+    return TwoToOneBlock(dtype, numpy.heaviside)
