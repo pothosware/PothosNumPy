@@ -23,7 +23,8 @@ endif (NOT JSON_HPP_INCLUDE_DIR)
 ########################################################################
 include(FindPythonModule)
 find_python_module(numpy REQUIRED)
-find_python_module(scipy REQUIRED)
+find_python_module(mako REQUIRED)
+find_python_module(yaml REQUIRED)
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
