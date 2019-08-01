@@ -1,26 +1,18 @@
 # Copyright (c) 2019 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
+from .BaseBlock import *
+
 import Pothos
 
 import numpy
 
-# TODO: support functions that take in two inputs instead of a single 2D
-# input
-class NToOneBlock(Pothos.Block):
-    def __init__(self, dtype, nchans, func, *args):
-        Utility.validateDType(dtype)
-
-        Pothos.Block.__init__(self)
-        self.setupOutput(0, dtype)
-
-        self.dtype = dtype
-        self.numpyDType = Pothos.Buffer.dtype_to_numpy(self.dtype)
-        self.nchans = 0
-        self.func = func
-        self.args = args
+class NToOneBlock(BaseBlock):
+    def __init__(self, inputDType, outputDType, func, *funcArgs, **kwargs):
+        BaseBlock.__init__(self, inputDType, outputDType, func, *funcArgs, **kwargs)
 
         self.setNumChannels(nchans)
+        self.setupOutput(0, self.outputDType)
 
     def getNumChannels(self):
         return self.nchans
@@ -31,37 +23,45 @@ class NToOneBlock(Pothos.Block):
 
         oldNChans = self.nchans
         for i in range(oldNChans, nchans):
-            self.setupInput(i, self.dtype)
+            self.setupInput(i, self.inputDType)
 
         self.nchans = nchans
 
     def work(self):
+        if self.callPostBuffer:
+            self.workWithPostBuffer()
+        else:
+            self.workWithGivenOutputBuffer()
+
+    def workWithPostBuffer(self):
+        elems = self.workInfo().minAllInElements
+        if 0 == elems:
+            return
+
+        # This creates a 2D ndarray containing the array subsets we're interested
+        # in. This points to the input buffers themselves without copying memory.
+        allArrs = numpy.array([arr[:elems].view() for arr in self.inputs()], dtype=self.numpyInputDType)
+
+        # TODO: what happens if a function doesn't take in *args of *kwargs?
+        out = numpy.apply_along_axis(self.func, 0, allArrs, *self.funcArgs, **self.funcKWargs)
+
+        for port in self.inputs():
+            port.consume(elems)
+        self.output(0).postBuffer(out)
+
+    def workWithGivenOutputBuffer(self):
         elems = self.workInfo().minAllElements
         if 0 == elems:
             return
 
-        N = elems * self.dtype.dimension()
-        allArrs = numpy.array([arr[:N].view() for arr in self.inputs()], dtype=self.numpyDType)
-        self.output(0).buffer()[:N] = self.func(allArrs, axis=0, dtype=self.numpyDType)
+        # This creates a 2D ndarray containing the array subsets we're interested
+        # in. This points to the input buffers themselves without copying memory.
+        allArrs = numpy.array([arr[:elems].view() for arr in self.inputs()], dtype=self.numpyInputDType)
+        out0 = self.output(0).buffer()
+
+        # TODO: what happens if a function doesn't take in *args of *kwargs?
+        out0[:elems] = numpy.apply_along_axis(self.func, 0, allArrs, *self.funcArgs, **self.funcKWargs)
 
         for port in self.inputs():
             port.consume(elems)
-
-#
-# Factories exposed to C++ layer
-#
-
-def Prod(self, dtype, nchans):
-    return NToOneBlock(dtype, nchans, numpy.prod)
-
-def Sum(self, dtype, nchans):
-    return NToOneBlock(dtype, nchans, numpy.sum)
-
-def NanProd(self, dtype, nchans):
-    return NToOneBlock(dtype, nchans, numpy.nanprod)
-
-def NanSum(self, dtype, nchans):
-    return NToOneBlock(dtype, nchans, numpy.nansum)
-
-def Diff(self, dtype, nchans):
-    return NToOneBlock(dtype, nchans, numpy.diff)
+        self.output(0).produce(elems)

@@ -7,10 +7,26 @@ import numpy
 
 # Pothos supports all complex types, but NumPy does not support
 # complex integral types, so we must catch this on block instantiation.
-def validateDType(dtype):
+# Optionally add other checks.
+def validateDType(dtype, **kwargs):
     typeStr = dtype.toString()
-    if ("complex_u" in typeStr) or ("complex_i" in typeStr):
+    if ("complex_u" in typeStr) or ("complex_i" in typeStr) or dtype.isCustom():
         raise TypeError("NumPy does not support type {0}".format(typeStr))
+
+    UNSUPPORTED_TEMPLATE = "This block does not support {0} types."
+    unsupportedType = None
+
+    if dtype.isSigned() and not kwargs.get("supportInt", False):
+        unsupportedType = "int"
+    elif dtype.isInteger() and not kwargs.get("supportUInt", False):
+        unsupportedType = "uint"
+    elif dtype.isFloat() and not kwargs.get("supportFloat", False):
+        unsupportedType = "float"
+    elif dtype.isComplex() and not kwargs.get("supportComplex", False):
+        unsupportedType = "complex"
+
+    if unsupportedType is not None:
+        raise TypeError(UNSUPPORTED_TEMPLATE.format(unsupportedType))
 
 def validateComplexParamRange(param, blockDType):
     VALUE_ERROR_TEMPLATE = "{0} part of given value {1} is outside the valid {2} range [{3}, {4}]."

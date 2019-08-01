@@ -36,6 +36,8 @@ BUILD_PYTHON_MODULE(
     DESTINATION PothosNumPy
     SOURCES
         Python/__init__.py
+        Python/BaseBlock.py
+        Python/CppFactories.py
         Python/FFT.py
         Python/Load.py
         Python/NToOneBlock.py

@@ -40,7 +40,7 @@ static const std::vector<Pothos::BlockRegistry> blockRegistries =
 {
     // One-to-one
     BLOCK_REGISTRY("/numpy/sin", "Sin"),
-    BLOCK_REGISTRY("/numpy/cos", "Cos"),
+    /*BLOCK_REGISTRY("/numpy/cos", "Cos"),
     BLOCK_REGISTRY("/numpy/tan", "Tan"),
     BLOCK_REGISTRY("/numpy/arcsin", "ArcSin"),
     BLOCK_REGISTRY("/numpy/arccos", "ArcCos"),
@@ -117,5 +117,5 @@ static const std::vector<Pothos::BlockRegistry> blockRegistries =
     // Sinks
     BLOCK_REGISTRY("/numpy/save", "Save"),
     BLOCK_REGISTRY("/numpy/savez", "SaveZ"),
-    BLOCK_REGISTRY("/numpy/savez_compressed", "SaveZCompressed"),
+    BLOCK_REGISTRY("/numpy/savez_compressed", "SaveZCompressed"),*/
 };
