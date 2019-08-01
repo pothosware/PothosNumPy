@@ -8,7 +8,7 @@ import Pothos
 import numpy
 
 class OneToOneBlock(Pothos.Block):
-    def __init__(self, dtype, func, *args, useDType=True):
+    def __init__(self, dtype, func, *args, useDType=True, callPostBuffer=False):
         Utility.validateDType(dtype)
 
         Pothos.Block.__init__(self)
@@ -18,8 +18,32 @@ class OneToOneBlock(Pothos.Block):
         self.func = func
         self.args = args
         self.useDType = useDType
+        self.callPostBuffer = callPostBuffer
 
     def work(self):
+        if self.callPostBuffer:
+            self.workWithPostBuffer()
+        else:
+            self.workWithGivenOutputBuffer()
+
+    def workWithPostBuffer(self):
+        elems = self.workInfo().minAllElements
+        if 0 == elems:
+            return
+
+        in0 = self.input(0).buffer()
+        out = None
+        numpyDType = self.input(0).dtype()
+
+        if self.useDType:
+            out = self.func(in0, *self.args, dtype=numpyDType)
+        else:
+            out = self.func(in0, *self.args).astype(numpyDType)
+
+        self.input(0).consume(elems)
+        self.output(0).postBuffer(out)
+
+    def workWithGivenOutputBuffer(self):
         elems = self.workInfo().minAllElements
         if 0 == elems:
             return
@@ -168,3 +192,19 @@ def Fix(dtype):
 # TODO: disallow int types
 def I0(dtype):
     return OneToOneBlock(dtype, numpy.i0, useDType=False)
+
+def Flip(dtype):
+    return OneToOneBlock(dtype, numpy.flip, 0, useDType=False, callPostBuffer=True)
+
+# TODO: test
+def Roll(dtype, shift):
+    return RollClass(dtype, shift)
+
+def Unique(dtype):
+    return OneToOneBlock(dtype, numpy.unique, useDType=False, callPostBuffer=True)
+
+def Sort(dtype):
+    return OneToOneBlock(dtype, numpy.sort, useDType=False, callPostBuffer=True)
+
+def SortComplex(dtype):
+    return OneToOneBlock(dtype, numpy.sort_complex, useDType=False, callPostBuffer=True)

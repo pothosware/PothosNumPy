@@ -5,7 +5,6 @@ from .FFT import *
 from .Load import *
 from .OneToOneBlock import *
 from .NToOneBlock import *
-from .PostBufferBlock import *
 from .RegisteredCallHelpers import *
 from .Save import *
 from .SaveZ import *
