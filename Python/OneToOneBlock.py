@@ -27,7 +27,7 @@ class OneToOneBlock(Pothos.Block):
             self.workWithGivenOutputBuffer()
 
     def workWithPostBuffer(self):
-        elems = self.workInfo().minAllElements
+        elems = self.workInfo().minAllInElements
         if 0 == elems:
             return
 
