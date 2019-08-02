@@ -8,7 +8,7 @@ import Pothos
 import numpy
 
 class NToOneBlock(BaseBlock):
-    def __init__(self, inputDType, outputDType, func, *funcArgs, **kwargs):
+    def __init__(self, nchans, inputDType, outputDType, func, *funcArgs, **kwargs):
         BaseBlock.__init__(self, inputDType, outputDType, func, *funcArgs, **kwargs)
 
         self.setNumChannels(nchans)

@@ -1,0 +1,20 @@
+sin:
+        blockClass: OneToOneBlock
+        singleDType: True
+        useDType: False
+        inputs: {supportFloat: True}
+        outputs: {supportFloat: True}
+
+bitwise_and:
+        blockClass: TwoToOneBlock
+        singleDType: True
+        useDType: True
+        inputs: {supportInt: True, supportUInt: True}
+        outputs: {supportInt: True, supportUInt: True}
+
+add:
+        blockClass: NToOneBlock
+        singleDType: True
+        useDType: true
+        inputs: {supportInt: True, supportUInt: True, supportFloat: True, supportComplex: True}
+        outputs: {supportInt: True, supportUInt: True, supportFloat: True, supportComplex: True}
