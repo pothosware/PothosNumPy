@@ -1,20 +1,30 @@
 sin:
         blockClass: OneToOneBlock
+        useDType: True
         singleDType: True
-        useDType: False
-        inputs: {supportFloat: True}
-        outputs: {supportFloat: True}
+        inputArgs: {supportFloat: True}
+        outputArgs: {supportFloat: True}
 
 bitwise_and:
         blockClass: TwoToOneBlock
+        useDType: False
         singleDType: True
-        useDType: True
-        inputs: {supportInt: True, supportUInt: True}
-        outputs: {supportInt: True, supportUInt: True}
+        inputArgs: {supportInt: True, supportUInt: True}
+        outputArgs: {supportInt: True, supportUInt: True}
 
 add:
         blockClass: NToOneBlock
+        useDType: True
         singleDType: True
-        useDType: true
-        inputs: {supportInt: True, supportUInt: True, supportFloat: True, supportComplex: True}
-        outputs: {supportInt: True, supportUInt: True, supportFloat: True, supportComplex: True}
+        inputArgs: {supportAll: True}
+        outputArgs: {supportAll: True}
+
+templates:
+        sin:
+                - cos
+                - tan
+        bitwise_and:
+                - bitwise_or
+                - bitwise_xor
+        add:
+                - multiply
