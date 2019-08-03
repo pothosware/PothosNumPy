@@ -28,7 +28,7 @@ def generatePythonMakoParams(blockName, blockYAML):
 
     otherBlockParams = "nchans, " if (makoDict["blockClass"] == "NToOneBlock") else ""
     otherBlockParams += "useDType={0}".format(blockYAML.get("useDType", False))
-    if ("otherBlockParams" in blockYAML) and (len(blockYAML["otherBlockParams"] > 0)):
+    if ("otherBlockParams" in blockYAML) and (len(blockYAML["otherBlockParams"]) > 0):
         otherBlockParams = "{0}, {1}".format(", ".join(blockYAML["otherBlockParams"]), otherBlockParams)
     makoDict["otherBlockParams"] = otherBlockParams
 

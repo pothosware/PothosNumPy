@@ -72,16 +72,15 @@ static SimpleBlockTestParams<T> getTestParamsForVectorFunc(
     return testParams;
 }
 
-// TODO: make sure all blocks are tested
 template <typename T>
 static void testSimpleBlocksFloatingPoint()
 {
     // STL implementations where functions don't exist
-    /*auto reciprocal = [](T input){return T(1.0f) / input;};
+    auto reciprocal = [](T input){return T(1.0f) / input;};
     auto negative = [](T input){return std::abs(input) * T(-1.0f);};
     auto square = [](T input){return std::pow(input, T(2.0f));};
 
-    auto flip = [](const std::vector<T>& input)
+    /*auto flip = [](const std::vector<T>& input)
     {
         std::vector<T> output(input);
         std::reverse(output.begin(), output.end());
@@ -91,7 +90,7 @@ static void testSimpleBlocksFloatingPoint()
     simpleBlockTest(getTestParamsForFunc<T>(
         "/numpy/sin",
         std::sin));
-    /*simpleBlockTest(getTestParamsForFunc<T>(
+    simpleBlockTest(getTestParamsForFunc<T>(
         "/numpy/cos",
         std::cos));
     simpleBlockTest(getTestParamsForFunc<T>(
@@ -157,7 +156,7 @@ static void testSimpleBlocksFloatingPoint()
     simpleBlockTest(getTestParamsForFunc<T>(
         "/numpy/absolute",
         std::abs));
-    simpleBlockTest(getTestParamsForVectorFunc<T>(
+    /*simpleBlockTest(getTestParamsForVectorFunc<T>(
         "/numpy/flip",
         flip));*/
 }

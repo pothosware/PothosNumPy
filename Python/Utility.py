@@ -13,6 +13,9 @@ def validateDType(dtype, dtypeArgs):
     if ("complex_u" in typeStr) or ("complex_i" in typeStr) or dtype.isCustom():
         raise TypeError("NumPy does not support type {0}".format(typeStr))
 
+    if dtypeArgs.get("supportAll", False):
+        return
+
     UNSUPPORTED_TEMPLATE = "This block does not support {0} types."
     unsupportedType = None
 

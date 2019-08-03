@@ -19,12 +19,53 @@ add:
         inputArgs: {supportAll: True}
         outputArgs: {supportAll: True}
 
+floor:
+        blockClass: OneToOneBlock
+        useDType: True
+        singleDType: True
+        inputArgs: {supportFloat: True, supportInt: True}
+        outputArgs: {supportFloat: True, supportInt: True}
+
+exp:
+        blockClass: OneToOneBlock
+        useDType: True
+        singleDType: True
+        inputArgs: {supportFloat: True, supportComplex: True}
+        outputArgs: {supportFloat: True, supportComplex: True}
+
+positive:
+        blockClass: OneToOneBlock
+        useDType: True
+        singleDType: True
+        inputArgs: {supportAll: True}
+        outputArgs: {supportAll: True}
+
 templates:
         sin:
                 - cos
                 - tan
+                - arcsin
+                - arccos
+                - arctan
         bitwise_and:
                 - bitwise_or
                 - bitwise_xor
         add:
                 - multiply
+        floor:
+                - ceil
+                - trunc
+        exp:
+                - expm1
+                - exp2
+                - log
+                - log10
+                - log2
+                - log1p
+                - reciprocal
+                - cbrt
+        positive:
+                - negative
+                - sqrt
+                - square
+                - absolute
