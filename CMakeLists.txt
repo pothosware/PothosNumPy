@@ -75,8 +75,8 @@ BUILD_PYTHON_MODULE(
         Python/Utility.py
         ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/CppEntryPoints.py
     CPP_SOURCES
-        Cpp/RegisteredCalls.cpp
         ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/Factory.cpp
+        Cpp/RegisteredCalls.cpp
 
         Testing/TestFFT.cpp
         Testing/TestRegisteredCalls.cpp

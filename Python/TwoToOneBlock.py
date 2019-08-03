@@ -8,8 +8,8 @@ import Pothos
 import numpy
 
 class TwoToOneBlock(BaseBlock):
-    def __init__(self, inputDType, outputDType, func, *funcArgs, **kwargs):
-        BaseBlock.__init__(self, inputDType, outputDType, func, *funcArgs, **kwargs)
+    def __init__(self, func, inputDType, outputDType, inputArgs, outputArgs, *funcArgs, **kwargs):
+        BaseBlock.__init__(self, func, inputDType, outputDType, inputArgs, outputArgs, *funcArgs, **kwargs)
 
         self.setupInput(0, self.inputDType)
         self.setupInput(1, self.inputDType)

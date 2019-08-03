@@ -6,6 +6,7 @@ import os
 import sys
 import yaml
 
+# TODO: account for sources and sinks, where one params are None
 def generatePythonMakoParams(blockName, blockYAML):
     makoDict = dict()
 
@@ -16,17 +17,17 @@ def generatePythonMakoParams(blockName, blockYAML):
     makoDict["dtypeBlockParams"] = "dtype, dtype" if blockYAML["singleDType"] else "inputDType, outputDType"
 
     inputArgs = blockYAML["inputArgs"]
-    makoDict["inputArgs"] = "dict({0})".format(", ".join(['"{0}"={1}'.format(x, inputArgs[x]) for x in inputArgs]))
+    makoDict["inputArgs"] = "dict({0})".format(", ".join(['{0}={1}'.format(x, inputArgs[x]) for x in inputArgs]))
 
     outputArgs = blockYAML["outputArgs"]
-    makoDict["outputArgs"] = "dict({0})".format(", ".join(['"{0}"={1}'.format(x, outputArgs[x]) for x in outputArgs]))
+    makoDict["outputArgs"] = "dict({0})".format(", ".join(['{0}={1}'.format(x, outputArgs[x]) for x in outputArgs]))
 
+    makoDict["otherEntryPointParams"] = ", nchans" if (makoDict["blockClass"] == "NToOneBlock") else ""
     if "otherEntryPointParams" in blockYAML:
-        makoDict["otherEntryPointParams"] = ", ".join(blockYAML["otherEntryPointParams"])
-    else:
-        makoDict["otherEntryPointParams"] = ""
+        makoDict["otherEntryPointParams"] += ", {0}".format(", ".join(blockYAML["otherEntryPointParams"]))
 
-    otherBlockParams = "useDType={0}".format(blockYAML.get("useDType", False))
+    otherBlockParams = "nchans, " if (makoDict["blockClass"] == "NToOneBlock") else ""
+    otherBlockParams += "useDType={0}".format(blockYAML.get("useDType", False))
     if ("otherBlockParams" in blockYAML) and (len(blockYAML["otherBlockParams"] > 0)):
         otherBlockParams = "{0}, {1}".format(", ".join(blockYAML["otherBlockParams"]), otherBlockParams)
     makoDict["otherBlockParams"] = otherBlockParams
@@ -34,7 +35,7 @@ def generatePythonMakoParams(blockName, blockYAML):
     return makoDict
 
 def generateCppFactory(blockName):
-    return 'Pothos::BlockRegistry("numpy/{0}", Pothos::Callable(&FactoryFunc).bind<std::string>("{1}", 2))' \
+    return 'Pothos::BlockRegistry("/numpy/{0}", Pothos::Callable(&FactoryFunc).bind<std::string>("{1}", 2))' \
            .format(blockName, blockName.title().replace("_",""))
 
 def generatePythonCppEntrypointFile(blockYAML, outputDir):
