@@ -6,8 +6,6 @@ import os
 import sys
 import yaml
 
-import json
-
 def generatePythonMakoParams(blockName, blockYAML):
     makoDict = dict()
 
@@ -39,7 +37,7 @@ def generateCppFactory(blockName):
     return 'Pothos::BlockRegistry("numpy/{0}", Pothos::Callable(&FactoryFunc).bind<std::string>("{1}", 2))' \
            .format(blockName, blockName.title().replace("_",""))
 
-def generatePythonCppEntrypointFile(blockYAML):
+def generatePythonCppEntrypointFile(blockYAML, outputDir):
     blockMakoParams = [generatePythonMakoParams(blockName, blockYAML[blockName]) for blockName in blockYAML if (blockName != "templates")]
     for baseBlock in blockYAML["templates"]:
         blockMakoParams += [generatePythonMakoParams(blockName, blockYAML[baseBlock]) for blockName in blockYAML["templates"][baseBlock]]
@@ -49,8 +47,7 @@ def generatePythonCppEntrypointFile(blockYAML):
     with open(tmplPath) as f:
         tmpl = f.read()
 
-    prefix = """
-# Copyright (c) 2019 Nicholas Corgan
+    prefix = """# Copyright (c) 2019 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
 #
@@ -61,9 +58,12 @@ def generatePythonCppEntrypointFile(blockYAML):
     rendered = Template(tmpl).render(blockMakoParams=blockMakoParams)
 
     output = "{0}\n{1}".format(prefix, rendered)
-    print(output)
 
-def generateCppFactoryFile(blockYAML):
+    outputPath = os.path.join(outputDir, "CppEntryPoints.py")
+    with open(outputPath, "w") as f:
+        f.write(output)
+
+def generateCppFactoryFile(blockYAML, outputDir):
     factories = [generateCppFactory(blockName) for blockName in blockYAML if (blockName != "templates")]
     for baseBlock in blockYAML["templates"]:
         factories += [generateCppFactory(blockName) for blockName in blockYAML["templates"][baseBlock]]
@@ -73,8 +73,7 @@ def generateCppFactoryFile(blockYAML):
     with open(tmplPath) as f:
         tmpl = f.read()
 
-    prefix = """
-// Copyright (c) 2019 Nicholas Corgan
+    prefix = """// Copyright (c) 2019 Nicholas Corgan
 // SPDX-License-Identifier: BSD-3-Clause
 
 //
@@ -85,7 +84,10 @@ def generateCppFactoryFile(blockYAML):
     rendered = Template(tmpl).render(factories=factories)
 
     output = "{0}\n{1}".format(prefix, rendered)
-    print(output)
+
+    outputPath = os.path.join(outputDir, "Factory.cpp")
+    with open(outputPath, "w") as f:
+        f.write(output)
 
 if __name__ == "__main__":
     yamlPath = os.path.join(os.path.dirname(__file__), "Blocks.yaml")
@@ -93,5 +95,7 @@ if __name__ == "__main__":
     with open(yamlPath) as f:
         yml = yaml.load(f.read())
 
-    generatePythonCppEntrypointFile(yml)
-    generateCppFactoryFile(yml)
+    outputDir = os.path.abspath(sys.argv[1])
+
+    generatePythonCppEntrypointFile(yml, outputDir)
+    generateCppFactoryFile(yml, outputDir)

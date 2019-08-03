@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 from .BaseBlock import *
-from .CppFactories import *
+from .CppEntryPoints import *
 from .FFT import *
 from .Load import *
 from .OneToOneBlock import *

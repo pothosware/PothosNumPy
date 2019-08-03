@@ -28,6 +28,6 @@ static Pothos::Object FactoryFunc(
 static const std::vector<Pothos::BlockRegistry> blockRegistries =
 {
 %for factory in factories:
-    ${factory}
+    ${factory},
 %endfor
 };

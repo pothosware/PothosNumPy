@@ -26,6 +26,32 @@ find_python_module(numpy REQUIRED)
 find_python_module(mako REQUIRED)
 find_python_module(yaml REQUIRED)
 
+########################################################################
+# Auto-generate the majority of blocks
+########################################################################
+
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/BlockGen)
+set(autogenDeps
+    ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks.yaml
+    ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/CppEntryPoints.mako.py
+    ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Factory.mako.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/GenBlocks.py)
+set(autogenOutputs
+    ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/CppEntryPoints.py
+    ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/Factory.cpp)
+add_custom_command(
+    OUTPUT ${autogenOutputs}
+    DEPENDS ${autogenDeps}
+    COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/GenBlocks.py" "${CMAKE_CURRENT_BINARY_DIR}/BlockGen"
+    COMMENT "Auto-generating C++ factories and Python entry points")
+add_custom_target(
+    autogen_files ALL
+    DEPENDS ${autogenOutputs})
+
+########################################################################
+# Build the module
+########################################################################
+
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${JSON_HPP_INCLUDE_DIR})
@@ -37,7 +63,6 @@ BUILD_PYTHON_MODULE(
     SOURCES
         Python/__init__.py
         Python/BaseBlock.py
-        Python/CppFactories.py
         Python/FFT.py
         Python/Load.py
         Python/NToOneBlock.py
@@ -48,9 +73,10 @@ BUILD_PYTHON_MODULE(
         Python/Source.py
         Python/TwoToOneBlock.py
         Python/Utility.py
+        ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/CppEntryPoints.py
     CPP_SOURCES
-        Cpp/Factory.cpp
         Cpp/RegisteredCalls.cpp
+        ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/Factory.cpp
 
         Testing/TestFFT.cpp
         Testing/TestRegisteredCalls.cpp
