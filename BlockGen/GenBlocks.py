@@ -8,9 +8,17 @@ import yaml
 
 NONSTANDARD = ["templates", "factoryOnly"]
 
-# Put the ugly hardcoded stuff here
+def manualReplace(blockPath):
+    REPLACES = dict(
+        Fft="FFT",
+        Ifft="IFFT",
+        Rfft="RFFT",
+        Irfft="IRFFT")
+
+    return REPLACES.get(blockPath, blockPath)
+
 def getEntryPointName(blockPath):
-    return os.path.basename(blockPath).title().replace("_","").replace(".","").replace("Fft", "FFT")
+    return manualReplace(os.path.basename(blockPath).title().replace("_","").replace(".",""))
 
 # TODO: account for sources and sinks, where one params are None
 def generatePythonMakoParams(blockName, blockYAML):

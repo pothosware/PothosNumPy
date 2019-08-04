@@ -79,3 +79,6 @@ templates:
 factoryOnly:
         - flip
         - fft/fft
+        - fft/ifft
+        - fft/rfft
+        - fft/irfft
