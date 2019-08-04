@@ -21,7 +21,7 @@ def validateDType(dtype, dtypeArgs):
 
     if dtype.isSigned() and not dtypeArgs.get("supportInt", False):
         unsupportedType = "int"
-    elif dtype.isInteger() and not dtypeArgs.get("supportUInt", False):
+    elif (dtype.isInteger() and not dtype.isSigned()) and not dtypeArgs.get("supportUInt", False):
         unsupportedType = "uint"
     elif dtype.isFloat() and not dtypeArgs.get("supportFloat", False):
         unsupportedType = "float"

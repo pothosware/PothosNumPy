@@ -29,7 +29,13 @@ template <typename T>
 struct IsComplex<std::complex<T>> : std::true_type {};
 
 template <typename T, typename U>
-using EnableIfInteger = typename std::enable_if<!IsComplex<T>::value && !std::is_floating_point<T>::value, U>::type;
+using EnableIfInteger = typename std::enable_if<!IsComplex<T>::value && !std::is_floating_point<T>::value && !std::is_unsigned<T>::value, U>::type;
+
+template <typename T, typename U>
+using EnableIfUnsignedInt = typename std::enable_if<std::is_unsigned<T>::value, U>::type;
+
+template <typename T, typename U>
+using EnableIfAnyInt = typename std::enable_if<!IsComplex<T>::value && !std::is_floating_point<T>::value, U>::type;
 
 template <typename T, typename U>
 using EnableIfFloat = typename std::enable_if<!IsComplex<T>::value && std::is_floating_point<T>::value, U>::type;
@@ -46,12 +52,18 @@ using EnableIfNotComplex = typename std::enable_if<!IsComplex<T>::value, U>::typ
 template <typename T, typename U, typename V>
 using EnableIfSecondComplex = typename std::enable_if<!IsComplex<T>::value && IsComplex<U>::value, V>::type;
 
+template <typename T, typename U, typename Ret>
+using EnableIfTypeMatches = typename std::enable_if<std::is_same<T, U>::value, Ret>::type;
+
+template <typename T, typename U, typename Ret>
+using EnableIfTypeDoesNotMatch = typename std::enable_if<!std::is_same<T, U>::value, Ret>::type;
+
 //
 // Utility functions
 //
 
 template <typename T>
-static inline EnableIfInteger<T, void> testEqual(T x, T y)
+static inline EnableIfAnyInt<T, void> testEqual(T x, T y)
 {
     POTHOS_TEST_EQUAL(x, y);
 }
@@ -129,7 +141,8 @@ static std::vector<std::complex<T>> toComplexVector(const std::vector<T>& vector
 
 // https://gist.github.com/lorenzoriano/5414671
 template <typename T>
-static std::vector<T> linspace(T a, T b, size_t N) {
+static std::vector<T> linspace(T a, T b, size_t N)
+{
     T h = (b - a) / static_cast<T>(N-1);
     std::vector<T> xs(N);
     typename std::vector<T>::iterator x;
@@ -140,7 +153,21 @@ static std::vector<T> linspace(T a, T b, size_t N) {
 }
 
 template <typename T>
-static typename std::enable_if<std::is_floating_point<T>::value, void>::type testBufferChunk(
+static std::vector<T> getIntTestParams(T a, T step, size_t N)
+{
+    std::vector<T> ret;
+    ret.reserve(N);
+
+    for(size_t i = 0; i < N; ++i)
+    {
+        ret.emplace_back(a + (T(i)*step));
+    }
+
+    return ret;
+}
+
+template <typename T>
+static EnableIfFloat<T, void> testBufferChunk(
     const Pothos::BufferChunk& bufferChunk,
     const std::vector<T>& expectedOutputs,
     T epsilon = 1e-6)
@@ -157,9 +184,10 @@ static typename std::enable_if<std::is_floating_point<T>::value, void>::type tes
 }
 
 template <typename T>
-static typename std::enable_if<std::is_integral<T>::value, void>::type testBufferChunk(
+static EnableIfAnyInt<T, void> testBufferChunk(
     const Pothos::BufferChunk& bufferChunk,
-    const std::vector<T>& expectedOutputs)
+    const std::vector<T>& expectedOutputs,
+    T)
 {
     POTHOS_TEST_TRUE(bufferChunk.elements() > 0);
     auto pOut = bufferChunk.as<const T*>();

@@ -15,8 +15,74 @@
 #include <string>
 #include <vector>
 
+//
+// Templated functions to use for output comparison
+// TODO: fix positive and negative behavior
+//
+
+template <typename T>
+static T testAbs(T input)
+{
+    return T(std::abs(float(input)));
+}
+
+template <typename T>
+static T positive(T input)
+{
+    return input;
+}
+
+template <typename T>
+static T negative(T input)
+{
+    return T(input * T(-1));
+}
+
+template <typename T>
+static EnableIfTypeMatches<T, float, T> square(T input)
+{
+    return T(std::pow(input, T(2)));
+}
+
+template <typename T>
+static EnableIfTypeDoesNotMatch<T, float, T> square(T input)
+{
+    return T(std::pow(double(input), T(2)));
+}
+
+template <typename T>
+static EnableIfComplex<T, T> complexExpM1(const T& input)
+{
+    static const T oneComplex{1.0f,0.0f};
+
+    return std::exp(input) - oneComplex;
+}
+
+template <typename T>
+static EnableIfComplex<T, T> complexLog2(const T& input)
+{
+    static const T twoComplex{2.0f,0.0f};
+
+    return std::log(input) / std::log(twoComplex);
+}
+
+template <typename T>
+std::vector<T> flip(const std::vector<T>& input)
+{
+    std::vector<T> output(input);
+    std::reverse(output.begin(), output.end());
+    return output;
+}
+
+//
+// Test functions
+//
+
 template <typename T>
 using TestFunc = T(*)(T);
+
+template <typename T>
+using ComplexTestFunc = std::complex<T>(*)(const std::complex<T>&);
 
 template <typename T>
 using VectorTestFunc = std::vector<T>(*)(const std::vector<T>&);
@@ -28,8 +94,45 @@ static std::vector<T> getArcTrigParams(size_t numInputs)
 }
 
 template <typename T>
-static SimpleBlockTestParams<T> getBaseTestParams(const std::string& blockRegistryPath)
+static EnableIfInteger<T, SimpleBlockTestParams<T>> getBaseTestParams(const std::string& blockRegistryPath)
 {
+    static constexpr T minValue = std::is_same<T, std::int8_t>::value ? T(-5) : T(-25);
+    static constexpr size_t numInputs = std::is_same<T, std::int8_t>::value ? 11 : 51;
+
+    SimpleBlockTestParams<T> testParams =
+    {
+        blockRegistryPath,
+        getIntTestParams<T>(minValue, T(1), numInputs),
+        {},
+        T(0)
+    };
+    testParams.expectedOutputs.reserve(numInputs);
+
+    return testParams;
+}
+
+template <typename T>
+static EnableIfUnsignedInt<T, SimpleBlockTestParams<T>> getBaseTestParams(const std::string& blockRegistryPath)
+{
+    static constexpr T minValue = std::is_same<T, std::uint8_t>::value ? T(5) : T(25);
+    static constexpr size_t numInputs = std::is_same<T, std::uint8_t>::value ? 9 : 76;
+
+    SimpleBlockTestParams<T> testParams =
+    {
+        blockRegistryPath,
+        getIntTestParams<T>(minValue, T(1), numInputs),
+        {},
+        T(0)
+    };
+    testParams.expectedOutputs.reserve(numInputs);
+
+    return testParams;
+}
+
+template <typename T>
+static EnableIfFloat<T, SimpleBlockTestParams<T>> getBaseTestParams(const std::string& blockRegistryPath)
+{
+    // To not have nice even numbers
     static const size_t numInputs = 123;
 
     const bool isArcTrig = (std::string::npos != blockRegistryPath.find("/arc"));
@@ -47,9 +150,47 @@ static SimpleBlockTestParams<T> getBaseTestParams(const std::string& blockRegist
 }
 
 template <typename T>
-static SimpleBlockTestParams<T> getTestParamsForFunc(
+static EnableIfComplex<T, SimpleBlockTestParams<T>> getBaseTestParams(const std::string& blockRegistryPath)
+{
+    using Scalar = typename T::value_type;
+    static_assert(std::is_floating_point<Scalar>::value);
+
+    auto scalarTestInputs = getBaseTestParams<Scalar>(blockRegistryPath).inputs;
+
+    // To get an even size
+    if(0 != (scalarTestInputs.size() % 2)) scalarTestInputs.pop_back();
+
+    SimpleBlockTestParams<T> testParams =
+    {
+        blockRegistryPath,
+        toComplexVector(scalarTestInputs),
+        {},
+        {1e-6f,1e-6f}
+    };
+    testParams.expectedOutputs.reserve(testParams.inputs.size());
+
+    return testParams;
+}
+
+template <typename T>
+static EnableIfNotComplex<T, SimpleBlockTestParams<T>> getTestParamsForFunc(
     const std::string& blockRegistryPath,
     TestFunc<T> func)
+{
+    auto testParams = getBaseTestParams<T>(blockRegistryPath);
+    std::transform(
+        testParams.inputs.begin(),
+        testParams.inputs.end(),
+        std::back_inserter(testParams.expectedOutputs),
+        func);
+
+    return testParams;
+}
+
+template <typename T>
+static EnableIfComplex<T, SimpleBlockTestParams<T>> getTestParamsForFunc(
+    const std::string& blockRegistryPath,
+    ComplexTestFunc<typename T::value_type> func)
 {
     auto testParams = getBaseTestParams<T>(blockRegistryPath);
     std::transform(
@@ -72,20 +213,40 @@ static SimpleBlockTestParams<T> getTestParamsForVectorFunc(
     return testParams;
 }
 
+//
+// Test code
+//
+
 template <typename T>
-static void testSimpleBlocksFloatingPoint()
+static void testSimpleBlocksInt()
+{
+    simpleBlockTest(getTestParamsForFunc<T>(
+        "/numpy/absolute",
+        testAbs));
+    simpleBlockTest(getTestParamsForFunc<T>(
+        "/numpy/positive",
+        positive));
+    simpleBlockTest(getTestParamsForFunc<T>(
+        "/numpy/negative",
+        negative));
+    simpleBlockTest(getTestParamsForFunc<T>(
+        "/numpy/square",
+        square));
+}
+
+template <typename T>
+static void testSimpleBlocksUInt()
+{
+    simpleBlockTest(getTestParamsForFunc<T>(
+        "/numpy/square",
+        square));
+}
+
+template <typename T>
+static void testSimpleBlocksFloat()
 {
     // STL implementations where functions don't exist
     auto reciprocal = [](T input){return T(1.0f) / input;};
-    auto negative = [](T input){return std::abs(input) * T(-1.0f);};
-    auto square = [](T input){return std::pow(input, T(2.0f));};
-
-    /*auto flip = [](const std::vector<T>& input)
-    {
-        std::vector<T> output(input);
-        std::reverse(output.begin(), output.end());
-        return output;
-    };*/
 
     simpleBlockTest(getTestParamsForFunc<T>(
         "/numpy/sin",
@@ -140,7 +301,7 @@ static void testSimpleBlocksFloatingPoint()
         reciprocal));
     simpleBlockTest(getTestParamsForFunc<T>(
         "/numpy/positive",
-        std::abs));
+        positive));
     simpleBlockTest(getTestParamsForFunc<T>(
         "/numpy/negative",
         negative));
@@ -161,9 +322,37 @@ static void testSimpleBlocksFloatingPoint()
         flip));*/
 }
 
-// TODO: test all other types
+template <typename T>
+static void testSimpleBlocksComplex()
+{
+    static_assert(IsComplex<T>::value);
+
+    simpleBlockTest(getTestParamsForFunc<T>(
+        "/numpy/exp",
+        std::exp));
+    simpleBlockTest(getTestParamsForFunc<T>(
+        "/numpy/expm1",
+        complexExpM1));
+    simpleBlockTest(getTestParamsForFunc<T>(
+        "/numpy/log2",
+        complexLog2));
+}
+
 POTHOS_TEST_BLOCK("/numpy/tests", test_simple_blocks)
 {
-    testSimpleBlocksFloatingPoint<float>();
-    testSimpleBlocksFloatingPoint<double>();
+    testSimpleBlocksInt<std::int8_t>();
+    testSimpleBlocksInt<std::int16_t>();
+    testSimpleBlocksInt<std::int32_t>();
+    testSimpleBlocksInt<std::int64_t>();
+
+    testSimpleBlocksUInt<std::uint8_t>();
+    testSimpleBlocksUInt<std::uint16_t>();
+    testSimpleBlocksUInt<std::uint32_t>();
+    testSimpleBlocksUInt<std::uint64_t>();
+
+    testSimpleBlocksFloat<float>();
+    testSimpleBlocksFloat<double>();
+
+    testSimpleBlocksComplex<std::complex<float>>();
+    testSimpleBlocksComplex<std::complex<double>>();
 }

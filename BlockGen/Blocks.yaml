@@ -23,8 +23,8 @@ floor:
         blockClass: OneToOneBlock
         useDType: True
         singleDType: True
-        inputArgs: {supportFloat: True, supportInt: True}
-        outputArgs: {supportFloat: True, supportInt: True}
+        inputArgs: {supportFloat: True}
+        outputArgs: {supportFloat: True}
 
 exp:
         blockClass: OneToOneBlock
@@ -34,6 +34,13 @@ exp:
         outputArgs: {supportFloat: True, supportComplex: True}
 
 positive:
+        blockClass: OneToOneBlock
+        useDType: True
+        singleDType: True
+        inputArgs: {supportInt: True, supportFloat: True, supportComplex: True}
+        outputArgs: {supportInt: True, supportFloat: True, supportComplex: True}
+
+square:
         blockClass: OneToOneBlock
         useDType: True
         singleDType: True
@@ -65,7 +72,6 @@ templates:
                 - reciprocal
                 - cbrt
         positive:
+                - absolute
                 - negative
                 - sqrt
-                - square
-                - absolute
