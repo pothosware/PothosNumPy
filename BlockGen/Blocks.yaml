@@ -75,3 +75,7 @@ templates:
                 - absolute
                 - negative
                 - sqrt
+
+factoryOnly:
+        - flip
+        - fft/fft

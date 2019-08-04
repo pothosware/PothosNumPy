@@ -6,12 +6,18 @@ import os
 import sys
 import yaml
 
+NONSTANDARD = ["templates", "factoryOnly"]
+
+# Put the ugly hardcoded stuff here
+def getEntryPointName(blockPath):
+    return os.path.basename(blockPath).title().replace("_","").replace(".","").replace("Fft", "FFT")
+
 # TODO: account for sources and sinks, where one params are None
 def generatePythonMakoParams(blockName, blockYAML):
     makoDict = dict()
 
     makoDict["func"] = blockName
-    makoDict["cppEntryPoint"] = blockName.title().replace("_","")
+    makoDict["cppEntryPoint"] = getEntryPointName(blockName)
     makoDict["blockClass"] = blockYAML["blockClass"]
     makoDict["dtypeEntryPointParams"] = "dtype" if blockYAML["singleDType"] else "inputDType, outputDType"
     makoDict["dtypeBlockParams"] = "dtype, dtype" if blockYAML["singleDType"] else "inputDType, outputDType"
@@ -36,10 +42,10 @@ def generatePythonMakoParams(blockName, blockYAML):
 
 def generateCppFactory(blockName):
     return 'Pothos::BlockRegistry("/numpy/{0}", Pothos::Callable(&FactoryFunc).bind<std::string>("{1}", 2))' \
-           .format(blockName, blockName.title().replace("_",""))
+           .format(blockName, getEntryPointName(blockName))
 
 def generatePythonCppEntrypointFile(blockYAML, outputDir):
-    blockMakoParams = [generatePythonMakoParams(blockName, blockYAML[blockName]) for blockName in blockYAML if (blockName != "templates")]
+    blockMakoParams = [generatePythonMakoParams(blockName, blockYAML[blockName]) for blockName in blockYAML if (blockName not in NONSTANDARD)]
     for baseBlock in blockYAML["templates"]:
         blockMakoParams += [generatePythonMakoParams(blockName, blockYAML[baseBlock]) for blockName in blockYAML["templates"][baseBlock]]
 
@@ -65,9 +71,11 @@ def generatePythonCppEntrypointFile(blockYAML, outputDir):
         f.write(output)
 
 def generateCppFactoryFile(blockYAML, outputDir):
-    factories = [generateCppFactory(blockName) for blockName in blockYAML if (blockName != "templates")]
+    factories = [generateCppFactory(blockName) for blockName in blockYAML if (blockName not in NONSTANDARD)]
     for baseBlock in blockYAML["templates"]:
         factories += [generateCppFactory(blockName) for blockName in blockYAML["templates"][baseBlock]]
+
+    factories += [generateCppFactory(blockName) for blockName in blockYAML["factoryOnly"]]
 
     tmpl = None
     tmplPath = os.path.join(os.path.dirname(__file__), "Factory.mako.cpp")
