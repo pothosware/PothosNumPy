@@ -9,6 +9,11 @@ import numpy
 
 class TwoToOneBlock(BaseBlock):
     def __init__(self, func, inputDType, outputDType, inputArgs, outputArgs, *funcArgs, **kwargs):
+        if inputDType is None:
+            raise ValueError("For non-source blocks, inputDType cannot be None.")
+        if outputDType is None:
+            raise ValueError("For non-sink blocks, outputDType cannot be None.")
+
         BaseBlock.__init__(self, func, inputDType, outputDType, inputArgs, outputArgs, *funcArgs, **kwargs)
 
         self.setupInput(0, self.inputDType)
@@ -16,6 +21,9 @@ class TwoToOneBlock(BaseBlock):
         self.setupOutput(0, self.outputDType)
 
     def work(self):
+        assert(self.numpyInputDType is not None)
+        assert(self.numpyOutputDType is not None)
+
         if self.callPostBuffer:
             self.workWithPostBuffer()
         else:
