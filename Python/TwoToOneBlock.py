@@ -66,21 +66,3 @@ class TwoToOneBlock(BaseBlock):
         self.input(0).consume(elems)
         self.input(1).consume(elems)
         self.output(0).produce(elems)
-
-"""
-#
-# Factories exposed to C++ layer
-#
-
-def BitwiseAnd(dtype):
-    return TwoToOneBlock(dtype, numpy.bitwise_and)
-
-def BitwiseOr(dtype):
-    return TwoToOneBlock(dtype, numpy.bitwise_or)
-
-def BitwiseXor(dtype):
-    return TwoToOneBlock(dtype, numpy.bitwise_xor)
-
-def Heaviside(dtype):
-    return TwoToOneBlock(dtype, numpy.heaviside)
-"""
