@@ -13,7 +13,8 @@
 #include <cmath>
 #include <complex>
 #include <string>
-#include <vector>
+
+#include <tr1/cmath>
 
 //
 // Templated functions to use for output comparison
@@ -54,6 +55,12 @@ template <typename T>
 static T negative(T input)
 {
     return T(input * T(-1));
+}
+
+template <typename T>
+static EnableIfFloat<T, T> testI0(T input)
+{
+    return std::tr1::cyl_bessel_i(0, input);
 }
 
 template <typename T>
@@ -385,6 +392,14 @@ static void testSimpleBlocksFloat()
     /*simpleBlockTest(getTestParamsForVectorFunc<T>(
         "/numpy/flip",
         flip));*/
+
+    // These implementations are different enough to require a more lenient
+    // epsilon, but the numbers are large enough that we can accept this
+    // difference and still consider the functions equal.
+    simpleBlockTest(getTestParamsForFunc<T>(
+        "/numpy/i0",
+        testI0,
+        T(10.0f)));
 }
 
 template <typename T>

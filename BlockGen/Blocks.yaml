@@ -4,6 +4,12 @@ sin:
         singleDType: True
         inputArgs: {supportFloat: True}
         outputArgs: {supportFloat: True}
+i0:
+        blockClass: OneToOneBlock
+        useDType: False
+        singleDType: True
+        inputArgs: {supportFloat: True}
+        outputArgs: {supportFloat: True}
 
 bitwise_and:
         blockClass: TwoToOneBlock
@@ -60,7 +66,6 @@ templates:
                 - arcsinh
                 - arccosh
                 - arctanh
-                - i0
                 - sinc
         bitwise_and:
                 - bitwise_or
