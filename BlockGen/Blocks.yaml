@@ -25,6 +25,21 @@ add:
         inputArgs: {supportAll: True}
         outputArgs: {supportAll: True}
 
+subtract:
+        blockClass: TwoToOneBlock
+        useDType: True
+        singleDType: True
+        inputArgs: {supportAll: True}
+        outputArgs: {supportAll: True}
+
+divide:
+        blockClass: TwoToOneBlock
+        useDType: True
+        singleDType: True
+        inputArgs: {supportFloat: True, supportComplex: True}
+        outputArgs: {supportFloat: True, supportComplex: True}
+
+
 floor:
         blockClass: OneToOneBlock
         useDType: True

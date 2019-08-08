@@ -91,14 +91,6 @@ static EnableIfComplex<T, T> complexLog2(const T& input)
     return std::log(input) / std::log(twoComplex);
 }
 
-template <typename T>
-std::vector<T> flip(const std::vector<T>& input)
-{
-    std::vector<T> output(input);
-    std::reverse(output.begin(), output.end());
-    return output;
-}
-
 //
 // Test functions
 //

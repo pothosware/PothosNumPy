@@ -153,6 +153,14 @@ static std::vector<T> linspace(T a, T b, size_t N)
 }
 
 template <typename T>
+std::vector<T> flip(const std::vector<T>& input)
+{
+    std::vector<T> output(input);
+    std::reverse(output.begin(), output.end());
+    return output;
+}
+
+template <typename T>
 static std::vector<T> getIntTestParams(T a, T step, size_t N)
 {
     std::vector<T> ret;
@@ -245,7 +253,7 @@ std::string stdVectorToString(const std::vector<T>& vec)
         {
             ostream << " ";
         }
-        ostream << val;
+        ostream << (ssize_t)val;
     }
 
     return ostream.str();

@@ -38,6 +38,8 @@ class TwoToOneBlock(BaseBlock):
         in1 = self.input(1).buffer()
         out = None
 
+        N = min(len(in0), len(in1))
+
         if self.useDType:
             out = self.func(in0[:N], in1[:N], *self.funcArgs, dtype=self.numpyInputDType)
         else:
@@ -59,7 +61,7 @@ class TwoToOneBlock(BaseBlock):
         N = min(len(in0), len(in1), len(out0))
 
         if self.useDType:
-            out0[:N] = self.func(in0[:N], in1[:N], *self.funcArgs, dtype=numpyDType)
+            out0[:N] = self.func(in0[:N], in1[:N], *self.funcArgs, dtype=self.numpyInputDType)
         else:
             out0[:N] = self.func(in0[:N], in1[:N], *self.funcArgs)
 
