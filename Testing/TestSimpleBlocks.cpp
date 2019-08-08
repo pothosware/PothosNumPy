@@ -17,8 +17,26 @@
 
 //
 // Templated functions to use for output comparison
-// TODO: fix positive and negative behavior
 //
+
+// Convenience
+template <typename T>
+static constexpr T pi()
+{
+    return T(M_PI);
+}
+
+template <typename T>
+static constexpr T testDegrees(T rad)
+{
+    return T(rad * T(180.0f) / pi<T>());
+}
+
+template <typename T>
+static constexpr T testRadians(T deg)
+{
+    return T(deg * pi<T>() / T(180.0f));
+}
 
 template <typename T>
 static T testAbs(T input)
@@ -130,7 +148,9 @@ static EnableIfUnsignedInt<T, SimpleBlockTestParams<T>> getBaseTestParams(const 
 }
 
 template <typename T>
-static EnableIfFloat<T, SimpleBlockTestParams<T>> getBaseTestParams(const std::string& blockRegistryPath)
+static EnableIfFloat<T, SimpleBlockTestParams<T>> getBaseTestParams(
+    const std::string& blockRegistryPath,
+    T epsilon = 1e-6f)
 {
     // To not have nice even numbers
     static const size_t numInputs = 123;
@@ -142,7 +162,7 @@ static EnableIfFloat<T, SimpleBlockTestParams<T>> getBaseTestParams(const std::s
         blockRegistryPath,
         isArcTrig ? getArcTrigParams<T>(numInputs) : linspace<T>(10.0f, 20.0f, numInputs),
         {},
-        1e-6f
+        epsilon
     };
     testParams.expectedOutputs.reserve(numInputs);
 
@@ -173,11 +193,27 @@ static EnableIfComplex<T, SimpleBlockTestParams<T>> getBaseTestParams(const std:
 }
 
 template <typename T>
-static EnableIfNotComplex<T, SimpleBlockTestParams<T>> getTestParamsForFunc(
+static EnableIfAnyInt<T, SimpleBlockTestParams<T>> getTestParamsForFunc(
     const std::string& blockRegistryPath,
     TestFunc<T> func)
 {
     auto testParams = getBaseTestParams<T>(blockRegistryPath);
+    std::transform(
+        testParams.inputs.begin(),
+        testParams.inputs.end(),
+        std::back_inserter(testParams.expectedOutputs),
+        func);
+
+    return testParams;
+}
+
+template <typename T>
+static EnableIfFloat<T, SimpleBlockTestParams<T>> getTestParamsForFunc(
+    const std::string& blockRegistryPath,
+    TestFunc<T> func,
+    T epsilon = 1e-6f)
+{
+    auto testParams = getBaseTestParams<T>(blockRegistryPath, epsilon);
     std::transform(
         testParams.inputs.begin(),
         testParams.inputs.end(),
@@ -267,6 +303,27 @@ static void testSimpleBlocksFloat()
         "/numpy/arctan",
         std::atan));
     simpleBlockTest(getTestParamsForFunc<T>(
+        "/numpy/sinh",
+        std::sinh));
+    simpleBlockTest(getTestParamsForFunc<T>(
+        "/numpy/cosh",
+        std::cosh));
+    simpleBlockTest(getTestParamsForFunc<T>(
+        "/numpy/tanh",
+        std::tanh));
+    simpleBlockTest(getTestParamsForFunc<T>(
+        "/numpy/arcsinh",
+        std::asinh));
+
+    // TODO: separate getTestValues func to get valid values
+    /*simpleBlockTest(getTestParamsForFunc<T>(
+        "/numpy/arccosh",
+        std::acosh));*/
+
+    simpleBlockTest(getTestParamsForFunc<T>(
+        "/numpy/arctanh",
+        std::atanh));
+    simpleBlockTest(getTestParamsForFunc<T>(
         "/numpy/floor",
         std::floor));
     simpleBlockTest(getTestParamsForFunc<T>(
@@ -317,6 +374,14 @@ static void testSimpleBlocksFloat()
     simpleBlockTest(getTestParamsForFunc<T>(
         "/numpy/absolute",
         std::abs));
+    simpleBlockTest(getTestParamsForFunc<T>(
+        "/numpy/degrees",
+        testDegrees,
+        T(1e-3f)));
+    simpleBlockTest(getTestParamsForFunc<T>(
+        "/numpy/radians",
+        testRadians,
+        T(1e-3f)));
     /*simpleBlockTest(getTestParamsForVectorFunc<T>(
         "/numpy/flip",
         flip));*/
