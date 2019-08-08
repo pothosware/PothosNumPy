@@ -261,7 +261,7 @@ static SimpleBlockTestParams<T> getTestParamsForVectorFunc(
 //
 
 template <typename T>
-static void testSimpleBlocksInt()
+static void testOneToOneBlocksInt()
 {
     simpleBlockTest(getTestParamsForFunc<T>(
         "/numpy/absolute",
@@ -278,7 +278,7 @@ static void testSimpleBlocksInt()
 }
 
 template <typename T>
-static void testSimpleBlocksUInt()
+static void testOneToOneBlocksUInt()
 {
     simpleBlockTest(getTestParamsForFunc<T>(
         "/numpy/square",
@@ -286,7 +286,7 @@ static void testSimpleBlocksUInt()
 }
 
 template <typename T>
-static void testSimpleBlocksFloat()
+static void testOneToOneBlocksFloat()
 {
     // STL implementations where functions don't exist
     auto reciprocal = [](T input){return T(1.0f) / input;};
@@ -403,7 +403,7 @@ static void testSimpleBlocksFloat()
 }
 
 template <typename T>
-static void testSimpleBlocksComplex()
+static void testOneToOneBlocksComplex()
 {
     static_assert(IsComplex<T>::value);
 
@@ -418,21 +418,21 @@ static void testSimpleBlocksComplex()
         complexLog2));
 }
 
-POTHOS_TEST_BLOCK("/numpy/tests", test_simple_blocks)
+POTHOS_TEST_BLOCK("/numpy/tests", test_one_to_one_blocks)
 {
-    testSimpleBlocksInt<std::int8_t>();
-    testSimpleBlocksInt<std::int16_t>();
-    testSimpleBlocksInt<std::int32_t>();
-    testSimpleBlocksInt<std::int64_t>();
+    testOneToOneBlocksInt<std::int8_t>();
+    testOneToOneBlocksInt<std::int16_t>();
+    testOneToOneBlocksInt<std::int32_t>();
+    testOneToOneBlocksInt<std::int64_t>();
 
-    testSimpleBlocksUInt<std::uint8_t>();
-    testSimpleBlocksUInt<std::uint16_t>();
-    testSimpleBlocksUInt<std::uint32_t>();
-    testSimpleBlocksUInt<std::uint64_t>();
+    testOneToOneBlocksUInt<std::uint8_t>();
+    testOneToOneBlocksUInt<std::uint16_t>();
+    testOneToOneBlocksUInt<std::uint32_t>();
+    testOneToOneBlocksUInt<std::uint64_t>();
 
-    testSimpleBlocksFloat<float>();
-    testSimpleBlocksFloat<double>();
+    testOneToOneBlocksFloat<float>();
+    testOneToOneBlocksFloat<double>();
 
-    testSimpleBlocksComplex<std::complex<float>>();
-    testSimpleBlocksComplex<std::complex<double>>();
+    testOneToOneBlocksComplex<std::complex<float>>();
+    testOneToOneBlocksComplex<std::complex<double>>();
 }

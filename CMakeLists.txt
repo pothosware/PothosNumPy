@@ -79,7 +79,7 @@ BUILD_PYTHON_MODULE(
         Cpp/RegisteredCalls.cpp
 
         Testing/TestFFT.cpp
+        Testing/TestOneToOneBlocks.cpp
         Testing/TestRegisteredCalls.cpp
-        Testing/TestSimpleBlocks.cpp
         Testing/TestSimpleSources.cpp
 )
