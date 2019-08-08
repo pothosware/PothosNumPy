@@ -253,7 +253,7 @@ static SimpleBlockTestParams<T> getTestParamsForVectorFunc(
 //
 
 template <typename T>
-static void testOneToOneBlocksInt()
+static EnableIfInteger<T, void> testOneToOneBlocks()
 {
     simpleBlockTest(getTestParamsForFunc<T>(
         "/numpy/absolute",
@@ -270,7 +270,7 @@ static void testOneToOneBlocksInt()
 }
 
 template <typename T>
-static void testOneToOneBlocksUInt()
+static EnableIfUnsignedInt<T, void> testOneToOneBlocks()
 {
     simpleBlockTest(getTestParamsForFunc<T>(
         "/numpy/square",
@@ -278,7 +278,7 @@ static void testOneToOneBlocksUInt()
 }
 
 template <typename T>
-static void testOneToOneBlocksFloat()
+static EnableIfFloat<T, void> testOneToOneBlocks()
 {
     // STL implementations where functions don't exist
     auto reciprocal = [](T input){return T(1.0f) / input;};
@@ -395,9 +395,9 @@ static void testOneToOneBlocksFloat()
 }
 
 template <typename T>
-static void testOneToOneBlocksComplex()
+static EnableIfComplex<T, void> testOneToOneBlocks()
 {
-    static_assert(IsComplex<T>::value);
+    static_assert(std::is_floating_point<typename T::value_type>::value);
 
     simpleBlockTest(getTestParamsForFunc<T>(
         "/numpy/exp",
@@ -412,19 +412,18 @@ static void testOneToOneBlocksComplex()
 
 POTHOS_TEST_BLOCK("/numpy/tests", test_one_to_one_blocks)
 {
-    testOneToOneBlocksInt<std::int8_t>();
-    testOneToOneBlocksInt<std::int16_t>();
-    testOneToOneBlocksInt<std::int32_t>();
-    testOneToOneBlocksInt<std::int64_t>();
-
-    testOneToOneBlocksUInt<std::uint8_t>();
-    testOneToOneBlocksUInt<std::uint16_t>();
-    testOneToOneBlocksUInt<std::uint32_t>();
-    testOneToOneBlocksUInt<std::uint64_t>();
-
-    testOneToOneBlocksFloat<float>();
-    testOneToOneBlocksFloat<double>();
-
-    testOneToOneBlocksComplex<std::complex<float>>();
-    testOneToOneBlocksComplex<std::complex<double>>();
+    // SFINAE will direct these calls to the functions that test
+    // blocks applicable to the given type.
+    testOneToOneBlocks<std::int8_t>();
+    testOneToOneBlocks<std::int16_t>();
+    testOneToOneBlocks<std::int32_t>();
+    testOneToOneBlocks<std::int64_t>();
+    testOneToOneBlocks<std::uint8_t>();
+    testOneToOneBlocks<std::uint16_t>();
+    testOneToOneBlocks<std::uint32_t>();
+    testOneToOneBlocks<std::uint64_t>();
+    testOneToOneBlocks<float>();
+    testOneToOneBlocks<double>();
+    testOneToOneBlocks<std::complex<float>>();
+    testOneToOneBlocks<std::complex<double>>();
 }
