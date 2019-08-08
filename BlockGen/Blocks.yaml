@@ -54,6 +54,14 @@ templates:
                 - arcsin
                 - arccos
                 - arctan
+                - sinh
+                - cosh
+                - tanh
+                - arcsinh
+                - arccosh
+                - arctanh
+                - i0
+                - sinc
         bitwise_and:
                 - bitwise_or
                 - bitwise_xor
@@ -62,6 +70,8 @@ templates:
         floor:
                 - ceil
                 - trunc
+                - degrees
+                - radians
         exp:
                 - expm1
                 - exp2
@@ -69,6 +79,8 @@ templates:
                 - log10
                 - log2
                 - log1p
+                - logaddexp
+                - logaddexp2
                 - reciprocal
                 - cbrt
         positive:
