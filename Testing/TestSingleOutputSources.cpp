@@ -9,6 +9,7 @@
 #include <Pothos/Plugin.hpp>
 #include <Pothos/Proxy.hpp>
 
+#include <Poco/Logger.h>
 #include <Poco/Thread.h>
 
 #include <algorithm>
@@ -37,6 +38,14 @@ static void testAllValuesEqual(
     {
         testEqual(testValue, buffer[i]);
     }
+}
+
+static void testOutputNotEmpty(const Pothos::BufferChunk& bufferChunk)
+{
+    POTHOS_TEST_TRUE(bufferChunk.elements() > 0);
+
+    Poco::Logger& logger = Poco::Logger::get(__FUNCTION__);
+    poco_warning(logger, "This test should do some sort of output validation.");
 }
 
 //
@@ -168,8 +177,50 @@ static void testFull()
         true);
 }
 
+template <typename T>
+static void testARange()
+{
+    Pothos::DType dtype(typeid(T));
+    std::cout << "Testing " << dtype.toString() << std::endl;
+
+    auto arange = Pothos::BlockRegistry::make(
+                     "/numpy/arange",
+                     dtype,
+                     T(0),
+                     T(10),
+                     T(1));
+
+    // TODO: output validation
+    testSingleOutputSource(
+        arange,
+        dtype,
+        testOutputNotEmpty,
+        true);
+}
+
+template <typename T>
+static void testSpace(const std::string& path)
+{
+    Pothos::DType dtype(typeid(T));
+    std::cout << "Testing " << path << "(" << dtype.toString() << ")" << std::endl;
+
+    auto arange = Pothos::BlockRegistry::make(
+                     path,
+                     dtype,
+                     T(1),
+                     T(10),
+                     T(5));
+
+    // TODO: output validation
+    testSingleOutputSource(
+        arange,
+        dtype,
+        testOutputNotEmpty,
+        true);
+}
+
 //
-// Registered tests
+// Registered tests (TODO: separate by type)
 //
 
 POTHOS_TEST_BLOCK("/numpy/tests", test_ones)
@@ -218,4 +269,60 @@ POTHOS_TEST_BLOCK("/numpy/tests", test_full)
     testFull<double>();
     testFull<std::complex<float>>();
     testFull<std::complex<double>>();
+}
+
+POTHOS_TEST_BLOCK("/numpy/tests", test_arange)
+{
+    testARange<std::int8_t>();
+    testARange<std::int16_t>();
+    testARange<std::int32_t>();
+    testARange<std::int64_t>();
+    testARange<std::uint8_t>();
+    testARange<std::uint16_t>();
+    testARange<std::uint32_t>();
+    testARange<std::uint64_t>();
+    testARange<float>();
+    testARange<double>();
+}
+
+POTHOS_TEST_BLOCK("/numpy/tests", test_linspace)
+{
+    testSpace<std::int8_t>("/numpy/linspace");
+    testSpace<std::int16_t>("/numpy/linspace");
+    testSpace<std::int32_t>("/numpy/linspace");
+    testSpace<std::int64_t>("/numpy/linspace");
+    testSpace<std::uint8_t>("/numpy/linspace");
+    testSpace<std::uint16_t>("/numpy/linspace");
+    testSpace<std::uint32_t>("/numpy/linspace");
+    testSpace<std::uint64_t>("/numpy/linspace");
+    testSpace<float>("/numpy/linspace");
+    testSpace<double>("/numpy/linspace");
+}
+
+POTHOS_TEST_BLOCK("/numpy/tests", test_logspace)
+{
+    testSpace<std::int8_t>("/numpy/logspace");
+    testSpace<std::int16_t>("/numpy/logspace");
+    testSpace<std::int32_t>("/numpy/logspace");
+    testSpace<std::int64_t>("/numpy/logspace");
+    testSpace<std::uint8_t>("/numpy/logspace");
+    testSpace<std::uint16_t>("/numpy/logspace");
+    testSpace<std::uint32_t>("/numpy/logspace");
+    testSpace<std::uint64_t>("/numpy/logspace");
+    testSpace<float>("/numpy/logspace");
+    testSpace<double>("/numpy/logspace");
+}
+
+POTHOS_TEST_BLOCK("/numpy/tests", test_geomspace)
+{
+    testSpace<std::int8_t>("/numpy/geomspace");
+    testSpace<std::int16_t>("/numpy/geomspace");
+    testSpace<std::int32_t>("/numpy/geomspace");
+    testSpace<std::int64_t>("/numpy/geomspace");
+    testSpace<std::uint8_t>("/numpy/geomspace");
+    testSpace<std::uint16_t>("/numpy/geomspace");
+    testSpace<std::uint32_t>("/numpy/geomspace");
+    testSpace<std::uint64_t>("/numpy/geomspace");
+    testSpace<float>("/numpy/geomspace");
+    testSpace<double>("/numpy/geomspace");
 }

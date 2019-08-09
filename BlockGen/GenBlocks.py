@@ -13,7 +13,11 @@ def manualReplace(blockPath):
         Fft="FFT",
         Ifft="IFFT",
         Rfft="RFFT",
-        Irfft="IRFFT")
+        Irfft="IRFFT",
+        Arange="ARange",
+        Linspace="LinSpace",
+        Logspace="LogSpace",
+        Geomspace="GeomSpace")
 
     return REPLACES.get(blockPath, blockPath)
 

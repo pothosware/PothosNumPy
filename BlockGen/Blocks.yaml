@@ -122,3 +122,7 @@ factoryOnly:
         - fft/rfft
         - fft/irfft
         - full
+        - arange
+        - linspace
+        - logspace
+        - geomspace
