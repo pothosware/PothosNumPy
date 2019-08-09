@@ -81,6 +81,6 @@ BUILD_PYTHON_MODULE(
         Testing/TestFFT.cpp
         Testing/TestOneToOneBlocks.cpp
         Testing/TestRegisteredCalls.cpp
-        Testing/TestSimpleSources.cpp
+        Testing/TestSingleOutputSources.cpp
         Testing/TestTwoToOneBlocks.cpp
 )

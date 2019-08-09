@@ -27,14 +27,21 @@ def generatePythonMakoParams(blockName, blockYAML):
     makoDict["func"] = blockName
     makoDict["cppEntryPoint"] = getEntryPointName(blockName)
     makoDict["blockClass"] = blockYAML["blockClass"]
-    makoDict["dtypeEntryPointParams"] = "dtype" if blockYAML["singleDType"] else "inputDType, outputDType"
-    makoDict["dtypeBlockParams"] = "dtype, dtype" if blockYAML["singleDType"] else "inputDType, outputDType"
 
-    inputArgs = blockYAML["inputArgs"]
-    makoDict["inputArgs"] = "dict({0})".format(", ".join(['{0}={1}'.format(x, inputArgs[x]) for x in inputArgs]))
+    if "Source" in blockYAML["blockClass"]:
+        makoDict["dtypeEntryPointParams"] = "dtype"
+        makoDict["dtypeBlockParams"] = "dtype"
+    else:
+        makoDict["dtypeEntryPointParams"] = "dtype" if blockYAML["singleDType"] else "inputDType, outputDType"
+        makoDict["dtypeBlockParams"] = "dtype, dtype" if blockYAML["singleDType"] else "inputDType, outputDType"
 
-    outputArgs = blockYAML["outputArgs"]
-    makoDict["outputArgs"] = "dict({0})".format(", ".join(['{0}={1}'.format(x, outputArgs[x]) for x in outputArgs]))
+    if "inputArgs" in blockYAML:
+        inputArgs = blockYAML["inputArgs"]
+        makoDict["inputArgs"] = "dict({0})".format(", ".join(['{0}={1}'.format(x, inputArgs[x]) for x in inputArgs]))
+
+    if "outputArgs" in blockYAML:
+        outputArgs = blockYAML["outputArgs"]
+        makoDict["outputArgs"] = "dict({0})".format(", ".join(['{0}={1}'.format(x, outputArgs[x]) for x in outputArgs]))
 
     makoDict["otherEntryPointParams"] = ", nchans" if (makoDict["blockClass"] == "NToOneBlock") else ""
     if "otherEntryPointParams" in blockYAML:

@@ -1,81 +1,81 @@
 # Copyright (c) 2019 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
+from .BaseBlock import *
 from . import Utility
 
 import Pothos
 
 import numpy
 
-class SimpleSource(Pothos.Block):
-    def __init__(self, dtype, func, *args):
-        Utility.validateDType(dtype)
+class SingleOutputSource(BaseBlock):
+    def __init__(self, func, dtype, dtypeArgs, *funcArgs, **kwargs):
+        if dtype is None:
+            raise ValueError("Null dtype")
 
-        Pothos.Block.__init__(self)
-        self.setupOutput("0", dtype)
-
-        self.func = func
-        self.numpyDType = Pothos.Buffer.dtype_to_numpy(dtype)
-
-        self.args = args
+        BaseBlock.__init__(self, func, None, dtype, None, dtypeArgs, *funcArgs, **kwargs)
+        self.setupOutput(0, self.outputDType)
 
     def work(self):
-        out0 = self.output(0).buffer()
-        N = len(out0)
+        assert(self.numpyOutputDType is not None)
 
-        if N == 0:
+        if self.callPostBuffer:
+            self.workWithPostBuffer()
+        else:
+            self.workWithGivenOutputBuffer()
+
+    def workWithPostBuffer(self):
+        elems = len(self.output(0).buffer())
+
+        # Even if we're posting the buffer, we're in a situation where we
+        # shouldn't be outputting anything, so go with it.
+        if elems == 0:
             return
 
-        if self.args is None:
-            out0[:] = self.func(N, dtype=self.numpyDType)
+        if self.useDType:
+            out = self.func(elems, *self.funcArgs, dtype=self.numpyInputDType)
         else:
-            out0[:] = self.func(N, *self.args, dtype=self.numpyDType)
-
-        self.output(0).produce(N)
-
-class PostBufferSource(Pothos.Block):
-    def __init__(self, dtype, func, *args):
-        Utility.validateDType(dtype)
-
-        Pothos.Block.__init__(self)
-        self.setupOutput("0", dtype)
-
-        self.func = func
-        self.numpyDType = Pothos.Buffer.dtype_to_numpy(dtype)
-
-        self.args = args
-
-    def work(self):
-        N = len(self.output(0).buffer())
-
-        # Even though we're posting the buffer, N will be 0 in a situation
-        # where we shouldn't have output, so go along with that.
-        if N == 0:
-            return
-
-        out = None
-
-        if self.args is None:
-            out = self.func(N, dtype=self.numpyDType)
-        else:
-            out = self.func(N, *self.args, dtype=self.numpyDType)
+            out = self.func(elems, *self.funcArgs).astype(self.numpyOutputDType)
 
         self.postBuffer(out)
 
-class FullClass(SimpleSource):
+    def workWithGivenOutputBuffer(self):
+        elems = len(self.output(0).buffer())
+        if 0 == elems:
+            return
+
+        out0 = self.output(0).buffer()
+
+        if self.useDType:
+            out0[:] = self.func(elems, *self.funcArgs, dtype=self.numpyInputDType)
+        else:
+            out0[:] = self.func(elems, *self.funcArgs)
+
+        self.output(0).produce(elems)
+
+class FullClass(SingleOutputSource):
     def __init__(self, dtype, fillValue):
-        SimpleSource.__init__(self, dtype, numpy.full, fillValue)
+        dtypeArgs = dict(supportAll=True)
+        SingleOutputSource.__init__(self, numpy.full, dtype, dtypeArgs, fillValue)
         self.setFillValue(fillValue)
 
     def getFillValue(self):
         return self.fillValue
 
     def setFillValue(self, fillValue):
-        Utility.validateParameter(fillValue, self.numpyDType)
+        Utility.validateParameter(fillValue, self.numpyOutputDType)
 
         self.fillValue = fillValue
-        self.args = [fillValue]
+        self.funcArgs = [fillValue]
 
+#
+# Factories exposed to C++ layer
+#
+
+def Full(dtype, fillValue):
+    return FullClass(dtype, fillValue)
+
+"""
 class Range(SimpleSource):
     def __init__(self, dtype, func, start, stop, step):
         SimpleSource.__init__(self, dtype, func, start, stop, step)
@@ -152,20 +152,6 @@ class Space(SimpleSource):
         self.numValues = numValues
         self.__refreshArgs()
 
-#
-# Factories exposed to C++ layer
-#
-
-def Ones(dtype):
-    return SimpleSource(dtype, numpy.ones)
-
-def Zeros(dtype):
-    return SimpleSource(dtype, numpy.zeros)
-
-# TODO: enforce that fillValue is valid for the given dtype
-def Full(dtype, fillValue):
-    return FullClass(dtype, fillValue)
-
 def ARange(dtype, start, stop, step):
     return Range(dtype, numpy.arange, start, stop, step)
 
@@ -177,3 +163,4 @@ def LogSpace(dtype, start, stop, numValues):
 
 def GeomSpace(dtype, start, stop, numValues):
     return Space(dtype, numpy.geomspace, start, stop, numValues)
+"""

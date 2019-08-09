@@ -43,7 +43,7 @@ static void testAllValuesEqual(
 // Test code
 //
 
-static void testSimpleSource(
+static void testSingleOutputSource(
     const Pothos::Proxy& testSource,
     const Pothos::DType& dtype,
     const SourceTestFunction& testFunction,
@@ -78,7 +78,7 @@ static void testOnes()
 {
     using std::placeholders::_1;
 
-    constexpr size_t dimension = 2;
+    constexpr size_t dimension = 1;
     Pothos::DType dtype(typeid(T), dimension);
     std::cout << "Testing " << dtype.toString() << std::endl;
 
@@ -86,7 +86,7 @@ static void testOnes()
                     "/numpy/ones",
                     dtype);
 
-    testSimpleSource(
+    testSingleOutputSource(
         ones,
         dtype,
         std::bind(testAllValuesEqual<T>, _1, T(1)),
@@ -98,7 +98,7 @@ static void testZeros()
 {
     using std::placeholders::_1;
 
-    constexpr size_t dimension = 2;
+    constexpr size_t dimension = 1;
     Pothos::DType dtype(typeid(T), dimension);
     std::cout << "Testing " << dtype.toString() << std::endl;
 
@@ -106,7 +106,7 @@ static void testZeros()
                      "/numpy/zeros",
                     dtype);
  
-    testSimpleSource(
+    testSingleOutputSource(
         zeros,
         dtype,
         std::bind(testAllValuesEqual<T>, _1, T(0)),
@@ -132,7 +132,7 @@ static void testFull()
 {
     using std::placeholders::_1;
 
-    constexpr size_t dimension = 2;
+    constexpr size_t dimension = 1;
     Pothos::DType dtype(typeid(T), dimension);
     std::cout << "Testing " << dtype.toString() << std::endl;
 
@@ -149,7 +149,7 @@ static void testFull()
         testValue1,
         full.template call<T>("getFillValue"));
 
-    testSimpleSource(
+    testSingleOutputSource(
         full,
         dtype,
         std::bind(testAllValuesEqual<T>, _1, testValue1),
@@ -161,7 +161,7 @@ static void testFull()
         testValue2,
         full.template call<T>("getFillValue"));
 
-    testSimpleSource(
+    testSingleOutputSource(
         full,
         dtype,
         std::bind(testAllValuesEqual<T>, _1, testValue2),

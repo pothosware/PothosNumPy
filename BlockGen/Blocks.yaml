@@ -68,6 +68,11 @@ square:
         inputArgs: {supportAll: True}
         outputArgs: {supportAll: True}
 
+zeros:
+        blockClass: SingleOutputSource
+        useDType: True
+        outputArgs: {supportAll: True}
+
 templates:
         sin:
                 - cos
@@ -107,6 +112,8 @@ templates:
                 - absolute
                 - negative
                 - sqrt
+        zeros:
+                - ones
 
 factoryOnly:
         - flip
@@ -114,3 +121,4 @@ factoryOnly:
         - fft/ifft
         - fft/rfft
         - fft/irfft
+        - full
