@@ -123,6 +123,12 @@ templates:
         add:
                 - multiply
                 - ravel
+                - maximum
+                - minimum
+                - amax
+                - amin
+                - nanmax
+                - nanmin
         floor:
                 - ceil
                 - trunc

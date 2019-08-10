@@ -17,7 +17,11 @@ def manualReplace(blockPath):
         Arange="ARange",
         Linspace="LinSpace",
         Logspace="LogSpace",
-        Geomspace="GeomSpace")
+        Geomspace="GeomSpace",
+        Amax="AMax",
+        Amin="AMin",
+        Nanmax="NaNMax",
+        Nanmin="NaNMin")
 
     return REPLACES.get(blockPath, blockPath)
 
