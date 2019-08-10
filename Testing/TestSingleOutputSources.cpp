@@ -87,12 +87,14 @@ static void testOnes()
 {
     using std::placeholders::_1;
 
+    static const std::string path = "/numpy/ones";
+
     constexpr size_t dimension = 1;
     Pothos::DType dtype(typeid(T), dimension);
-    std::cout << "Testing " << dtype.toString() << std::endl;
+    std::cout << "Testing " << path << "(" << dtype.toString() << ")" << std::endl;
 
     auto ones = Pothos::BlockRegistry::make(
-                    "/numpy/ones",
+                    path,
                     dtype);
 
     testSingleOutputSource(
@@ -107,13 +109,15 @@ static void testZeros()
 {
     using std::placeholders::_1;
 
+    static const std::string path = "/numpy/zeros";
+
     constexpr size_t dimension = 1;
     Pothos::DType dtype(typeid(T), dimension);
-    std::cout << "Testing " << dtype.toString() << std::endl;
+    std::cout << "Testing " << path << "(" << dtype.toString() << ")" << std::endl;
 
     auto zeros = Pothos::BlockRegistry::make(
-                     "/numpy/zeros",
-                    dtype);
+                     path,
+                     dtype);
  
     testSingleOutputSource(
         zeros,
@@ -141,12 +145,14 @@ static void testFull()
 {
     using std::placeholders::_1;
 
+    static const std::string path = "/numpy/full";
+
     constexpr size_t dimension = 1;
     Pothos::DType dtype(typeid(T), dimension);
-    std::cout << "Testing " << dtype.toString() << std::endl;
+    std::cout << "Testing " << path << "(" << dtype.toString() << ")" << std::endl;
 
     auto full = Pothos::BlockRegistry::make(
-                     "/numpy/full",
+                    path,
                     dtype,
                     getFullFillValue<T>());
 
@@ -220,109 +226,65 @@ static void testSpace(const std::string& path)
 }
 
 //
-// Registered tests (TODO: separate by type)
+// Test code
 //
 
-POTHOS_TEST_BLOCK("/numpy/tests", test_ones)
+// Called for all types
+template <typename T>
+static void testCommon()
 {
-    testOnes<std::int8_t>();
-    testOnes<std::int16_t>();
-    testOnes<std::int32_t>();
-    testOnes<std::int64_t>();
-    testOnes<std::uint8_t>();
-    testOnes<std::uint16_t>();
-    testOnes<std::uint32_t>();
-    testOnes<std::uint64_t>();
-    testOnes<float>();
-    testOnes<double>();
-    testOnes<std::complex<float>>();
-    testOnes<std::complex<double>>();
+    testOnes<T>();
+    testZeros<T>();
+    testFull<T>();
 }
 
-POTHOS_TEST_BLOCK("/numpy/tests", test_zeros)
+template <typename T>
+static EnableIfInteger<T, void> testSingleOutputSources()
 {
-    testZeros<std::int8_t>();
-    testZeros<std::int16_t>();
-    testZeros<std::int32_t>();
-    testZeros<std::int64_t>();
-    testZeros<std::uint8_t>();
-    testZeros<std::uint16_t>();
-    testZeros<std::uint32_t>();
-    testZeros<std::uint64_t>();
-    testZeros<float>();
-    testZeros<double>();
-    testZeros<std::complex<float>>();
-    testZeros<std::complex<double>>();
-}
-
-POTHOS_TEST_BLOCK("/numpy/tests", test_full)
-{
-    testFull<std::int8_t>();
-    testFull<std::int16_t>();
-    testFull<std::int32_t>();
-    testFull<std::int64_t>();
-    testFull<std::uint8_t>();
-    testFull<std::uint16_t>();
-    testFull<std::uint32_t>();
-    testFull<std::uint64_t>();
-    testFull<float>();
-    testFull<double>();
-    testFull<std::complex<float>>();
-    testFull<std::complex<double>>();
-}
-
-POTHOS_TEST_BLOCK("/numpy/tests", test_arange)
-{
-    testARange<std::int8_t>();
-    testARange<std::int16_t>();
-    testARange<std::int32_t>();
-    testARange<std::int64_t>();
-    testARange<std::uint8_t>();
-    testARange<std::uint16_t>();
-    testARange<std::uint32_t>();
-    testARange<std::uint64_t>();
-    testARange<float>();
-    testARange<double>();
-}
-
-POTHOS_TEST_BLOCK("/numpy/tests", test_linspace)
-{
-    testSpace<std::int8_t>("/numpy/linspace");
-    testSpace<std::int16_t>("/numpy/linspace");
-    testSpace<std::int32_t>("/numpy/linspace");
-    testSpace<std::int64_t>("/numpy/linspace");
-    testSpace<std::uint8_t>("/numpy/linspace");
-    testSpace<std::uint16_t>("/numpy/linspace");
-    testSpace<std::uint32_t>("/numpy/linspace");
-    testSpace<std::uint64_t>("/numpy/linspace");
+    testCommon<T>();
     testSpace<float>("/numpy/linspace");
-    testSpace<double>("/numpy/linspace");
-}
-
-POTHOS_TEST_BLOCK("/numpy/tests", test_logspace)
-{
-    testSpace<std::int8_t>("/numpy/logspace");
-    testSpace<std::int16_t>("/numpy/logspace");
-    testSpace<std::int32_t>("/numpy/logspace");
-    testSpace<std::int64_t>("/numpy/logspace");
-    testSpace<std::uint8_t>("/numpy/logspace");
-    testSpace<std::uint16_t>("/numpy/logspace");
-    testSpace<std::uint32_t>("/numpy/logspace");
-    testSpace<std::uint64_t>("/numpy/logspace");
     testSpace<float>("/numpy/logspace");
-    testSpace<double>("/numpy/logspace");
+    testSpace<float>("/numpy/geomspace");
 }
 
-POTHOS_TEST_BLOCK("/numpy/tests", test_geomspace)
+template <typename T>
+static EnableIfUnsignedInt<T, void> testSingleOutputSources()
 {
-    testSpace<std::int8_t>("/numpy/geomspace");
-    testSpace<std::int16_t>("/numpy/geomspace");
-    testSpace<std::int32_t>("/numpy/geomspace");
-    testSpace<std::int64_t>("/numpy/geomspace");
-    testSpace<std::uint8_t>("/numpy/geomspace");
-    testSpace<std::uint16_t>("/numpy/geomspace");
-    testSpace<std::uint32_t>("/numpy/geomspace");
-    testSpace<std::uint64_t>("/numpy/geomspace");
-    testSpace<float>("/numpy/geomspace");
-    testSpace<double>("/numpy/geomspace");
+    testCommon<T>();
+    testSpace<T>("/numpy/linspace");
+    testSpace<T>("/numpy/logspace");
+    testSpace<T>("/numpy/geomspace");
+}
+
+template <typename T>
+static EnableIfFloat<T, void> testSingleOutputSources()
+{
+    testCommon<T>();
+    testSpace<T>("/numpy/linspace");
+    testSpace<T>("/numpy/logspace");
+    testSpace<T>("/numpy/geomspace");
+}
+
+template <typename T>
+static EnableIfComplex<T, void> testSingleOutputSources()
+{
+    testCommon<T>();
+}
+
+POTHOS_TEST_BLOCK("/numpy/tests", test_single_output_sources)
+{
+    // SFINAE will direct these calls to the functions that test
+    // blocks applicable to the given type.
+    testSingleOutputSources<std::int8_t>();
+    testSingleOutputSources<std::int16_t>();
+    testSingleOutputSources<std::int32_t>();
+    testSingleOutputSources<std::int64_t>();
+    testSingleOutputSources<std::uint8_t>();
+    testSingleOutputSources<std::uint16_t>();
+    testSingleOutputSources<std::uint32_t>();
+    testSingleOutputSources<std::uint64_t>();
+    testSingleOutputSources<float>();
+    testSingleOutputSources<double>();
+    testSingleOutputSources<std::complex<float>>();
+    testSingleOutputSources<std::complex<double>>();
 }

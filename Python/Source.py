@@ -150,7 +150,6 @@ class SpaceClass(SingleOutputSource):
         else:
             out = self.func(*self.funcArgs).astype(self.numpyOutputDType)
 
-        print(out)
         self.output(0).postBuffer(out)
 
     def __refreshArgs(self):
