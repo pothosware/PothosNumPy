@@ -13,7 +13,14 @@ i0:
 
 bitwise_and:
         blockClass: TwoToOneBlock
-        useDType: False
+        useDType: True
+        singleDType: True
+        inputArgs: {supportInt: True, supportUInt: True}
+        outputArgs: {supportInt: True, supportUInt: True}
+
+invert:
+        blockClass: OneToOneBlock
+        useDType: True
         singleDType: True
         inputArgs: {supportInt: True, supportUInt: True}
         outputArgs: {supportInt: True, supportUInt: True}
@@ -73,6 +80,27 @@ zeros:
         useDType: True
         outputArgs: {supportAll: True}
 
+ldexp:
+        blockClass: TwoToOneBlock
+        useDType: True
+        singleDType: True
+        inputArgs: {supportInt: True, supportUInt: True, supportFloat: True}
+        outputArgs: {supportInt: True, supportUInt: True, supportFloat: True}
+
+real:
+        blockClass: OneToOneBlock
+        useDType: False
+        singleDType: False
+        inputArgs: {supportComplex: True}
+        outputArgs: {supportFloat: True}
+
+conj:
+        blockClass: OneToOneBlock
+        useDType: True
+        singleDType: True
+        inputArgs: {supportComplex: True}
+        outputArgs: {supportComplex: True}
+
 templates:
         sin:
                 - cos
@@ -90,8 +118,11 @@ templates:
         bitwise_and:
                 - bitwise_or
                 - bitwise_xor
+                - left_shift
+                - right_shift
         add:
                 - multiply
+                - ravel
         floor:
                 - ceil
                 - trunc
@@ -114,6 +145,11 @@ templates:
                 - sqrt
         zeros:
                 - ones
+        subtract:
+                - power
+                - mod
+        real:
+                - imag
 
 factoryOnly:
         - flip
