@@ -39,6 +39,24 @@ static Pothos::Proxy getNumPyFloatInfo(const Pothos::DType& dtype)
     return PothosNumPy.call("getNumPyFloatInfoFromPothosDType", dtype);
 }
 
+static Pothos::BufferChunk getNumPyWindow(
+    const std::string& windowType,
+    size_t windowSize)
+{
+    auto pythonEnv = Pothos::ProxyEnvironment::make("python");
+    auto numpy = pythonEnv->findProxy("numpy");
+
+    return numpy.call<Pothos::BufferChunk>(windowType, windowSize);
+}
+
+static Pothos::BufferChunk getNumPyKaiser(size_t windowSize, double beta)
+{
+    auto pythonEnv = Pothos::ProxyEnvironment::make("python");
+    auto numpy = pythonEnv->findProxy("numpy");
+
+    return numpy.call<Pothos::BufferChunk>("kaiser", windowSize, beta);
+}
+
 pothos_static_block(registerCalls)
 {
     Pothos::PluginRegistry::addCall(
@@ -56,4 +74,25 @@ pothos_static_block(registerCalls)
     Pothos::PluginRegistry::addCall(
         "/numpy/info/version",
         Pothos::Callable(getNumPyVersion));
+
+    const std::vector<std::string> windowTypes =
+    {
+        "bartlett",
+        "blackman",
+        "hamming",
+        "hanning"
+    };
+    for(const auto& windowType: windowTypes)
+    {
+        std::string pluginName = "/numpy/window/" + windowType;
+        Pothos::PluginRegistry::addCall(
+            std::string("/numpy/window/" + windowType),
+            Pothos::Callable(getNumPyWindow)
+                .bind<std::string>(std::string(windowType), 0));
+    }
+
+    // Add Kaiser separately because of the different function signature.
+    Pothos::PluginRegistry::addCall(
+        "/numpy/window/kaiser",
+        Pothos::Callable(getNumPyKaiser));
 }
