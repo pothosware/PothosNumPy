@@ -21,7 +21,12 @@ def manualReplace(blockPath):
         Amax="AMax",
         Amin="AMin",
         Nanmax="NaNMax",
-        Nanmin="NaNMin")
+        Nanmin="NaNMin",
+        Ptp="PTP",
+        Nanmedian="NaNMedian",
+        Nanmean="NaNMean",
+        Nanstd="NaNStd",
+        Nanvar="NaNVar")
 
     return REPLACES.get(blockPath, blockPath)
 

@@ -101,6 +101,13 @@ conj:
         inputArgs: {supportComplex: True}
         outputArgs: {supportComplex: True}
 
+unique:
+        blockClass: OneToOneBlock
+        useDType: False
+        singleDType: True
+        inputArgs: {supportAll: True}
+        outputArgs: {supportAll: True}
+
 templates:
         sin:
                 - cos
@@ -168,3 +175,12 @@ factoryOnly:
         - amin
         - nanmax
         - nanmin
+        - ptp
+        - median
+        - mean
+        - std
+        - var
+        - nanmedian
+        - nanmean
+        - nanstd
+        - nanvar

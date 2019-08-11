@@ -49,9 +49,18 @@ class ForwardAndPostLabelBlock(BaseBlock):
         self.output(0).postLabel(self.labelName, numpyRet, self.findIndexFunc(buf))
 
 #
+# Utility
+#
+
+# Use when there is no set index associated with a given operation
+def __returnZero(buf):
+    return 0
+
+#
 # Subclasses
 #
 
+# Needed because of "initial" function parameter
 class AxisMinMaxBlock(ForwardAndPostLabelBlock):
     def __init__(self, dtype, func, findIndexFunc, labelName):
         dtypeArgs = dict(supportAll=True)
@@ -59,6 +68,19 @@ class AxisMinMaxBlock(ForwardAndPostLabelBlock):
 
         # TODO: make "initial" settable on the fly, validated
         self.funcArgs = None
+
+# Needed because the array index associated with the label depends on the return
+# value as well as the buffer
+class MedianClass(ForwardAndPostLabelBlock):
+    def __init__(self, dtype, medianFunc):
+        dtypeArgs = dict(supportAll=True)
+        ForwardAndPostLabelBlock.__init__(self, medianFunc, __returnZero, "MEDIAN", dtype, dtype, dtypeArgs, dtypeArgs)
+
+    def processAndPostBuffer(self, numpyRet, buf):
+        # numpy.where returns a tuple of ndarrays
+        arrIndex = numpy.where(buf == numpyRet)[0][0]
+
+        self.output(0).postLabel(self.labelName, numpyRet, arrIndex)
 
 #
 # Factories exposed to C++
@@ -77,3 +99,39 @@ def AMin(dtype):
 def NaNMin(dtype):
     dtypeArgs = dict(supportAll=True)
     return ForwardAndPostLabelBlock(numpy.nanmin, numpy.nanargmin, "MIN", dtype, dtype, dtypeArgs, dtypeArgs)
+
+def PTP(dtype):
+    dtypeArgs = dict(supportAll=True)
+    return ForwardAndPostLabelBlock(numpy.ptp, __returnZero, "PTP", dtype, dtype, dtypeArgs, dtypeArgs)
+
+def Median(dtype):
+    dtypeArgs = dict(supportAll=True)
+    return MedianClass(dtype, numpy.median)
+
+def Mean(dtype):
+    dtypeArgs = dict(supportAll=True)
+    return ForwardAndPostLabelBlock(numpy.mean, __returnZero, "MEAN", dtype, dtype, dtypeArgs, dtypeArgs)
+
+def Std(dtype):
+    dtypeArgs = dict(supportAll=True)
+    return ForwardAndPostLabelBlock(numpy.std, __returnZero, "STD", dtype, dtype, dtypeArgs, dtypeArgs)
+
+def Var(dtype):
+    dtypeArgs = dict(supportAll=True)
+    return ForwardAndPostLabelBlock(numpy.var, __returnZero, "VAR", dtype, dtype, dtypeArgs, dtypeArgs)
+
+def NaNMedian(dtype):
+    dtypeArgs = dict(supportAll=True)
+    return MedianClass(dtype, numpy.nanmedian)
+
+def NaNMean(dtype):
+    dtypeArgs = dict(supportAll=True)
+    return ForwardAndPostLabelBlock(numpy.nanmean, __returnZero, "MEAN", dtype, dtype, dtypeArgs, dtypeArgs)
+
+def NaNStd(dtype):
+    dtypeArgs = dict(supportAll=True)
+    return ForwardAndPostLabelBlock(numpy.nanstd, __returnZero, "STD", dtype, dtype, dtypeArgs, dtypeArgs)
+
+def NaNVar(dtype):
+    dtypeArgs = dict(supportAll=True)
+    return ForwardAndPostLabelBlock(numpy.nanvar, __returnZero, "VAR", dtype, dtype, dtypeArgs, dtypeArgs)
