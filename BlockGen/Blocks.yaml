@@ -125,10 +125,6 @@ templates:
                 - ravel
                 - maximum
                 - minimum
-                - amax
-                - amin
-                - nanmax
-                - nanmin
         floor:
                 - ceil
                 - trunc
@@ -168,3 +164,7 @@ factoryOnly:
         - linspace
         - logspace
         - geomspace
+        - amax
+        - amin
+        - nanmax
+        - nanmin

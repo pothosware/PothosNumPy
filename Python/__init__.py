@@ -3,6 +3,7 @@
 
 from .BaseBlock import *
 from .CppEntryPoints import *
+from .ForwardAndPostLabelBlock import *
 from .FFT import *
 from .Load import *
 from .OneToOneBlock import *

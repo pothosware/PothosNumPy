@@ -64,6 +64,7 @@ BUILD_PYTHON_MODULE(
         Python/__init__.py
         Python/BaseBlock.py
         Python/FFT.py
+        Python/ForwardAndPostLabelBlock.py
         Python/Load.py
         Python/NToOneBlock.py
         Python/OneToOneBlock.py
