@@ -82,13 +82,13 @@ def generatePythonCppEntrypointFile(blockYAML, outputDir):
     with open(tmplPath) as f:
         tmpl = f.read()
 
-    prefix = """# Copyright (c) 2019 Nicholas Corgan
+    prefix = """# Copyright (c) 2019-{0} Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
 #
-# This file was auto-generated on {0}.
+# This file was auto-generated on {1}.
 #
-""".format(datetime.datetime.now())
+""".format(datetime.datetime.now().year, datetime.datetime.now())
 
     rendered = Template(tmpl).render(blockMakoParams=blockMakoParams)
 
