@@ -1,3 +1,5 @@
+# TODO: add PostBuffer support
+
 sin:
         blockClass: OneToOneBlock
         useDType: True
@@ -114,6 +116,11 @@ hypot:
         inputArgs: {supportFloat: True}
         outputArgs: {supportFloat: True}
 
+random/random:
+        blockClass: SingleOutputSource
+        useDType: True
+        outputArgs: {supportFloat: True}
+
 templates:
         sin:
                 - cos
@@ -171,6 +178,7 @@ templates:
         hypot:
                 - arctan2
 
+# TODO: move random functions to lists above
 factoryOnly:
         - flip
         - fft/fft
@@ -196,3 +204,5 @@ factoryOnly:
         - nanstd
         - nanvar
         - count_nonzero
+        - random/integers
+        - random/permutation
