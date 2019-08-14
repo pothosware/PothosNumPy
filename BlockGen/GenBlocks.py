@@ -26,7 +26,9 @@ def manualReplace(blockPath):
         Nanmedian="NaNMedian",
         Nanmean="NaNMean",
         Nanstd="NaNStd",
-        Nanvar="NaNVar")
+        Nanvar="NaNVar",
+        CountNonzero="CountNonZero",
+        Copysign="CopySign")
 
     return REPLACES.get(blockPath, blockPath)
 

@@ -46,7 +46,6 @@ divide:
         inputArgs: {supportFloat: True, supportComplex: True}
         outputArgs: {supportFloat: True, supportComplex: True}
 
-
 floor:
         blockClass: OneToOneBlock
         useDType: True
@@ -108,6 +107,13 @@ unique:
         inputArgs: {supportAll: True}
         outputArgs: {supportAll: True}
 
+hypot:
+        blockClass: TwoToOneBlock
+        useDType: True
+        singleDType: True
+        inputArgs: {supportFloat: True}
+        outputArgs: {supportFloat: True}
+
 templates:
         sin:
                 - cos
@@ -137,6 +143,7 @@ templates:
                 - trunc
                 - degrees
                 - radians
+                - unwrap
         exp:
                 - expm1
                 - exp2
@@ -159,6 +166,10 @@ templates:
                 - mod
         real:
                 - imag
+        ldexp:
+                - copysign
+        hypot:
+                - arctan2
 
 factoryOnly:
         - flip
@@ -184,3 +195,4 @@ factoryOnly:
         - nanmean
         - nanstd
         - nanvar
+        - count_nonzero

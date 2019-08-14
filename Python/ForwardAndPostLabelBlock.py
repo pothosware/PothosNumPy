@@ -135,3 +135,7 @@ def NaNStd(dtype):
 def NaNVar(dtype):
     dtypeArgs = dict(supportAll=True)
     return ForwardAndPostLabelBlock(numpy.nanvar, __returnZero, "VAR", dtype, dtype, dtypeArgs, dtypeArgs)
+
+def CountNonZero(dtype):
+    dtypeArgs = dict(supportAll=True)
+    return ForwardAndPostLabelBlock(numpy.count_nonzero, __returnZero, "NONZERO", dtype, dtype, dtypeArgs, dtypeArgs)
