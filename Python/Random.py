@@ -43,3 +43,41 @@ def Integers(dtype):
     outputArgs = dict(supportInt=True)
 
     return SingleOutputSource(GetNumPyRandomIntegersFunc(), dtype, outputArgs, useDType=True)
+
+class Beta(SingleOutputSource):
+    def __init__(self, dtype, alpha, beta):
+        outputArgs = dict(supportFloat=True)
+        SingleOutputSource.__init__(self, GetNumPyRandom().beta, dtype, outputArgs, useDType=False)
+
+        self.__alpha = None
+        self.__beta = None
+
+        self.setAlpha(alpha)
+        self.setBeta(beta)
+
+    def getAlpha(self):
+        return self.__alpha
+
+    def setAlpha(self, alpha):
+        self.validateParameter(alpha, self.numpyOutputDType)
+
+        if alpha < 0.0:
+            raise ValueError("Alpha must be > 0.0")
+
+        self.__alpha = alpha
+        self.__updateArgs()
+
+    def getBeta(self):
+        return self.__beta
+
+    def setBeta(self, beta):
+        self.validateParameter(beta, self.numpyOutputDType)
+
+        if beta < 0.0:
+            raise ValueError("Beta must be > 0.0")
+
+        self.__beta = beta
+        self.__updateArgs()
+
+    def __updateArgs(self):
+        self.funcArgs = [self.__alpha, self.__beta]

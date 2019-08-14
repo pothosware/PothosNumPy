@@ -177,6 +177,8 @@ templates:
                 - copysign
         hypot:
                 - arctan2
+        random/random:
+                - random/standard_cauchy
 
 # TODO: move random functions to lists above
 factoryOnly:
