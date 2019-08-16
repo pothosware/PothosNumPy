@@ -1,0 +1,49 @@
+sin:
+        name: Sin
+        categories: ["/NumPy/Trig"]
+        class: OneToOneBlock
+        blockType: float
+
+cos:
+        name: Cos
+        copy: sin
+
+tan:
+        name: Tan
+        copy: sin
+
+arccos:
+        name: ArcCos
+        copy: sin
+
+arcsin:
+        name: ArcSin
+        copy: sin
+
+arctan:
+        name: ArcTan
+        copy: sin
+
+sinh:
+        name: SinH
+        copy: sin
+
+cosh:
+        name: CosH
+        copy: sin
+
+tanh:
+        name: TanH
+        copy: sin
+
+arccosh:
+        name: ArcCosH
+        copy: sin
+
+arcsinh:
+        name: ArcSinH
+        copy: sin
+
+arctan2:
+        name: ArcTan2
+        copy: sin

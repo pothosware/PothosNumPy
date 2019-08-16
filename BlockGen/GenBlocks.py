@@ -6,6 +6,7 @@ import os
 import sys
 import yaml
 
+'''
 NONSTANDARD = ["templates", "factoryOnly"]
 
 def manualReplace(blockPath):
@@ -137,4 +138,4 @@ if __name__ == "__main__":
     outputDir = os.path.abspath(sys.argv[1])
 
     generatePythonCppEntrypointFile(yml, outputDir)
-    generateCppFactoryFile(yml, outputDir)
+    generateCppFactoryFile(yml, outputDir)'''
