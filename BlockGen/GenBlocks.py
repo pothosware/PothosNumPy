@@ -6,6 +6,43 @@ import os
 import sys
 import yaml
 
+def processYAMLFile(yamlPath):
+    yml = None
+    with open(yamlPath) as f:
+        yml = yaml.load(f.read())
+
+    if not yml:
+        raise RuntimeError("No YAML found in {0}".format(filepath))
+
+    # These entries are fully defined, so when other entries have a "copy"
+    # field, the script will look in this dict.
+    templateEntries = {k:v for k,v in yml.items() if "copy" not in v}
+
+    fullEntries = templateEntries.copy()
+    for k,v in yml.items():
+        if "copy" in v:
+            if v["copy"] not in templateEntries:
+                raise RuntimeError('Could not find template entry: "{0}".'.format(v["copy"]))
+
+            fullEntry = templateEntries[v["copy"]].copy()
+            fullEntry["name"] = v["name"]
+            fullEntries[k] = fullEntry
+
+    return fullEntries
+
+if __name__ == "__main__":
+    blocksDir = os.path.join(os.path.dirname(__file__), "Blocks")
+    yamlFiles = [os.path.join(blocksDir, filepath) for filepath in os.listdir(blocksDir) if os.path.splitext(filepath)[1] == ".yaml"]
+
+    expandedYAMLList = [processYAMLFile(yamlFile) for yamlFile in yamlFiles]
+
+    # At this point, we have a list of dictionaries, so consolidate them.
+    expandedYAML = dict()
+    for yaml in expandedYAMLList:
+        expandedYAML.update(yaml)
+
+    print(expandedYAML)
+
 '''
 NONSTANDARD = ["templates", "factoryOnly"]
 
