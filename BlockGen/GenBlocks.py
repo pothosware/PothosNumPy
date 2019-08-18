@@ -6,6 +6,15 @@ import os
 import sys
 import yaml
 
+PythonFactoryFunctionTemplate = None
+
+def populateTemplates():
+    global PythonFactoryFunctionTemplate
+
+    pythonFactoryFunctionTemplatePath = os.path.join(os.path.dirname(__file__), "PythonFactoryFunction.mako.py")
+    with open(pythonFactoryFunctionTemplatePath) as f:
+        PythonFactoryFunctionTemplate = f.read()
+
 def processYAMLFile(yamlPath):
     yml = None
     with open(yamlPath) as f:
@@ -30,6 +39,18 @@ def processYAMLFile(yamlPath):
 
     return fullEntries
 
+def generatePythonFactoryFunction(func,yaml):
+    # Generate variables for processing.
+    makoVars = dict()
+    makoVars["name"] = yaml["name"]
+    makoVars["category"] = " ".join(yaml["categories"])
+    makoVars["func"] = func
+    makoVars["keywords"] = func
+    makoVars["factoryParams"] = "dtype"
+    makoVars["class"] = yaml["class"]
+
+    print(Template(PythonFactoryFunctionTemplate).render(makoVars=makoVars))
+
 if __name__ == "__main__":
     blocksDir = os.path.join(os.path.dirname(__file__), "Blocks")
     yamlFiles = [os.path.join(blocksDir, filepath) for filepath in os.listdir(blocksDir) if os.path.splitext(filepath)[1] == ".yaml"]
@@ -41,7 +62,10 @@ if __name__ == "__main__":
     for yaml in expandedYAMLList:
         expandedYAML.update(yaml)
 
-    print(expandedYAML)
+    populateTemplates()
+
+    for k,v in expandedYAML.items():
+        generatePythonFactoryFunction(k,v)
 
 '''
 NONSTANDARD = ["templates", "factoryOnly"]

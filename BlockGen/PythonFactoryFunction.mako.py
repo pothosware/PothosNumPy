@@ -1,8 +1,8 @@
 """/*
-|PothosDoc ${yaml["name"]
-|category ${yaml["category"]}
-|keywords ${yaml["keywords"]}
-|factory /numpy/${yaml["func"]}(${yaml["factoryParams"]})
+|PothosDoc ${makoVars['name']}
+|category ${makoVars['category']}
+|keywords ${makoVars['keywords']}
+|factory /numpy/${makoVars['func']}(${makoVars['factoryParams']})
 */"""
-def ${yaml["name"]}(${yaml["factoryParams"]}):
-    return ${yaml["class"]}(${yaml["classParams"]})
+def ${makoVars["name"]}(${makoVars["factoryParams"]}):
+    return ${makoVars["class"]}(${makoVars["classParams"]})
