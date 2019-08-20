@@ -13,12 +13,12 @@ tan:
         name: Tan
         copy: sin
 
-arccos:
-        name: ArcCos
-        copy: sin
-
 arcsin:
         name: ArcSin
+        copy: sin
+
+arccos:
+        name: ArcCos
         copy: sin
 
 arctan:
@@ -37,14 +37,22 @@ tanh:
         name: TanH
         copy: sin
 
-arccosh:
-        name: ArcCosH
-        copy: sin
-
 arcsinh:
         name: ArcSinH
         copy: sin
 
-arctan2:
-        name: ArcTan2
+arccosh:
+        name: ArcCosH
+        copy: sin
+
+arctanh:
+        name: ArcTanH
+        copy: sin
+
+deg2rad:
+        name: Deg2Rad
+        copy: sin
+
+rad2deg:
+        name: Rad2Deg
         copy: sin
