@@ -1,0 +1,22 @@
+angle:
+        name: Angle
+        categories: ["/NumPy/Trig"]
+        class: OneToOneBlock
+        blockPattern: ComplexToScalar
+        prefix: numpy
+
+real:
+        name: Real
+        copy: angle
+
+imag:
+        name: Imag
+        copy: angle
+
+conjugate:
+        name: Conjugate
+        categories: ["/NumPy/Trig"]
+        class: OneToOneBlock
+        blockType: [complex]
+        prefix: numpy
+        alias: [conj]

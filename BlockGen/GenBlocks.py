@@ -39,6 +39,8 @@ def processYAMLFile(yamlPath):
             if "alias" in fullEntry:
                 del fullEntry["alias"]
             fullEntry.update(v)
+        else:
+            fullEntry = v.copy()
 
         fullEntries[k] = fullEntry
 
@@ -64,6 +66,12 @@ def generatePythonFactoryFunction(func,yaml):
         dictText = "dict({0})".format(", ".join(["support{0}=True".format(formatTypeText(typeText)) for typeText in yaml["blockType"]]))
         makoVars["factoryParams"] = "dtype"
         makoVars["classParams"] = "dtype, dtype, {1}, {1}".format(dictText, dictText)
+    elif "blockPattern" in yaml:
+        if yaml["blockPattern"] == "ComplexToScalar":
+            makoVars["factoryParams"] = "inputDType, outputDType"
+            makoVars["classParams"] = "inputDType, outputDType, dict(supportComplex=True), dict(supportFloat=True)"
+        else:
+            raise RuntimeError("Invalid block pattern.")
 
     if "args" in yaml:
         makoVars["args"] = "[{0}]".format(", ".join(yaml["args"]))
