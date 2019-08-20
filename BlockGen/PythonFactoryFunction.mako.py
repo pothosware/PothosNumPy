@@ -5,4 +5,4 @@
 |factory /numpy/${makoVars['func']}(${makoVars['factoryParams']})
 */"""
 def ${makoVars["name"]}(${makoVars["factoryParams"]}):
-    return ${makoVars["class"]}(${makoVars["classParams"]})
+    return ${makoVars["class"]}(${makoVars["prefix"]}.${makoVars["func"]}, ${makoVars["classParams"]})

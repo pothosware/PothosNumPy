@@ -6,6 +6,8 @@ import os
 import sys
 import yaml
 
+Now = datetime.datetime.now()
+
 PythonFactoryFunctionTemplate = None
 
 def populateTemplates():
@@ -46,8 +48,19 @@ def generatePythonFactoryFunction(func,yaml):
     makoVars["category"] = " ".join(yaml["categories"])
     makoVars["func"] = func
     makoVars["keywords"] = func
-    makoVars["factoryParams"] = "dtype"
     makoVars["class"] = yaml["class"]
+    makoVars["prefix"] = yaml["prefix"]
+
+    def formatTypeText(typeText):
+        return typeText.title().replace("Uint", "UInt")
+
+    if ("blockType" in yaml) and ("Block" in yaml["class"]):
+        dictText = "dict({0})".format(", ".join(["support{0}=True".format(formatTypeText(typeText)) for typeText in yaml["blockType"]]))
+        makoVars["factoryParams"] = "dtype"
+        makoVars["classParams"] = "dtype, dtype, {1}, {1}".format(dictText, dictText)
+
+    if "kwargs" in yaml:
+        makoVars["classParams"] += ", {0}".format(", ".join(yaml["kwargs"]))
 
     print(Template(PythonFactoryFunctionTemplate).render(makoVars=makoVars))
 

@@ -2,7 +2,8 @@ sin:
         name: Sin
         categories: ["/NumPy/Trig"]
         class: OneToOneBlock
-        blockType: float
+        blockType: [float]
+        prefix: numpy
 
 cos:
         name: Cos
