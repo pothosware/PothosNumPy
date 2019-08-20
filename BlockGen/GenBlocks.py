@@ -59,8 +59,13 @@ def generatePythonFactoryFunction(func,yaml):
         makoVars["factoryParams"] = "dtype"
         makoVars["classParams"] = "dtype, dtype, {1}, {1}".format(dictText, dictText)
 
+    if "args" in yaml:
+        makoVars["args"] = "[{0}]".format(", ".join(yaml["args"]))
+        makoVars["classParams"] += ", *args"
+
     if "kwargs" in yaml:
-        makoVars["classParams"] += ", {0}".format(", ".join(yaml["kwargs"]))
+        makoVars["kwargs"] = "dict({0})".format(", ".join(yaml["kwargs"]))
+        makoVars["classParams"] += ", **kwargs"
 
     print(Template(PythonFactoryFunctionTemplate).render(makoVars=makoVars))
 
