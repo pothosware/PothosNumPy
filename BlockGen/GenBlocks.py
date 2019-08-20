@@ -38,12 +38,9 @@ def processYAMLFile(yamlPath):
             fullEntry = templateEntries[v["copy"]].copy()
             if "alias" in fullEntry:
                 del fullEntry["alias"]
+            fullEntry.update(v)
 
-            fullEntry["name"] = v["name"]
-            if "alias" in v:
-                fullEntry["alias"] = v["alias"]
-
-            fullEntries[k] = fullEntry
+        fullEntries[k] = fullEntry
 
     return fullEntries
 
