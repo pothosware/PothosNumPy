@@ -52,7 +52,9 @@ arctanh:
 deg2rad:
         name: Deg2Rad
         copy: sin
+        alias: [radians]
 
 rad2deg:
         name: Rad2Deg
         copy: sin
+        alias: [degrees]

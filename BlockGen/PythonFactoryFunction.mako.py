@@ -3,6 +3,11 @@
 |category ${makoVars['category']}
 |keywords ${makoVars['keywords']}
 |factory /numpy/${makoVars['func']}(${makoVars['factoryParams']})
+%if "alias" in makoVars:
+%for alias in makoVars["alias"]:
+|alias /numpy/${alias}
+%endfor
+%endif
 */"""
 def ${makoVars["name"]}(${makoVars["factoryParams"]}):
 %if "args" in makoVars:
