@@ -1,6 +1,6 @@
 angle:
         name: Angle
-        categories: ["/NumPy/Trig"]
+        categories: ["/NumPy/Complex"]
         class: OneToOneBlock
         blockPattern: ComplexToScalar
         prefix: numpy

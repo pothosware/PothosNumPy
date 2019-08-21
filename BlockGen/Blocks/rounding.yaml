@@ -1,0 +1,25 @@
+rint:
+        name: RInt
+        categories: ["/NumPy/Rounding"]
+        class: OneToOneBlock
+        blockType: [float, complex]
+        prefix: numpy
+
+fix:
+        name: Fix
+        categories: ["/Numpy/Rounding"]
+        class: OneToOneBlock
+        blockType: [float]
+        prefix: numpy
+
+ceil:
+        name: Ceil
+        copy: fix
+
+floor:
+        name: Floor
+        copy: fix
+
+trunc:
+        name: Trunc
+        copy: fix

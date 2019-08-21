@@ -1,0 +1,26 @@
+sqrt:
+        name: SqRt
+        categories: ["/NumPy/Misc"]
+        class: OneToOneBlock
+        blockType: [float, complex]
+        prefix: numpy
+
+cbrt:
+        name: CbRt
+        copy: sqrt
+        blockType: [float]
+
+square:
+        name: Square
+        copy: sqrt
+        blockType: [all]
+
+absolute:
+        name: Absolute
+        copy: sqrt
+        blockType: [float, uint, complex]
+
+fabs:
+        name: FAbs
+        copy: sqrt
+        blockType: [float]

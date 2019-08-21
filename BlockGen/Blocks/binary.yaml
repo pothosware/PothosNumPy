@@ -1,0 +1,6 @@
+invert:
+        name: Invert
+        categories: ["/NumPy/Binary"]
+        class: OneToOneBlock
+        blockType: [int, uint]
+        prefix: numpy
