@@ -4,6 +4,7 @@ angle:
         class: OneToOneBlock
         blockPattern: ComplexToScalar
         prefix: numpy
+        kwargs: [useDType=False]
 
 real:
         name: Real

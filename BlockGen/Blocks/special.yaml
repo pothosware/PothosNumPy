@@ -4,8 +4,8 @@ i0:
         class: OneToOneBlock
         blockType: [float]
         prefix: numpy
+        kwargs: [useDType=False]
 
 sinc:
         name: Sinc
         copy: i0
-        kwargs: [useDType=False]
