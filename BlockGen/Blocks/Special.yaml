@@ -3,7 +3,6 @@ i0:
         categories: ["/NumPy/Special"]
         class: OneToOneBlock
         blockType: [float]
-        prefix: numpy
         kwargs: [useDType=False]
 
 sinc:

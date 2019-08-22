@@ -1,7 +1,6 @@
 unique:
         name: Unique
         class: OneToOneBlock
-        prefix: numpy
         categories: ["/NumPy/Stream"]
         blockType: [all]
         kwargs: [useDType=False, callPostBuffer=True]
@@ -9,14 +8,12 @@ unique:
 copy_sign:
         name: CopySign
         class: TwoToOneBlock
-        prefix: numpy
         categories: ["/NumPy/Stream"]
         blockType: [int, float, complex]
 
 positive:
         name: Positive
         class: OneToOneBlock
-        prefix: numpy
         categories: ["/NumPy/Stream"]
         blockType: [int, float, complex]
 

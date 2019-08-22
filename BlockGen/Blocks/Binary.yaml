@@ -3,7 +3,6 @@ invert:
         categories: ["/NumPy/Binary"]
         class: OneToOneBlock
         blockType: [int, uint]
-        prefix: numpy
 
 bitwise_and:
         copy: invert

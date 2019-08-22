@@ -54,7 +54,7 @@ def generatePythonFactoryFunction(func,yaml):
     makoVars["func"] = func
     makoVars["keywords"] = func
     makoVars["class"] = yaml["class"]
-    makoVars["prefix"] = yaml["prefix"]
+    makoVars["prefix"] = yaml.get("prefix", "numpy")
 
     if "alias" in yaml:
         makoVars["alias"] = yaml["alias"]

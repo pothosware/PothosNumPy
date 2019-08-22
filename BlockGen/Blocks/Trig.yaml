@@ -3,7 +3,6 @@ sin:
         categories: ["/NumPy/Trig"]
         class: OneToOneBlock
         blockType: [float]
-        prefix: numpy
 
 cos:
         name: Cos

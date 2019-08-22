@@ -3,7 +3,6 @@ add:
         categories: ["/NumPy/Arithmetic"]
         class: NToOneBlock
         blockType: [all]
-        prefix: numpy
 
 multiply:
         copy: add
@@ -19,7 +18,6 @@ subtract:
         categories: ["/NumPy/Arithmetic"]
         class: TwoToOneBlock
         blockType: [all]
-        prefix: numpy
 
 divide:
         copy: subtract
@@ -56,7 +54,6 @@ reciprocal:
         categories: ["/NumPy/Arithmetic"]
         class: OneToOneBlock
         blockType: [float, complex]
-        prefix: numpy
 
 sqrt:
         copy: reciprocal

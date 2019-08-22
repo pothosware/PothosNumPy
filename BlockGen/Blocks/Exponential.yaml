@@ -3,7 +3,6 @@ exp:
         categories: ["/NumPy/Exponential"]
         class: OneToOneBlock
         blockType: [float, complex]
-        prefix: numpy
 
 expm1:
         copy: exp

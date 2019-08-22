@@ -3,7 +3,6 @@ angle:
         categories: ["/NumPy/Complex"]
         class: OneToOneBlock
         blockPattern: ComplexToScalar
-        prefix: numpy
         kwargs: [useDType=False]
 
 real:
@@ -19,5 +18,4 @@ conjugate:
         categories: ["/NumPy/Trig"]
         class: OneToOneBlock
         blockType: [complex]
-        prefix: numpy
         alias: [conj]
