@@ -1,0 +1,40 @@
+exp:
+        name: Exp
+        categories: ["/NumPy/Exponential"]
+        class: OneToOneBlock
+        blockType: [float, complex]
+        prefix: numpy
+
+expm1:
+        copy: exp
+        name: ExpM1
+
+exp2:
+        copy: exp
+        name: Exp2
+
+log:
+        copy: exp
+        name: Log
+
+log10:
+        copy: exp
+        name: Log10
+
+log2:
+        copy: exp
+        name: Log2
+
+log1p:
+        copy: exp
+        name: Log1P
+
+logaddexp:
+        copy: exp
+        name: LogAddExp
+        blockType: [float]
+
+logaddexp2:
+        copy: exp
+        name: LogAddExp2
+        blockType: [float]

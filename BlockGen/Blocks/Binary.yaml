@@ -4,3 +4,18 @@ invert:
         class: OneToOneBlock
         blockType: [int, uint]
         prefix: numpy
+
+bitwise_and:
+        copy: invert
+        name: BitwiseAnd
+        class: TwoToOneBlock
+
+bitwise_or:
+        copy: invert
+        name: BitwiseOr
+        class: TwoToOneBlock
+
+bitwise_xor:
+        copy: invert
+        name: BitwiseXor
+        class: TwoToOneBlock

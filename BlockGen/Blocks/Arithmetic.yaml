@@ -1,0 +1,83 @@
+add:
+        name: Add
+        categories: ["/NumPy/Arithmetic"]
+        class: NToOneBlock
+        blockType: [all]
+        prefix: numpy
+
+multiply:
+        copy: add
+        name: Multiply
+        blockType: [float, complex]
+
+ldexp:
+        copy: add
+        name: LdExp
+
+subtract:
+        name: Subtract
+        categories: ["/NumPy/Arithmetic"]
+        class: TwoToOneBlock
+        blockType: [all]
+        prefix: numpy
+
+divide:
+        copy: subtract
+        name: Divide
+        blockType: [float, complex]
+
+true_divide:
+        copy: subtract
+        name: TrueDivide
+        blockType: [float, complex]
+
+floor_divide:
+        copy: subtract
+        name: FloorDivide
+        blockType: [float, complex]
+
+mod:
+        copy: subtract
+        name: Mod
+        blockType: [float, complex]
+
+fmod:
+        copy: subtract
+        name: FMod
+        blockType: [float, complex]
+
+remainder:
+        copy: subtract
+        name: Remainder
+        blockType: [float, complex]
+
+reciprocal:
+        name: Reciprocal
+        categories: ["/NumPy/Arithmetic"]
+        class: OneToOneBlock
+        blockType: [float, complex]
+        prefix: numpy
+
+sqrt:
+        copy: reciprocal
+        name: SqRt
+
+cbrt:
+        name: CbRt
+        copy: reciprocal
+        blockType: [float]
+
+square:
+        name: Square
+        copy: reciprocal
+        blockType: [all]
+
+absolute:
+        name: Absolute
+        copy: reciprocal
+        blockType: [float, int, complex]
+
+fabs:
+        name: FAbs
+        copy: reciprocal
+        blockType: [float]

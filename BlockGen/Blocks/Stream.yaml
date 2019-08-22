@@ -5,3 +5,25 @@ unique:
         categories: ["/NumPy/Stream"]
         blockType: [all]
         kwargs: [useDType=False, callPostBuffer=True]
+
+copy_sign:
+        name: CopySign
+        class: TwoToOneBlock
+        prefix: numpy
+        categories: ["/NumPy/Stream"]
+        blockType: [int, float, complex]
+
+positive:
+        name: Positive
+        class: OneToOneBlock
+        prefix: numpy
+        categories: ["/NumPy/Stream"]
+        blockType: [int, float, complex]
+
+trim_zeros:
+        copy: unique
+        name: TrimZeros
+
+negative:
+        copy: positive
+        name: Negative
