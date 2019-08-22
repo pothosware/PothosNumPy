@@ -32,9 +32,16 @@ find_python_module(yaml REQUIRED)
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/BlockGen)
 set(autogenDeps
-    ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks.yaml
-    ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/CppEntryPoints.mako.py
+    ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Arithmetic.yaml
+    ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Binary.yaml
+    ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Complex.yaml
+    ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Exponential.yaml
+    ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Rounding.yaml
+    ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Special.yaml
+    ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Stream.yaml
+    ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Trig.yaml
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Factory.mako.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/PythonFactoryFunction.mako.py
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/GenBlocks.py)
 set(autogenOutputs
     ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/CppEntryPoints.py
@@ -86,3 +93,4 @@ BUILD_PYTHON_MODULE(
         Testing/TestSingleOutputSources.cpp
         Testing/TestTwoToOneBlocks.cpp
 )
+add_dependencies(NumPyBlocks autogen_files)
