@@ -92,5 +92,7 @@ BUILD_PYTHON_MODULE(
         Testing/TestRegisteredCalls.cpp
         Testing/TestSingleOutputSources.cpp
         Testing/TestTwoToOneBlocks.cpp
+    DOC_SOURCES
+        ${autogenOutputs}
 )
 add_dependencies(NumPyBlocks autogen_files)

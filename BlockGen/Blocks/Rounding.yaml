@@ -6,7 +6,7 @@ rint:
 
 fix:
         name: Fix
-        categories: ["/Numpy/Rounding"]
+        categories: ["/NumPy/Rounding"]
         class: OneToOneBlock
         blockType: [float]
 
