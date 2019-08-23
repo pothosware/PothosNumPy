@@ -1,5 +1,6 @@
 rint:
         name: RInt
+        niceName: Round
         categories: ["/NumPy/Rounding"]
         class: OneToOneBlock
         blockType: [float, complex]
@@ -20,4 +21,5 @@ floor:
 
 trunc:
         name: Trunc
+        niceName: Truncate
         copy: fix

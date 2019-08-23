@@ -6,16 +6,18 @@ angle:
         kwargs: [useDType=False]
 
 real:
-        name: Real
         copy: angle
+        name: Real
+        niceName: Complex to Real
 
 imag:
-        name: Imag
         copy: angle
+        name: Imag
+        niceName: Complex to Imaginary
 
 conjugate:
         name: Conjugate
-        categories: ["/NumPy/Trig"]
+        categories: ["/NumPy/Complex"]
         class: OneToOneBlock
         blockType: [complex]
         alias: [conj]

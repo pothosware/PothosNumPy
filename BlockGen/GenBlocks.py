@@ -44,8 +44,9 @@ def processYAMLFile(yamlPath):
                 raise RuntimeError('Could not find template entry: "{0}".'.format(v["copy"]))
 
             fullEntry = templateEntries[v["copy"]].copy()
-            if "alias" in fullEntry:
-                del fullEntry["alias"]
+            for keyToErase in ["alias", "niceName"]:
+                if keyToErase in fullEntry:
+                    del fullEntry[keyToErase]
             fullEntry.update(v)
         else:
             fullEntry = v.copy()
@@ -70,6 +71,8 @@ def generatePythonFactoryFunction(func,yaml):
 
     if "alias" in yaml:
         makoVars["alias"] = yaml["alias"]
+    if "niceName" in yaml:
+        makoVars["niceName"] = yaml["niceName"]
 
     def formatTypeText(typeText):
         return typeText.title().replace("Uint", "UInt")

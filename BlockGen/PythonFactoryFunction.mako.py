@@ -1,5 +1,8 @@
 """/*
-|PothosDoc ${makoVars['name']}
+|PothosDoc ${makoVars.get('niceName', makoVars['name'])}
+
+Corresponding NumPy function: ${makoVars["prefix"]}.${makoVars["func"]}
+
 |category ${makoVars['category']}
 |keywords ${makoVars['keywords']}
 |factory /numpy/${makoVars['func']}(${makoVars['factoryParams']})

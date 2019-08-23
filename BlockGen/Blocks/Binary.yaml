@@ -7,14 +7,17 @@ invert:
 bitwise_and:
         copy: invert
         name: BitwiseAnd
+        niceName: Bitwise And
         class: TwoToOneBlock
 
 bitwise_or:
         copy: invert
         name: BitwiseOr
+        niceName: Bitwise Or
         class: TwoToOneBlock
 
 bitwise_xor:
         copy: invert
         name: BitwiseXor
+        niceName: Bitwise XOR
         class: TwoToOneBlock

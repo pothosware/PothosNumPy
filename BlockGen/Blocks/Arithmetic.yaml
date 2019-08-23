@@ -12,6 +12,7 @@ multiply:
 ldexp:
         copy: add
         name: LdExp
+        niceName: "x1 * 2**x2"
 
 subtract:
         name: Subtract
@@ -27,26 +28,25 @@ divide:
 true_divide:
         copy: subtract
         name: TrueDivide
+        niceName: "True Divide"
         blockType: [float, complex]
 
 floor_divide:
         copy: subtract
         name: FloorDivide
-        blockType: [float, complex]
-
-mod:
-        copy: subtract
-        name: Mod
-        blockType: [float, complex]
-
-fmod:
-        copy: subtract
-        name: FMod
+        niceName: "Floor Divide"
         blockType: [float, complex]
 
 remainder:
         copy: subtract
-        name: Remainder
+        name: Mod
+        niceName: Remainder
+        blockType: [float, complex]
+        alias: [mod]
+
+fmod:
+        copy: subtract
+        name: FMod
         blockType: [float, complex]
 
 reciprocal:
@@ -58,11 +58,13 @@ reciprocal:
 sqrt:
         copy: reciprocal
         name: SqRt
+        niceName: Square Root
 
 cbrt:
         name: CbRt
         copy: reciprocal
         blockType: [float]
+        niceName: Cube Root
 
 square:
         name: Square

@@ -1,59 +1,73 @@
 sin:
         name: Sin
+        niceName: Sine
         categories: ["/NumPy/Trig"]
         class: OneToOneBlock
         blockType: [float]
 
 cos:
         name: Cos
+        niceName: Cosine
         copy: sin
 
 tan:
         name: Tan
+        niceName: Tangent
         copy: sin
 
 arcsin:
         name: ArcSin
+        niceName: Arc Sine
         copy: sin
 
 arccos:
         name: ArcCos
+        niceName: Arc Cosine
         copy: sin
 
 arctan:
         name: ArcTan
+        niceName: Arc Tangent
         copy: sin
 
 sinh:
         name: SinH
+        niceName: Hyperbolic Sine
         copy: sin
 
 cosh:
         name: CosH
+        niceName: Hyperbolic Cosine
         copy: sin
 
 tanh:
         name: TanH
+        niceName: Hyperbolic Tangent
         copy: sin
 
 arcsinh:
         name: ArcSinH
+        niceName: Arc Hyperbolic Sine
         copy: sin
 
 arccosh:
         name: ArcCosH
+        niceName: Arc Hyperbolic Cosine
         copy: sin
 
 arctanh:
         name: ArcTanH
+        niceName: Arc Hyperbolic Tangent
         copy: sin
 
 deg2rad:
         name: Deg2Rad
+        niceName: Degrees to Radians
         copy: sin
         alias: [radians]
 
 rad2deg:
         name: Rad2Deg
+        niceName: Radians to Degrees
         copy: sin
         alias: [degrees]
