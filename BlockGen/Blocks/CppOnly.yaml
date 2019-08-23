@@ -1,0 +1,15 @@
+fft/fft:
+        name: FFT
+        cppOnly: True
+
+fft/ifft:
+        name: IFFT
+        copy: fft/fft
+
+fft/rfft:
+        name: RFFT
+        copy: fft/fft
+
+fft/irfft:
+        name: IRFFT
+        copy: fft/fft

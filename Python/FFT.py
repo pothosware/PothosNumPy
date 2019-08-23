@@ -46,6 +46,15 @@ class FFTClass(BaseBlock):
 
 # TODO: enforce scalar
 
+"""/*
+|PothosDoc FFT
+
+Corresponding NumPy function: numpy.fft.fft
+
+|category /NumPy/FFT
+|keywords fft
+|factory /numpy/fft(dtype,numBins)
+*/"""
 def FFT(dtype, numBins):
     dtypeArgs = dict(supportComplex=True)
 
@@ -57,6 +66,15 @@ def FFT(dtype, numBins):
                dtypeArgs,
                numBins)
 
+"""/*
+|PothosDoc Inverse FFT
+
+Corresponding NumPy function: numpy.fft.ifft
+
+|category /NumPy/FFT
+|keywords fft ifft
+|factory /numpy/ifft(dtype,numBins)
+*/"""
 def IFFT(dtype, numBins):
     dtypeArgs = dict(supportComplex=True)
 
@@ -68,6 +86,15 @@ def IFFT(dtype, numBins):
                dtypeArgs,
                numBins)
 
+"""/*
+|PothosDoc Real FFT
+
+Corresponding NumPy function: numpy.fft.rfft
+
+|category /NumPy/FFT
+|keywords fft rfft
+|factory /numpy/rfft(dtype,numBins)
+*/"""
 def RFFT(dtype, numBins):
     # Validate here so we get a clearer error message than DType complaining about
     # complex_complex_X.
@@ -83,6 +110,15 @@ def RFFT(dtype, numBins):
                dict(supportAll=True),
                numBins)
 
+"""/*
+|PothosDoc Inverse Real FFT
+
+Corresponding NumPy function: numpy.fft.irfft
+
+|category /NumPy/FFT
+|keywords fft irfft
+|factory /numpy/irfft(dtype,numBins)
+*/"""
 def IRFFT(dtype, numBins):
     # Validate here so we get a clearer error message than DType complaining about
     # complex_complex_X.

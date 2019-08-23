@@ -2,5 +2,6 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 from .CppEntryPoints import *
+from .FFT import *
 from .RegisteredCallHelpers import *
 from .Utility import *

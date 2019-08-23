@@ -35,6 +35,7 @@ set(autogenDeps
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Arithmetic.yaml
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Binary.yaml
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Complex.yaml
+    ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/CppOnly.yaml
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Exponential.yaml
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Rounding.yaml
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Special.yaml
@@ -94,5 +95,6 @@ BUILD_PYTHON_MODULE(
         Testing/TestTwoToOneBlocks.cpp
     DOC_SOURCES
         ${autogenOutputs}
+        Python/FFT.py
 )
 add_dependencies(NumPyBlocks autogen_files)

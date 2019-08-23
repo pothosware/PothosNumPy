@@ -141,7 +141,7 @@ from .TwoToOneBlock import *
 from .NToOneBlock import *
 """.format(Now.year, Now)
 
-    pythonFactoryFunctionsList = [generatePythonFactoryFunction(k,v) for k,v in expandedYAML.items()]
+    pythonFactoryFunctionsList = [generatePythonFactoryFunction(k,v) for k,v in expandedYAML.items() if not v.get("cppOnly", False)]
     pythonFactoryFunctionsStr = "\n".join(pythonFactoryFunctionsList)
 
     output = "{0}\n{1}".format(prefix, pythonFactoryFunctionsStr)
