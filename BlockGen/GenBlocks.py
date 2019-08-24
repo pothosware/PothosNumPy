@@ -81,10 +81,14 @@ def generatePythonFactoryFunction(func,yaml):
         if "Block" in yaml["class"]:
             dictText = "dict({0})".format(", ".join(["support{0}=True".format(formatTypeText(typeText)) for typeText in yaml["blockType"]]))
             makoVars["factoryParams"] = "dtype"
-            makoVars["classParams"] = "dtype, dtype, {1}, {1}".format(dictText, dictText)
+            makoVars["classParams"] = "dtype, dtype, {0}, {0}".format(dictText, dictText)
             if yaml["class"] == "NToOneBlock":
                 makoVars["factoryParams"] += ", nchans"
                 makoVars["classParams"] += ", nchans"
+        elif "Source" in yaml["class"]:
+            dictText = "dict({0})".format(", ".join(["support{0}=True".format(formatTypeText(typeText)) for typeText in yaml["blockType"]]))
+            makoVars["factoryParams"] = "dtype"
+            makoVars["classParams"] = "dtype, {0}".format(dictText, dictText)
         else:
             raise RuntimeError("Invalid block type.")
     elif "blockPattern" in yaml:
@@ -139,6 +143,7 @@ def generatePythonOutput(expandedYAML):
 from .OneToOneBlock import *
 from .TwoToOneBlock import *
 from .NToOneBlock import *
+from .Source import *
 """.format(Now.year, Now)
 
     pythonFactoryFunctionsList = [generatePythonFactoryFunction(k,v) for k,v in expandedYAML.items() if not v.get("cppOnly", False)]

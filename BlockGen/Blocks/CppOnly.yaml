@@ -13,3 +13,19 @@ fft/rfft:
 fft/irfft:
         name: IRFFT
         copy: fft/fft
+
+arange:
+        name: ARange
+        copy: fft/fft
+
+linspace:
+        name: LinSpace
+        cppOnly: True
+
+logspace:
+        name: LogSpace
+        cppOnly: True
+
+geomspace:
+        name: GeomSpace
+        cppOnly: True

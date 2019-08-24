@@ -68,7 +68,7 @@ class FullClass(SingleOutputSource):
         self.fillValue = fillValue
         self.funcArgs = [fillValue]
 
-class RangeClass(SingleOutputSource):
+class RangeSource(SingleOutputSource):
     def __init__(self, func, dtype, start, stop, step):
         dtypeArgs = dict(supportInt=True, supportUInt=True, supportFloat=True)
         SingleOutputSource.__init__(self, func, dtype, dtypeArgs, callPostBuffer=True)
@@ -125,7 +125,7 @@ class RangeClass(SingleOutputSource):
         self.step = step
         self.__refreshArgs()
 
-class SpaceClass(SingleOutputSource):
+class SpaceSource(SingleOutputSource):
     def __init__(self, func, dtype, start, stop, numValues):
         dtypeArgs = dict(supportInt=True, supportUInt=True, supportFloat=True)
         SingleOutputSource.__init__(self, func, dtype, dtypeArgs, callPostBuffer=True)
@@ -190,13 +190,13 @@ def Full(dtype, fillValue):
     return FullClass(dtype, fillValue)
 
 def ARange(dtype, start, stop, step):
-    return RangeClass(numpy.arange, dtype, start, stop, step)
+    return RangeSource(numpy.arange, dtype, start, stop, step)
 
 def LinSpace(dtype, start, stop, numValues):
-    return SpaceClass(numpy.linspace, dtype, start, stop, numValues)
+    return SpaceSource(numpy.linspace, dtype, start, stop, numValues)
 
 def LogSpace(dtype, start, stop, numValues):
-    return SpaceClass(numpy.logspace, dtype, start, stop, numValues)
+    return SpaceSource(numpy.logspace, dtype, start, stop, numValues)
 
 def GeomSpace(dtype, start, stop, numValues):
-    return SpaceClass(numpy.geomspace, dtype, start, stop, numValues)
+    return SpaceSource(numpy.geomspace, dtype, start, stop, numValues)
