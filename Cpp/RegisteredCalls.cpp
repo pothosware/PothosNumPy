@@ -1,5 +1,5 @@
 // Copyright (c) 2019 Nicholas Corgan
-// SPDX-License-Identifier: BSL-1.0
+// SPDX-License-Identifier: BSD-3-Clause
 
 #include <Pothos/Callable.hpp>
 #include <Pothos/Framework.hpp>

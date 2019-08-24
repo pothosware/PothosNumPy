@@ -1,5 +1,5 @@
 // Copyright (c) 2019 Nicholas Corgan
-// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-License-Identifier: BSD-3-Clause
 
 #include "TwoToOneBlockTest.hpp"
 #include "TestUtility.hpp"
