@@ -1,31 +1,10 @@
-fft/fft:
-        name: FFT
-        cppOnly: True
-
-fft/ifft:
-        name: IFFT
-        copy: fft/fft
-
-fft/rfft:
-        name: RFFT
-        copy: fft/fft
-
-fft/irfft:
-        name: IRFFT
-        copy: fft/fft
-
-arange:
-        name: ARange
-        copy: fft/fft
-
-linspace:
-        name: LinSpace
-        cppOnly: True
-
-logspace:
-        name: LogSpace
-        cppOnly: True
-
-geomspace:
-        name: GeomSpace
-        cppOnly: True
+# TODO: figure out what here can be automated
+fft/fft: {name: FFT}
+fft/ifft: {name: IFFT}
+fft/rfft: {name: RFFT}
+fft/irfft: {name: IRFFT}
+arange: {name: ARange}
+linspace: {name: LinSpace}
+logspace: {name: LogSpace}
+geomspace: {name: GeomSpace}
+full: {name: Full}

@@ -7,6 +7,7 @@ import sys
 import yaml
 
 ScriptDirName = os.path.dirname(__file__)
+BlocksDir = os.path.join(ScriptDirName, "Blocks")
 OutputDir = os.path.abspath(sys.argv[1])
 Now = datetime.datetime.now()
 
@@ -124,6 +125,17 @@ def generateCppOutput(expandedYAML):
             for alias in v["alias"]:
                 factories += [generateCppFactory(alias,v["name"])]
 
+    # Add C++-only blocks.
+    cppOnlyYAMLPath = os.path.join(BlocksDir, "CppOnly.yaml")
+    with open(cppOnlyYAMLPath) as f:
+        cppOnlyYAML = yaml.load(f.read())
+
+    for k,v in cppOnlyYAML.items():
+        factories += [generateCppFactory(k,v["name"])]
+    if "alias" in v:
+        for alias in v["alias"]:
+            factories += [generateCppFactory(alias,v["name"])]
+
     rendered = Template(CppFactoryTemplate).render(factories=factories)
 
     output = "{0}\n{1}".format(prefix, rendered)
@@ -156,15 +168,14 @@ from .Source import *
         f.write(output)
 
 if __name__ == "__main__":
-    blocksDir = os.path.join(ScriptDirName, "Blocks")
-    yamlFiles = [os.path.join(blocksDir, filepath) for filepath in os.listdir(blocksDir) if os.path.splitext(filepath)[1] == ".yaml"]
+    yamlFiles = [os.path.join(BlocksDir, filepath) for filepath in os.listdir(BlocksDir) if os.path.splitext(filepath)[1] == ".yaml"]
 
-    expandedYAMLList = [processYAMLFile(yamlFile) for yamlFile in yamlFiles]
+    expandedYAMLList = [processYAMLFile(yamlFile) for yamlFile in yamlFiles if "CppOnly.yaml" not in yamlFile]
 
     # At this point, we have a list of dictionaries, so consolidate them.
     expandedYAML = dict()
-    for yaml in expandedYAMLList:
-        expandedYAML.update(yaml)
+    for yml in expandedYAMLList:
+        expandedYAML.update(yml)
 
     populateTemplates()
     generateCppOutput(expandedYAML)
