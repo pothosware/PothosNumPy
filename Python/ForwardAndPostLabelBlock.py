@@ -89,53 +89,13 @@ class MedianClass(ForwardAndPostLabelBlock):
 def AMax(dtype):
     return AxisMinMaxBlock(dtype, numpy.amax, numpy.argmax, "MAX")
 
-def NaNMax(dtype):
-    dtypeArgs = dict(supportAll=True)
-    return ForwardAndPostLabelBlock(numpy.nanmax, numpy.nanargmax, "MAX", dtype, dtype, dtypeArgs, dtypeArgs)
-
 def AMin(dtype):
     return AxisMinMaxBlock(dtype, numpy.amin, numpy.argmin, "MIN")
-
-def NaNMin(dtype):
-    dtypeArgs = dict(supportAll=True)
-    return ForwardAndPostLabelBlock(numpy.nanmin, numpy.nanargmin, "MIN", dtype, dtype, dtypeArgs, dtypeArgs)
-
-def PTP(dtype):
-    dtypeArgs = dict(supportAll=True)
-    return ForwardAndPostLabelBlock(numpy.ptp, __returnZero, "PTP", dtype, dtype, dtypeArgs, dtypeArgs)
 
 def Median(dtype):
     dtypeArgs = dict(supportAll=True)
     return MedianClass(dtype, numpy.median)
 
-def Mean(dtype):
-    dtypeArgs = dict(supportAll=True)
-    return ForwardAndPostLabelBlock(numpy.mean, __returnZero, "MEAN", dtype, dtype, dtypeArgs, dtypeArgs)
-
-def Std(dtype):
-    dtypeArgs = dict(supportAll=True)
-    return ForwardAndPostLabelBlock(numpy.std, __returnZero, "STD", dtype, dtype, dtypeArgs, dtypeArgs)
-
-def Var(dtype):
-    dtypeArgs = dict(supportAll=True)
-    return ForwardAndPostLabelBlock(numpy.var, __returnZero, "VAR", dtype, dtype, dtypeArgs, dtypeArgs)
-
 def NaNMedian(dtype):
     dtypeArgs = dict(supportAll=True)
     return MedianClass(dtype, numpy.nanmedian)
-
-def NaNMean(dtype):
-    dtypeArgs = dict(supportAll=True)
-    return ForwardAndPostLabelBlock(numpy.nanmean, __returnZero, "MEAN", dtype, dtype, dtypeArgs, dtypeArgs)
-
-def NaNStd(dtype):
-    dtypeArgs = dict(supportAll=True)
-    return ForwardAndPostLabelBlock(numpy.nanstd, __returnZero, "STD", dtype, dtype, dtypeArgs, dtypeArgs)
-
-def NaNVar(dtype):
-    dtypeArgs = dict(supportAll=True)
-    return ForwardAndPostLabelBlock(numpy.nanvar, __returnZero, "VAR", dtype, dtype, dtypeArgs, dtypeArgs)
-
-def CountNonZero(dtype):
-    dtypeArgs = dict(supportAll=True)
-    return ForwardAndPostLabelBlock(numpy.count_nonzero, __returnZero, "NONZERO", dtype, dtype, dtypeArgs, dtypeArgs)

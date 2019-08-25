@@ -82,14 +82,17 @@ def generatePythonFactoryFunction(func,yaml):
         if "Block" in yaml["class"]:
             dictText = "dict({0})".format(", ".join(["support{0}=True".format(formatTypeText(typeText)) for typeText in yaml["blockType"]]))
             makoVars["factoryParams"] = "dtype"
-            makoVars["classParams"] = "dtype, dtype, {0}, {0}".format(dictText, dictText)
+            if makoVars["class"] == "ForwardAndPostLabelBlock":
+                makoVars["classParams"] = "{0}, \"{1}\", dtype, dtype, {2}, {2}".format(yaml.get("findIndexFunc", "__returnZero"), yaml["label"], dictText)
+            else:
+                makoVars["classParams"] = "dtype, dtype, {0}, {0}".format(dictText)
             if yaml["class"] == "NToOneBlock":
                 makoVars["factoryParams"] += ", nchans"
                 makoVars["classParams"] += ", nchans"
         elif "Source" in yaml["class"]:
             dictText = "dict({0})".format(", ".join(["support{0}=True".format(formatTypeText(typeText)) for typeText in yaml["blockType"]]))
             makoVars["factoryParams"] = "dtype"
-            makoVars["classParams"] = "dtype, {0}".format(dictText, dictText)
+            makoVars["classParams"] = "dtype, {0}".format(dictText)
         else:
             raise RuntimeError("Invalid block type.")
     elif "blockPattern" in yaml:
@@ -155,6 +158,7 @@ def generatePythonOutput(expandedYAML):
 from .OneToOneBlock import *
 from .TwoToOneBlock import *
 from .NToOneBlock import *
+from .ForwardAndPostLabelBlock import *
 from .Source import *
 """.format(Now.year, Now)
 

@@ -35,21 +35,25 @@ ravel:
 intersect1d:
         copy: unique
         name: Intersect1D
+        niceName: Set Intersection
         class: TwoToOneBlock
 
 setdiff1d:
         copy: unique
         name: SetDiff1D
+        niceName: Set Difference
         class: TwoToOneBlock
 
-setsxor1d:
+setxor1d:
         copy: unique
-        name: Intersect1D
+        name: SetXor1D
+        niceName: Set XOR
         class: TwoToOneBlock
 
 union1d:
         copy: unique
         name: Union1D
+        niceName: Set Union
         class: TwoToOneBlock
 
 sort:
@@ -62,3 +66,68 @@ sort_complex:
         name: SortComplex
         niceName: "Sort Complex"
         blockType: [complex]
+
+# TODO: better categories if needed, move to own files if needed
+
+ptp:
+        name: PTP
+        nicename: Peak-to-Peak
+        categories: ["/NumPy/Stream"]
+        class: ForwardAndPostLabelBlock
+        blockType: [all]
+        label: "PTP"
+
+mean:
+        copy: ptp
+        name: Mean
+        label: "MEAN"
+
+std:
+        copy: ptp
+        name: Std
+        niceName: Standard Deviation
+        label: "STD"
+
+var:
+        copy: ptp
+        name: Var
+        niceName: Variance
+        label: "VAR"
+
+nanmean:
+        copy: ptp
+        name: NaNMean
+        niceName: Mean (ignores NaN)
+        label: "MEAN"
+
+nanstd:
+        copy: ptp
+        name: NaNStd
+        niceName: Standard Deviation (ignores NaN)
+        label: "STD"
+
+nanvar:
+        copy: ptp
+        name: NaNVar
+        niceName: Variance (ignores NaN)
+        label: "VAR"
+
+nanmax:
+        copy: ptp
+        name: NaNMax
+        niceName: Max (ignores NaN)
+        findIndexFunc: numpy.nanargmax
+        label: "MAX"
+
+nanmin:
+        copy: ptp
+        name: NaNMin
+        niceName: Min (ignores NaN)
+        findIndexFunc: numpy.nanargmin
+        label: "MIN"
+
+count_nonzero:
+        copy: ptp
+        name: CountNonZero
+        niceName: Count Non-Zeros
+        label: "NONZERO"
