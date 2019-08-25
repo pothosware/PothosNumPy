@@ -19,6 +19,17 @@
 #include <tr1/cmath>
 
 //
+// Templated functions to use for output comparison
+//
+
+template <typename T>
+static constexpr T copySign(T T1, T T2)
+{
+    return (T2 < T(0)) ? (std::abs(T1) * T(-1))
+                       : std::abs(T1);
+}
+
+//
 // Test functions
 //
 
@@ -166,6 +177,9 @@ static EnableIfInteger<T, void> testTwoToOneBlocks()
     twoToOneBlockTest(getTestParamsForFunc<T>(
         "/numpy/bitwise_or",
         std::bit_or<T>()));
+    twoToOneBlockTest(getTestParamsForFunc<T>(
+        "/numpy/copysign",
+        copySign<T>));
 }
 
 template <typename T>
@@ -189,6 +203,9 @@ static EnableIfFloat<T, void> testTwoToOneBlocks()
     twoToOneBlockTest(getTestParamsForFunc<T>(
         "/numpy/divide",
         std::divides<T>()));
+    twoToOneBlockTest(getTestParamsForFunc<T>(
+        "/numpy/copysign",
+        copySign<T>));
 }
 
 template <typename T>

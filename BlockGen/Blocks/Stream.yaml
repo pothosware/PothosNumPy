@@ -5,12 +5,13 @@ unique:
         blockType: [all]
         kwargs: [useDType=False, callPostBuffer=True]
 
-copy_sign:
+copysign:
         name: CopySign
         niceName: Copy Sign
         class: TwoToOneBlock
         categories: ["/NumPy/Stream"]
-        blockType: [int, float, complex]
+        blockType: [int, float]
+        kwargs: [useDType=False]
 
 positive:
         name: Positive
