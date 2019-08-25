@@ -40,6 +40,7 @@ set(autogenDeps
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Rounding.yaml
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Sources.yaml
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Special.yaml
+    ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Stats.yaml
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Stream.yaml
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Trig.yaml
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Factory.mako.cpp
