@@ -44,10 +44,12 @@ set(autogenDeps
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Stream.yaml
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Trig.yaml
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Factory.mako.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/BlockExecutionTest.mako.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/PythonFactoryFunction.mako.py
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/GenBlocks.py)
 set(autogenOutputs
     ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/CppEntryPoints.py
+    ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/BlockExecutionTest.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/Factory.cpp)
 add_custom_command(
     OUTPUT ${autogenOutputs}
@@ -88,6 +90,7 @@ BUILD_PYTHON_MODULE(
         ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/CppEntryPoints.py
     CPP_SOURCES
         ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/Factory.cpp
+        ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/BlockExecutionTest.cpp
         Cpp/RegisteredCalls.cpp
 
         Testing/TestFFT.cpp

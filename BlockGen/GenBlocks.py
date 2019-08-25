@@ -13,10 +13,12 @@ Now = datetime.datetime.now()
 
 CppFactoryTemplate = None
 PythonFactoryFunctionTemplate = None
+BlockExecutionTestTemplate = None
 
 def populateTemplates():
     global CppFactoryTemplate
     global PythonFactoryFunctionTemplate
+    global BlockExecutionTestTemplate
 
     cppFactoryFunctionTemplatePath = os.path.join(ScriptDirName, "Factory.mako.cpp")
     with open(cppFactoryFunctionTemplatePath) as f:
@@ -25,6 +27,10 @@ def populateTemplates():
     pythonFactoryFunctionTemplatePath = os.path.join(ScriptDirName, "PythonFactoryFunction.mako.py")
     with open(pythonFactoryFunctionTemplatePath) as f:
         PythonFactoryFunctionTemplate = f.read()
+
+    blockExecutionTestTemplatePath = os.path.join(ScriptDirName, "BlockExecutionTest.mako.cpp")
+    with open(blockExecutionTestTemplatePath) as f:
+        BlockExecutionTestTemplate = f.read()
 
 def processYAMLFile(yamlPath):
     yml = None
@@ -171,6 +177,20 @@ from .Source import *
     with open(outputFilepath, 'w') as f:
         f.write(output)
 
+def generateBlockExecutionTest(expandedYAML):
+    sfinaeMap = dict(
+        Integer="int",
+        UnsignedInt="uint",
+        Float="float",
+        Complex="complex"
+    )
+
+    output = Template(BlockExecutionTestTemplate).render(blockYAML=expandedYAML, Now=Now, sfinaeMap=sfinaeMap)
+
+    outputFilepath = os.path.join(OutputDir, "BlockExecutionTest.cpp")
+    with open(outputFilepath, 'w') as f:
+        f.write(output)
+
 if __name__ == "__main__":
     yamlFiles = [os.path.join(BlocksDir, filepath) for filepath in os.listdir(BlocksDir) if os.path.splitext(filepath)[1] == ".yaml"]
 
@@ -184,3 +204,4 @@ if __name__ == "__main__":
     populateTemplates()
     generateCppOutput(expandedYAML)
     generatePythonOutput(expandedYAML)
+    generateBlockExecutionTest(expandedYAML)
