@@ -8,3 +8,5 @@ linspace: {name: LinSpace}
 logspace: {name: LogSpace}
 geomspace: {name: GeomSpace}
 full: {name: Full}
+roll: {name: Roll}
+partition: {name: Partition}

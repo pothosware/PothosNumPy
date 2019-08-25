@@ -26,3 +26,39 @@ trim_zeros:
 negative:
         copy: positive
         name: Negative
+
+ravel:
+        copy: unique
+        name: Ravel
+        class: NToOneBlock
+
+intersect1d:
+        copy: unique
+        name: Intersect1D
+        class: TwoToOneBlock
+
+setdiff1d:
+        copy: unique
+        name: SetDiff1D
+        class: TwoToOneBlock
+
+setsxor1d:
+        copy: unique
+        name: Intersect1D
+        class: TwoToOneBlock
+
+union1d:
+        copy: unique
+        name: Union1D
+        class: TwoToOneBlock
+
+sort:
+        copy: unique
+        name: Sort
+        alias: [msort]
+
+sort_complex:
+        copy: unique
+        name: SortComplex
+        niceName: "Sort Complex"
+        blockType: [complex]
