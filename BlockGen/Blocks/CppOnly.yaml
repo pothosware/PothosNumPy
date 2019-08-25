@@ -10,3 +10,7 @@ geomspace: {name: GeomSpace}
 full: {name: Full}
 roll: {name: Roll}
 partition: {name: Partition}
+amax: {name: AMax, niceName: "Max"}
+amin: {name: AMin, niceName: "Min"}
+median: {name: Median}
+nanmedian: {name: NaNMedian, niceName: "Median (ignores NaN)"}
