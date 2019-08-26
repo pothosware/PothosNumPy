@@ -67,6 +67,8 @@ static void testBlockExecutionFunc(
     const std::string& blockRegistryPath,
     bool hasNChans)
 {
+    static constexpr size_t nchans = 3;
+
     static const Pothos::DType dtype(typeid(T));
     std::cout << blockRegistryPath << "(" << dtype.toString() << ")" << std::endl;
 
@@ -75,12 +77,13 @@ static void testBlockExecutionFunc(
     Pothos::Proxy testBlock;
     if(hasNChans)
     {
-        static constexpr size_t nchans = 3;
-
         testBlock = Pothos::BlockRegistry::make(
                         blockRegistryPath,
                         dtype,
                         nchans);
+        POTHOS_TEST_EQUAL(
+            nchans,
+            testBlock.call<size_t>("getNumChannels"));
     }
     else
     {

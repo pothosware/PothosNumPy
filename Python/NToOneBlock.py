@@ -16,6 +16,8 @@ class NToOneBlock(BaseBlock):
 
         BaseBlock.__init__(self, func, inputDType, outputDType, inputArgs, outputArgs, *funcArgs, **kwargs)
 
+        self.nchans = 0 # Set this here because attempting to query it before it exists
+                        # will attempt to call a Pothos getter.
         self.setNumChannels(nchans)
         self.setupOutput(0, self.outputDType)
 
@@ -50,7 +52,7 @@ class NToOneBlock(BaseBlock):
         # in. This points to the input buffers themselves without copying memory.
         allArrs = numpy.array([arr[:elems].view() for arr in self.inputs()], dtype=self.numpyInputDType)
 
-        # TODO: what happens if a function doesn't take in *args of *kwargs?
+        # TODO: what happens if a function doesn't take in *args or **kwargs?
         out = numpy.apply_along_axis(self.func, 0, allArrs, *self.funcArgs, **self.funcKWargs)
 
         for port in self.inputs():
@@ -67,7 +69,7 @@ class NToOneBlock(BaseBlock):
         allArrs = numpy.array([arr[:elems].view() for arr in self.inputs()], dtype=self.numpyInputDType)
         out0 = self.output(0).buffer()
 
-        # TODO: what happens if a function doesn't take in *args of *kwargs?
+        # TODO: what happens if a function doesn't take in *args or **kwargs?
         out0[:elems] = numpy.apply_along_axis(self.func, 0, allArrs, *self.funcArgs, **self.funcKWargs)
 
         for port in self.inputs():

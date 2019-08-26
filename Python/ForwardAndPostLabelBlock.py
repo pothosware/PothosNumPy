@@ -46,15 +46,12 @@ class ForwardAndPostLabelBlock(BaseBlock):
         self.output(0).postBuffer(buf)
 
     def processAndPostBuffer(self, numpyRet, buf):
-        self.output(0).postLabel(self.labelName, numpyRet, self.findIndexFunc(buf))
+        if self.findIndexFunc:
+            index = self.findIndexFunc(buf)
+        else:
+            index = 0
 
-#
-# Utility
-#
-
-# Use when there is no set index associated with a given operation
-def __returnZero(buf):
-    return 0
+        self.output(0).postLabel(self.labelName, numpyRet, index)
 
 #
 # Subclasses
@@ -74,7 +71,7 @@ class AxisMinMaxBlock(ForwardAndPostLabelBlock):
 class MedianClass(ForwardAndPostLabelBlock):
     def __init__(self, dtype, medianFunc):
         dtypeArgs = dict(supportAll=True)
-        ForwardAndPostLabelBlock.__init__(self, medianFunc, __returnZero, "MEDIAN", dtype, dtype, dtypeArgs, dtypeArgs)
+        ForwardAndPostLabelBlock.__init__(self, medianFunc, None, "MEDIAN", dtype, dtype, dtypeArgs, dtypeArgs)
 
     def processAndPostBuffer(self, numpyRet, buf):
         # numpy.where returns a tuple of ndarrays

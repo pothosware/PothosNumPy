@@ -89,7 +89,7 @@ def generatePythonFactoryFunction(func,yaml):
             dictText = "dict({0})".format(", ".join(["support{0}=True".format(formatTypeText(typeText)) for typeText in yaml["blockType"]]))
             makoVars["factoryParams"] = "dtype"
             if makoVars["class"] == "ForwardAndPostLabelBlock":
-                makoVars["classParams"] = "{0}, \"{1}\", dtype, dtype, {2}, {2}".format(yaml.get("findIndexFunc", "__returnZero"), yaml["label"], dictText)
+                makoVars["classParams"] = "{0}, \"{1}\", dtype, dtype, {2}, {2}".format(yaml.get("findIndexFunc", "None"), yaml["label"], dictText)
             else:
                 makoVars["classParams"] = "dtype, dtype, {0}, {0}".format(dictText)
             if yaml["class"] == "NToOneBlock":
