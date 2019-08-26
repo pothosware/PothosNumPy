@@ -9,12 +9,15 @@
 #include <Pothos/Framework.hpp>
 #include <Pothos/Proxy.hpp>
 
+#include <Poco/Thread.h>
+
 #include <complex>
 #include <cstdint>
 #include <iostream>
 #include <string>
 #include <typeinfo>
 #include <type_traits>
+#include <unordered_map>
 
 //
 // Utility
@@ -92,7 +95,63 @@ static void testBlockExecutionFunc(
                         dtype);
     }
 
-    // TODO: execute topology
+    std::unordered_map<std::string, Pothos::Proxy> feederSources;
+    for(const auto& portInfo: testBlock.call<std::vector<Pothos::PortInfo>>("inputPortInfo"))
+    {
+        auto feederSource = Pothos::BlockRegistry::make(
+                                "/blocks/feeder_source",
+                                portInfo.dtype);
+        feederSource.call(
+            "feedBuffer",
+            stdVectorToBufferChunk<T>(
+                portInfo.dtype,
+                testInputs));
+        feederSources.emplace(
+            std::string(portInfo.name),
+            std::move(feederSource));
+    }
+
+    std::unordered_map<std::string, Pothos::Proxy> collectorSinks;
+    for(const auto& portInfo: testBlock.call<std::vector<Pothos::PortInfo>>("outputPortInfo"))
+    {
+        collectorSinks.emplace(
+            portInfo.name,
+            Pothos::BlockRegistry::make(
+                "/blocks/collector_sink",
+                portInfo.dtype));
+    }
+
+    // Execute the topology.
+    {
+        Pothos::Topology topology;
+        for(const auto& feederSourceMapPair: feederSources)
+        {
+            const auto& port = feederSourceMapPair.first;
+            const auto& feederSource = feederSourceMapPair.second;
+
+            topology.connect(
+                feederSource,
+                "0",
+                testBlock,
+                port);
+        }
+        for(const auto& collectorSinkMapPair: collectorSinks)
+        {
+            const auto& port = collectorSinkMapPair.first;
+            const auto& collectorSink = collectorSinkMapPair.second;
+
+            topology.connect(
+                testBlock,
+                port,
+                collectorSink,
+                "0");
+        }
+
+        topology.commit();
+
+        // When this block exits, the flowgraph will stop.
+        Poco::Thread::sleep(5);
+    }
 }
 
 //
