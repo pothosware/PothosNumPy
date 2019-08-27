@@ -28,11 +28,11 @@ class ForwardAndPostLabelBlock(BaseBlock):
         assert(self.numpyInputDType is not None)
         assert(self.numpyOutputDType is not None)
 
-        elems = len(self.input(0).buffer)
+        elems = len(self.input(0).buffer())
         if 0 == elems:
             return
 
-        buf = self.takeBuffer(self.input(0))
+        buf = self.input(0).takeBuffer()
         numpyRet = None
 
         if self.useDType:
@@ -42,16 +42,15 @@ class ForwardAndPostLabelBlock(BaseBlock):
 
         self.processAndPostBuffer(numpyRet, buf)
 
-        self.input(0).consume(elems)
-        self.output(0).postBuffer(buf)
-
     def processAndPostBuffer(self, numpyRet, buf):
         if self.findIndexFunc:
             index = self.findIndexFunc(buf)
         else:
             index = 0
 
-        self.output(0).postLabel(self.labelName, numpyRet, index)
+        self.input(0).consume(len(buf))
+        self.output(0).postLabel(Pothos.Label(self.labelName, numpyRet, index))
+        self.output(0).postBuffer(buf)
 
 #
 # Subclasses

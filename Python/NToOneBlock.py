@@ -16,6 +16,8 @@ class NToOneBlock(BaseBlock):
 
         BaseBlock.__init__(self, func, inputDType, outputDType, inputArgs, outputArgs, *funcArgs, **kwargs)
 
+        self.applyAlongAxis = kwargs.get("applyAlongAxis", True)
+
         self.nchans = 0 # Set this here because attempting to query it before it exists
                         # will attempt to call a Pothos getter.
         self.setNumChannels(nchans)
@@ -50,10 +52,13 @@ class NToOneBlock(BaseBlock):
 
         # This creates a 2D ndarray containing the array subsets we're interested
         # in. This points to the input buffers themselves without copying memory.
-        allArrs = numpy.array([arr[:elems].view() for arr in self.inputs()], dtype=self.numpyInputDType)
+        allArrs = numpy.array([buf.buffer()[:elems].view() for buf in self.inputs()], dtype=self.numpyInputDType)
 
         # TODO: what happens if a function doesn't take in *args or **kwargs?
-        out = numpy.apply_along_axis(self.func, 0, allArrs, *self.funcArgs, **self.funcKWargs)
+        if self.applyAlongAxis:
+            out = numpy.apply_along_axis(self.func, 0, allArrs, *self.funcArgs, **self.funcKWargs)
+        else:
+            out = self.func(allArrs, *self.funcArgs, **self.funcKWargs)
 
         for port in self.inputs():
             port.consume(elems)
@@ -66,11 +71,14 @@ class NToOneBlock(BaseBlock):
 
         # This creates a 2D ndarray containing the array subsets we're interested
         # in. This points to the input buffers themselves without copying memory.
-        allArrs = numpy.array([arr[:elems].view() for arr in self.inputs()], dtype=self.numpyInputDType)
+        allArrs = numpy.array([buf.buffer()[:elems].view() for buf in self.inputs()], dtype=self.numpyInputDType)
         out0 = self.output(0).buffer()
 
         # TODO: what happens if a function doesn't take in *args or **kwargs?
-        out0[:elems] = numpy.apply_along_axis(self.func, 0, allArrs, *self.funcArgs, **self.funcKWargs)
+        if self.applyAlongAxis:
+            out0[:elems] = numpy.apply_along_axis(self.func, 0, allArrs, *self.funcArgs, **self.funcKWargs)
+        else:
+            out0[:elems] = self.func(allArrs, *self.funcArgs, **self.funcKWargs)
 
         for port in self.inputs():
             port.consume(elems)

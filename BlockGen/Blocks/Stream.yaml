@@ -32,6 +32,7 @@ ravel:
         copy: unique
         name: Ravel
         class: NToOneBlock
+        kwargs: [useDType=False, applyAlongAxis=False, callPostBuffer=True]
 
 intersect1d:
         copy: unique

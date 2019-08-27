@@ -5,6 +5,7 @@ ptp:
         class: ForwardAndPostLabelBlock
         blockType: [all]
         label: "PTP"
+        kwargs: [useDType=False]
 
 mean:
         copy: ptp
