@@ -94,10 +94,7 @@ BUILD_PYTHON_MODULE(
         Cpp/RegisteredCalls.cpp
 
         Testing/TestFFT.cpp
-        Testing/TestOneToOneBlocks.cpp
         Testing/TestRegisteredCalls.cpp
-        Testing/TestSingleOutputSources.cpp
-        Testing/TestTwoToOneBlocks.cpp
     DOC_SOURCES
         ${autogenOutputs}
         Python/FFT.py
