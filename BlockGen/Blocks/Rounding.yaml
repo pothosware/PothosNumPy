@@ -10,16 +10,19 @@ fix:
         categories: ["/NumPy/Rounding"]
         class: OneToOneBlock
         blockType: [float]
+        kwargs: [useDType=False]
 
 ceil:
         name: Ceil
-        copy: fix
+        categories: ["/NumPy/Rounding"]
+        class: OneToOneBlock
+        blockType: [float]
 
 floor:
+        copy: ceil
         name: Floor
-        copy: fix
 
 trunc:
+        copy: ceil
         name: Trunc
         niceName: Truncate
-        copy: fix

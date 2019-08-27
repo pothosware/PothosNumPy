@@ -9,10 +9,10 @@ multiply:
         name: Multiply
         blockType: [float, complex]
 
-ldexp:
-        copy: add
-        name: LdExp
-        niceName: "x1 * 2**x2"
+#ldexp:
+#        copy: add
+#        name: LdExp
+#        niceName: "x1 * 2**x2"
 
 subtract:
         name: Subtract
@@ -41,13 +41,13 @@ remainder:
         copy: subtract
         name: Mod
         niceName: Remainder
-        blockType: [float, complex]
+        blockType: [int, uint, float]
         alias: [mod]
 
 fmod:
         copy: subtract
         name: FMod
-        blockType: [float, complex]
+        blockType: [int, uint, float]
 
 reciprocal:
         name: Reciprocal
@@ -74,7 +74,7 @@ square:
 absolute:
         name: Absolute
         copy: reciprocal
-        blockType: [float, int, complex]
+        blockType: [float, int]
 
 fabs:
         name: FAbs

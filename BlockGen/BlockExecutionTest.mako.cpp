@@ -179,7 +179,7 @@ POTHOS_TEST_BLOCK("/numpy/tests", test_block_execution)
     // SFINAE will make these call the functions with the
     // applicable blocks.
     testBlockExecution<std::int8_t>();
-    /*testBlockExecution<std::int16_t>();
+    testBlockExecution<std::int16_t>();
     testBlockExecution<std::int32_t>();
     testBlockExecution<std::int64_t>();
     testBlockExecution<std::uint8_t>();
@@ -189,5 +189,5 @@ POTHOS_TEST_BLOCK("/numpy/tests", test_block_execution)
     testBlockExecution<float>();
     testBlockExecution<double>();
     testBlockExecution<std::complex<float>>();
-    testBlockExecution<std::complex<double>>();*/
+    testBlockExecution<std::complex<double>>();
 }

@@ -28,7 +28,7 @@ class ForwardAndPostLabelBlock(BaseBlock):
         assert(self.numpyInputDType is not None)
         assert(self.numpyOutputDType is not None)
 
-        elems = len(self.input(0).buffer())
+        elems = self.input(0).elements()
         if 0 == elems:
             return
 
@@ -50,6 +50,7 @@ class ForwardAndPostLabelBlock(BaseBlock):
 
         self.input(0).consume(len(buf))
         self.output(0).postLabel(Pothos.Label(self.labelName, numpyRet, index))
+
         self.output(0).postBuffer(buf)
 
 #
