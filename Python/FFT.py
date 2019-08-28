@@ -10,7 +10,7 @@ import numpy
 import numpy.fft
 
 class FFTClass(BaseBlock):
-    def __init__(self, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, numBins, warnIfSuboptimal=True):
+    def __init__(self, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, numBins, warnIfSuboptimal=False):
         BaseBlock.__init__(self, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs)
 
         # The FFT algorithm is fastest for powers of 2.
@@ -53,7 +53,7 @@ Corresponding NumPy function: numpy.fft.fft
 
 |category /NumPy/FFT
 |keywords fft
-|factory /numpy/fft(dtype,numBins)
+|factory /numpy/fft/fft(dtype,numBins)
 */"""
 def FFT(dtype, numBins):
     dtypeArgs = dict(supportComplex=True)
@@ -64,7 +64,8 @@ def FFT(dtype, numBins):
                dtype,
                dtypeArgs,
                dtypeArgs,
-               numBins)
+               numBins,
+               warnIfSuboptimal=True)
 
 """/*
 |PothosDoc Inverse FFT
@@ -73,7 +74,7 @@ Corresponding NumPy function: numpy.fft.ifft
 
 |category /NumPy/FFT
 |keywords fft ifft
-|factory /numpy/ifft(dtype,numBins)
+|factory /numpy/fft/ifft(dtype,numBins)
 */"""
 def IFFT(dtype, numBins):
     dtypeArgs = dict(supportComplex=True)
@@ -93,7 +94,7 @@ Corresponding NumPy function: numpy.fft.rfft
 
 |category /NumPy/FFT
 |keywords fft rfft
-|factory /numpy/rfft(dtype,numBins)
+|factory /numpy/fft/rfft(dtype,numBins)
 */"""
 def RFFT(dtype, numBins):
     # Validate here so we get a clearer error message than DType complaining about
@@ -117,7 +118,7 @@ Corresponding NumPy function: numpy.fft.irfft
 
 |category /NumPy/FFT
 |keywords fft irfft
-|factory /numpy/irfft(dtype,numBins)
+|factory /numpy/fft/irfft(dtype,numBins)
 */"""
 def IRFFT(dtype, numBins):
     # Validate here so we get a clearer error message than DType complaining about
@@ -132,5 +133,52 @@ def IRFFT(dtype, numBins):
                dtype,
                dict(supportAll=True),
                dict(supportAll=True),
-               numBins,
-               warnIfSuboptimal=False)
+               numBins)
+
+"""/*
+|PothosDoc Hermetian FFT
+
+Corresponding NumPy function: numpy.fft.hfft
+
+|category /NumPy/FFT
+|keywords fft hfft
+|factory /numpy/ffthfft(dtype,numBins)
+*/"""
+def HFFT(dtype, numBins):
+    # Validate here so we get a clearer error message than DType complaining about
+    # complex_complex_X.
+    Utility.validateDType(dtype, dict(supportFloat=True))
+    complexDType = Utility.DType("complex_"+dtype.toString())
+
+    # Since we've already validated, skip validation in the base block.
+    return FFTClass(
+               numpy.fft.irfft,
+               complexDType,
+               dtype,
+               dict(supportAll=True),
+               dict(supportAll=True),
+               numBins)
+
+"""/*
+|PothosDoc Inverse Hermetian FFT
+
+Corresponding NumPy function: numpy.fft.ihfft
+
+|category /NumPy/FFT
+|keywords fft ihfft
+|factory /numpy/fft/ihfft(dtype,numBins)
+*/"""
+def IHFFT(dtype, numBins):
+    # Validate here so we get a clearer error message than DType complaining about
+    # complex_complex_X.
+    Utility.validateDType(dtype, dict(supportFloat=True))
+    complexDType = Utility.DType("complex_"+dtype.toString())
+
+    # Since we've already validated, skip validation in the base block.
+    return FFTClass(
+               numpy.fft.ihfft,
+               complexDType,
+               dtype,
+               dict(supportAll=True),
+               dict(supportAll=True),
+               numBins)

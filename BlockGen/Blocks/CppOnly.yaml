@@ -3,6 +3,8 @@ fft/fft: {name: FFT}
 fft/ifft: {name: IFFT}
 fft/rfft: {name: RFFT}
 fft/irfft: {name: IRFFT}
+fft/hfft: {name: HFFT}
+fft/ihfft: {name: IHFFT}
 arange: {name: ARange}
 linspace: {name: LinSpace}
 logspace: {name: LogSpace}
