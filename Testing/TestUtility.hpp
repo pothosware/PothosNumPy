@@ -52,6 +52,9 @@ using EnableIfNotComplex = typename std::enable_if<!IsComplex<T>::value, U>::typ
 template <typename T, typename U, typename V>
 using EnableIfSecondComplex = typename std::enable_if<!IsComplex<T>::value && IsComplex<U>::value, V>::type;
 
+template <typename T, typename U, typename V>
+using EnableIfNeitherComplex = typename std::enable_if<!IsComplex<T>::value && !IsComplex<U>::value, V>::type;
+
 template <typename T, typename U, typename Ret>
 using EnableIfTypeMatches = typename std::enable_if<std::is_same<T, U>::value, Ret>::type;
 

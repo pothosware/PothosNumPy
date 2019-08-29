@@ -148,12 +148,11 @@ def HFFT(dtype, numBins):
     # Validate here so we get a clearer error message than DType complaining about
     # complex_complex_X.
     Utility.validateDType(dtype, dict(supportFloat=True))
-    complexDType = Utility.DType("complex_"+dtype.toString())
 
     # Since we've already validated, skip validation in the base block.
     return FFTClass(
-               numpy.fft.irfft,
-               complexDType,
+               numpy.fft.hfft,
+               dtype,
                dtype,
                dict(supportAll=True),
                dict(supportAll=True),
@@ -171,14 +170,14 @@ Corresponding NumPy function: numpy.fft.ihfft
 def IHFFT(dtype, numBins):
     # Validate here so we get a clearer error message than DType complaining about
     # complex_complex_X.
-    Utility.validateDType(dtype, dict(supportFloat=True))
-    complexDType = Utility.DType("complex_"+dtype.toString())
+    Utility.validateDType(dtype, dict(supportFloat=True, supportComplex=True))
+    complexDType = dtype if "complex" in dtype.toString() else Utility.DType("complex_"+dtype.toString())
 
     # Since we've already validated, skip validation in the base block.
     return FFTClass(
                numpy.fft.ihfft,
-               complexDType,
                dtype,
+               complexDType,
                dict(supportAll=True),
                dict(supportAll=True),
                numBins)

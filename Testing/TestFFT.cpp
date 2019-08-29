@@ -25,12 +25,20 @@ struct BlockTestParams
     std::vector<U> outputs;
 };
 
+template <typename T, typename U, typename V>
+struct HFFTTestParams
+{
+    std::vector<T> inputs;
+    std::vector<U> outputs;
+    std::vector<V> revOutputs; // rev(fwd) != fwd
+};
+
 //
 // Utility code
 //
 
 template <typename T, typename U>
-static EnableIfBothComplex<T, U, BlockTestParams<T, U>> getTestParams()
+static EnableIfBothComplex<T, U, BlockTestParams<T, U>> getFFTTestParams()
 {
     return
     {
@@ -108,7 +116,7 @@ static EnableIfBothComplex<T, U, BlockTestParams<T, U>> getTestParams()
 }
 
 template <typename T, typename U>
-static EnableIfSecondComplex<T, U, BlockTestParams<T, U>> getTestParams()
+static EnableIfSecondComplex<T, U, BlockTestParams<T, U>> getRFFTTestParams()
 {
     return
     {
@@ -169,6 +177,146 @@ static EnableIfSecondComplex<T, U, BlockTestParams<T, U>> getTestParams()
 }
 
 template <typename T>
+static EnableIfNotComplex<T, HFFTTestParams<T, T, std::complex<T>>> getHFFTTestParams()
+{
+    return
+    {
+        {
+            2.0f,
+            3.0f,
+            5.0f,
+            7.0f,
+            11.0f,
+            13.0f,
+            17.0f,
+            19.0f,
+            23.0f,
+            29.0f,
+            31.0f,
+            37.0f,
+            41.0f,
+            43.0f,
+            47.0f,
+            53.0f,
+            59.0f,
+            61.0f,
+            67.0f,
+            71.0f,
+            73.0f,
+            79.0f,
+            83.0f,
+            89.0f,
+            97.0f,
+            101.0f,
+            103.0f,
+            107.0f,
+            109.0f,
+            113.0f,
+            127.0f,
+            131.0f
+        },
+        {
+            3.56900000e+03,
+            -1.64928469e+03,
+            1.07075581e+02,
+            -1.53836002e+02,
+            3.90284420e+01,
+            -4.53271404e+01,
+            1.91360555e+01,
+            -3.16612516e+01,
+            3.41560464e+01,
+            -6.27234033e+01,
+            3.90497458e+01,
+            -2.65584499e+01,
+            2.80602105e+01,
+            -1.74606915e+01,
+            8.77395827e+00,
+            -1.04465222e+01,
+            1.94275496e+01,
+            -1.39193347e+01,
+            3.09339995e-01,
+            -1.70571897e+01,
+            1.69617628e+01,
+            6.27984087e+00,
+            -9.93177578e+00,
+            7.80465318e+00,
+            -1.11310235e+01,
+            -8.73754814e+00,
+            -7.88886193e+00,
+            1.27003850e+01,
+            -2.58170535e+00,
+            7.22734603e+00,
+            -3.44532480e+00,
+            7.00000000e+00,
+            -3.44532480e+00,
+            7.22734603e+00,
+            -2.58170535e+00,
+            1.27003850e+01,
+            -7.88886193e+00,
+            -8.73754814e+00,
+            -1.11310235e+01,
+            7.80465318e+00,
+            -9.93177578e+00,
+            6.27984087e+00,
+            1.69617628e+01,
+            -1.70571897e+01,
+            3.09339995e-01,
+            -1.39193347e+01,
+            1.94275496e+01,
+            -1.04465222e+01,
+            8.77395827e+00,
+            -1.74606915e+01,
+            2.80602105e+01,
+            -2.65584499e+01,
+            3.90497458e+01,
+            -6.27234033e+01,
+            3.41560464e+01,
+            -3.16612516e+01,
+            1.91360555e+01,
+            -4.53271404e+01,
+            3.90284420e+01,
+            -1.53836002e+02,
+            1.07075581e+02,
+            -1.64928469e+03
+        },
+        {
+            {2.0f, +0.00000000e+00f},
+            {3.0f, -1.83365867e-15f},
+            {5.0f, +0.00000000e+00f},
+            {7.0f, -1.83365867e-15f},
+            {11.0f, -1.46692694e-14f},
+            {13.0f, +3.66731735e-15f},
+            {17.0f, +1.10019520e-14f},
+            {19.0f, +3.66731735e-15f},
+            {23.0f, -3.66731735e-15f},
+            {29.0f, +3.66731735e-15f},
+            {31.0f, +0.00000000e+00f},
+            {37.0f, +1.28356107e-14f},
+            {41.0f, +1.37524400e-14f},
+            {43.0f, +1.23771960e-14f},
+            {47.0f, +1.42108547e-14f},
+            {53.0f, +9.94186812e-15f},
+            {59.0f, +9.94186812e-15f},
+            {61.0f, +1.42108547e-14f},
+            {67.0f, +1.23771960e-14f},
+            {71.0f, +1.37524400e-14f},
+            {73.0f, +1.28356107e-14f},
+            {79.0f, +0.00000000e+00f},
+            {83.0f, +3.66731735e-15f},
+            {89.0f, -3.66731735e-15f},
+            {97.0f, +3.66731735e-15f},
+            {101.0f, +1.10019520e-14f},
+            {103.0f, +3.66731735e-15f},
+            {107.0f, -1.46692694e-14f},
+            {109.0f, -1.83365867e-15f},
+            {113.0f, +0.00000000e+00f},
+            {127.0f, -1.83365867e-15f},
+            {131.0f, +0.00000000e+00f},
+        }
+    };
+}
+
+template <typename T>
 static inline EnableIfNotComplex<T, T> getEpsilon()
 {
     return T(1e-4);
@@ -194,7 +342,7 @@ static void testFFT()
 
     using Complex = std::complex<T>;
 
-    const auto testParams = getTestParams<Complex, Complex>();
+    const auto testParams = getFFTTestParams<Complex, Complex>();
     POTHOS_TEST_TRUE(!testParams.inputs.empty());
     POTHOS_TEST_TRUE(!testParams.outputs.empty());
 
@@ -262,7 +410,7 @@ static void testRFFT()
 
     using Complex = std::complex<T>;
 
-    const auto testParams = getTestParams<T, Complex>();
+    const auto testParams = getRFFTTestParams<T, Complex>();
     POTHOS_TEST_TRUE(!testParams.inputs.empty());
     POTHOS_TEST_TRUE(!testParams.outputs.empty());
 
@@ -322,11 +470,84 @@ static void testRFFT()
         getEpsilon<T>());
 }
 
+template <typename T>
+static void testHFFT()
+{
+    const std::string fwdBlockRegistryPath = "/numpy/fft/hfft";
+    const std::string invBlockRegistryPath = "/numpy/fft/ihfft";
+
+    const auto testParams = getHFFTTestParams<T>();
+    POTHOS_TEST_TRUE(!testParams.inputs.empty());
+    POTHOS_TEST_TRUE(!testParams.outputs.empty());
+
+    Pothos::DType dtype(typeid(T));
+    Pothos::DType complexDType(typeid(std::complex<T>));
+    std::cout << "Testing " << dtype.toString() << " to "
+                            << dtype.toString() << " to "
+                            << complexDType.toString() << std::endl;
+
+    auto feeder = Pothos::BlockRegistry::make(
+                      "/blocks/feeder_source",
+                      dtype);
+    auto fwdFFTBlock = Pothos::BlockRegistry::make(
+                           fwdBlockRegistryPath,
+                           dtype,
+                           testParams.inputs.size());
+    auto invFFTBlock = Pothos::BlockRegistry::make(
+                           invBlockRegistryPath,
+                           dtype,
+                           testParams.outputs.size());
+    auto fwdCollector = Pothos::BlockRegistry::make(
+                            "/blocks/collector_sink",
+                            dtype);
+    auto invCollector = Pothos::BlockRegistry::make(
+                            "/blocks/collector_sink",
+                            complexDType);
+
+    // Load the feeder
+    feeder.call(
+        "feedBuffer",
+        stdVectorToBufferChunk(
+            dtype,
+            testParams.inputs));
+
+    // Run the topology
+    {
+        Pothos::Topology topology;
+        topology.connect(feeder, 0, fwdFFTBlock, 0);
+        topology.connect(fwdFFTBlock, 0, invFFTBlock, 0);
+        topology.connect(fwdFFTBlock, 0, fwdCollector, 0);
+        topology.connect(invFFTBlock, 0, invCollector, 0);
+        topology.commit();
+
+        // When this block exits, the flowgraph will stop.
+        Poco::Thread::sleep(10);
+    }
+
+    // Test the collectors
+    std::cout << " * Testing " << fwdBlockRegistryPath << std::endl;
+    testBufferChunk(
+        fwdCollector.call("getBuffer"),
+        testParams.outputs,
+        getEpsilon<T>());
+    std::cout << " * Testing " << invBlockRegistryPath << std::endl;
+    testBufferChunk(
+        invCollector.call("getBuffer"),
+        testParams.revOutputs,
+        getEpsilon<std::complex<T>>());
+}
+
+// TODO: test scalar into FFT
 POTHOS_TEST_BLOCK("/numpy/tests", test_fft)
 {
+    // TODO: test scalar input
     testFFT<float>();
     testFFT<double>();
 
     testRFFT<float>();
     testRFFT<double>();
+
+    // TODO: test complex input
+    testHFFT<float>();
+    testHFFT<double>();
 }
