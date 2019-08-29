@@ -94,6 +94,7 @@ BUILD_PYTHON_MODULE(
         Cpp/RegisteredCalls.cpp
 
         Testing/TestFFT.cpp
+        Testing/TestNumPyFileIO.cpp
         Testing/TestRegisteredCalls.cpp
     DOC_SOURCES
         ${autogenOutputs}

@@ -1,6 +1,8 @@
 # Copyright (c) 2019 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
+from .BaseBlock import *
+
 from . import Utility
 
 import Pothos
@@ -8,20 +10,18 @@ import Pothos
 import numpy
 import os
 
-class Save(Pothos.Block):
+class Save(BaseBlock):
     def __init__(self, dtype, filepath):
-        Utility.validateDType(dtype)
-
-        Pothos.Block.__init__(self)
-        self.setupInput("0", self.__dtype)
-
-        self.__dtype = dtype
-        self.__filepath = filepath
-        self.__buffer = []
-
-    def activate(self):
-        if os.path.splitext(self.__filepath)[1] != ".npy":
+        if os.path.splitext(filepath)[1] != ".npy":
             raise RuntimeError("Only .npy files are supported.")
+
+        dtypeArgs = dict(supportAll=True)
+        BaseBlock.__init__(self, numpy.save, dtype, None, dtypeArgs, None)
+
+        self.__filepath = filepath
+        self.__buffer = numpy.array([], dtype=self.numpyInputDType)
+
+        self.setupInput("0", dtype)
 
     def deactivate(self):
         # The .npy file format is intended to take a single array write,
@@ -40,5 +40,5 @@ class Save(Pothos.Block):
         if 0 == n:
             return
 
-        self.__buffer += in0
-        in0.consume(n)
+        self.__buffer = numpy.concatenate([self.__buffer, in0])
+        self.input(0).consume(n)

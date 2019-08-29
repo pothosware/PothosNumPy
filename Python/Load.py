@@ -1,6 +1,8 @@
 # Copyright (c) 2019 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
+from .BaseBlock import *
+
 from . import Utility
 
 import Pothos
@@ -8,31 +10,30 @@ import Pothos
 import numpy
 import os
 
-class Load(Pothos.Block):
+class Load(BaseBlock):
     def __init__(self, dtype, filepath):
-        Utility.validateDType(dtype)
+        if os.path.splitext(filepath)[1] != ".npy":
+            raise RuntimeError("Only .npy files are supported.")
 
-        Pothos.Block.__init__(self)
-        self.setupOutput("0", self.__dtype)
+        dtypeArgs = dict(supportAll=True)
+        BaseBlock.__init__(self, numpy.load, None, dtype, None, dtypeArgs)
 
-        self.__dtype = dtype
         self.__filepath = filepath
         self.__data = None
         self.__pos = 0
 
-    def activate(self):
-        if os.path.splitext(self.__filepath)[1] != ".npy":
-            raise RuntimeError("Only .npy files are supported.")
+        self.setupOutput("0", dtype)
 
-        with numpy.load(self.__filepath, "r") as data:
-            self.__data = data
+    def activate(self):
+        # Note: with numpy.load... only works in NumPy 1.15 and up
+        self.__data = numpy.load(self.__filepath, "r")
 
     def getFilepath(self):
         return self.__filepath
 
     def work(self):
         out0 = self.output(0).buffer()
-        n = min(len(out0), (len(self.__data) - pos))
+        n = min(len(out0), (len(self.__data) - self.__pos))
 
         if 0 == n:
             return
@@ -41,4 +42,4 @@ class Load(Pothos.Block):
         out0[:n] = self.__data[self.__pos:newPos]
 
         self.__pos = newPos
-        out0.produce(n)
+        self.output(0).produce(n)
