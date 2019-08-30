@@ -15,6 +15,15 @@ class Load(BaseBlock):
         if os.path.splitext(filepath)[1] != ".npy":
             raise RuntimeError("Only .npy files are supported.")
 
+        if "int64" in dtype.toString():
+            logger = Utility.PythonLogger(self.__class__.__name__)
+            logger.log(
+                str(self.__class__.__name__),
+                "This block supports type {0}, but input values are not guaranteed " \
+                "to be preserved due to limitations of type conversions between " \
+                "C++ and Python.".format(dtype.toString()),
+                "WARNING")
+
         dtypeArgs = dict(supportAll=True)
         BaseBlock.__init__(self, numpy.load, None, dtype, None, dtypeArgs)
 
@@ -25,7 +34,7 @@ class Load(BaseBlock):
         self.setupOutput("0", dtype)
 
     def activate(self):
-        # Note: with numpy.load... only works in NumPy 1.15 and up
+        # Note: "with numpy.load... as" only works in NumPy 1.15 and up
         self.__data = numpy.load(self.__filepath, "r")
 
     def getFilepath(self):

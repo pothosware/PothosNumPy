@@ -15,6 +15,15 @@ class Save(BaseBlock):
         if os.path.splitext(filepath)[1] != ".npy":
             raise RuntimeError("Only .npy files are supported.")
 
+        if "int64" in dtype.toString():
+            logger = Utility.PythonLogger(self.__class__.__name__)
+            logger.log(
+                str(self.__class__.__name__),
+                "This block supports type {0}, but input values are not guaranteed " \
+                "to be preserved due to limitations of type conversions between " \
+                "C++ and Python.".format(dtype.toString()),
+                "WARNING")
+
         dtypeArgs = dict(supportAll=True)
         BaseBlock.__init__(self, numpy.save, dtype, None, dtypeArgs, None)
 
@@ -29,6 +38,7 @@ class Save(BaseBlock):
         # provided and write at the end of the topology.
         if len(self.__buffer) > 0:
             numpy.save(self.__filepath, self.__buffer)
+            os.sync()
 
     def getFilepath(self):
         return self.__filepath
