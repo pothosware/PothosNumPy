@@ -18,3 +18,5 @@ median: {name: Median}
 nanmedian: {name: NaNMedian, niceName: "Median (ignores NaN)"}
 load: {name: Load, niceName: "Load from .npy/.npz"}
 save: {name: Save, niceName: "Save to .npy"}
+savez: {name: SaveZ, niceName: "Save to .npz"}
+savez_compressed: {name: SaveZCompressed, niceName: "Save to .npz (compressed)"}
