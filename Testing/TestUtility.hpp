@@ -118,7 +118,7 @@ static std::vector<Out> staticCastVector(const std::vector<In>& vectorIn)
 template <typename In, typename Out>
 static std::vector<Out> reinterpretCastVector(const std::vector<In>& vectorIn)
 {
-    static_assert(sizeof(In) == sizeof(Out));
+    static_assert(sizeof(In) == sizeof(Out), "sizeof(In) != sizeof(Out)");
 
     std::vector<Out> vectorOut(vectorIn.size());
     std::memcpy(
