@@ -15,7 +15,7 @@ list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 find_path(JSON_HPP_INCLUDE_DIR NAMES json.hpp PATH_SUFFIXES nlohmann)
 
 if (NOT JSON_HPP_INCLUDE_DIR)
-    message(WARNING "Pothos SDR toolkit requires json.hpp, skipping...")
+    message(WARNING "Pothos NumPy toolkit requires json.hpp, skipping...")
 endif (NOT JSON_HPP_INCLUDE_DIR)
 
 ########################################################################
