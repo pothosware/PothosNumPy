@@ -65,6 +65,13 @@ class OneToOneBlock(BaseBlock):
 # Blocks too different to be auto-generated
 #
 
+# TODO: remove when funcKWargs is added
+class Flip(OneToOneBlock):
+    def __init__(self, dtype):
+        dtypeArgs = dict(supportAll=True)
+        OneToOneBlock.__init__(self, numpy.roll, dtype, dtype, dtypeArgs, dtypeArgs)
+        self.funcKWargs["axis"] = None
+
 class Roll(OneToOneBlock):
     def __init__(self, dtype, roll):
         dtypeArgs = dict(supportAll=True)
