@@ -7,11 +7,15 @@ import numpy
 
 # Pothos supports all complex types, but NumPy does not support
 # complex integral types, so we must catch this on block instantiation.
-# Optionally add other checks.
+# Also confirm that the given DType is 1-dimensional, as that is all
+# these blocks support.
 def validateDType(dtype, dtypeArgs):
     typeStr = dtype.toString()
     if ("complex_u" in typeStr) or ("complex_i" in typeStr) or dtype.isCustom():
         raise TypeError("NumPy does not support type {0}".format(typeStr))
+
+    if dtype.dimension() > 1:
+        raise TypeError("PothosNumPy only supports DTypes of dimension 1.")
 
     if dtypeArgs.get("supportAll", False):
         return
