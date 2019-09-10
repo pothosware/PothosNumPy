@@ -5,6 +5,15 @@ import Pothos
 
 import numpy
 
+class BlockParams():
+    def __init__(self):
+        self.blockArgs = None
+        self.blockKWargs = None
+        self.funcArgs = None
+        self.funcKWargs = None
+        self.inputDTypeArgs = None
+        self.outputDTypeArgs = None
+
 # Pothos supports all complex types, but NumPy does not support
 # complex integral types, so we must catch this on block instantiation.
 # Also confirm that the given DType is 1-dimensional, as that is all

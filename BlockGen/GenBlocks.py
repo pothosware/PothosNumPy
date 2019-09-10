@@ -66,7 +66,81 @@ def generateCppFactory(func,name):
     return 'Pothos::BlockRegistry("/numpy/{0}", Pothos::Callable(&FactoryFunc).bind<std::string>("{1}", 2))' \
            .format(func, name)
 
+def formatTypeText(typeText):
+    return typeText.title().replace("Uint", "UInt")
+
+def blockTypeToDictString(blockTypeYAML):
+    return "dict({0})".format(", ".join(["support{0}=True".format(formatTypeText(typeText)) for typeText in blockTypeYAML]))
+
+def processBlock(yaml, makoVars):
+    for key in ["blockType", "inputType"]:
+        if key in yaml:
+            makoVars["inputDTypeArgs"] = blockTypeToDictString(yaml[key])
+            break
+    for key in ["blockType", "outputType"]:
+        if key in yaml:
+            makoVars["outputDTypeArgs"] = blockTypeToDictString(yaml[key])
+            break
+
+    if yaml["class"] in ["NToOneBlock"]:
+        makoVars["factoryParams"] = "nchans" if len(makoVars["factoryParams"]) == 0 else ("nchans, " + makoVars["factoryParams"])
+        makoVars["classParams"] = "nchans" if len(makoVars["classParams"]) == 0 else ("nchans, " + makoVars["classParams"])
+
+def processSource(yaml, makoVars):
+    for key in ["blockType", "outputType"]:
+        if key in yaml:
+            makoVars["outputDTypeArgs"] = blockTypeToDictString(yaml[key])
+            break
+
 def generatePythonFactoryFunction(func,yaml):
+    # Generate variables for processing.
+    makoVars = dict()
+    makoVars["name"] = yaml["name"]
+    makoVars["category"] = " ".join(yaml["categories"])
+    makoVars["func"] = func
+    makoVars["keywords"] = func
+    makoVars["class"] = yaml["class"]
+    makoVars["prefix"] = yaml.get("prefix", "numpy")
+
+    # Some keys are just straight copies.
+    for key in ["alias", "niceName"]:
+        if key in yaml:
+            makoVars[key] = yaml[key]
+
+    makoVars["classParams"] = ""
+    makoVars["factoryParams"] = ""
+
+    for key in ["args", "funcArgs"]:
+        if key in yaml:
+            makoVars[key] = "[{0}]".format(", ".join(yaml[key]))
+    if "args" in yaml:
+        if key in yaml:
+            makoVars["classParams"] += ", *args"
+
+    for key in ["kwargs", "funcKWargs"]:
+        if key in yaml:
+            makoVars[key] = "dict({0})".format(", ".join(yaml[key]))
+    if "kwargs" in yaml:
+        if key in yaml:
+            makoVars["classParams"] += ", **kwargs"
+
+    if "blockType" in yaml:
+        if "Block" in yaml["class"]:
+            processBlock(yaml, makoVars)
+        elif "Source" in yaml["class"]:
+            processSource(yaml, makoVars)
+        else:
+            raise RuntimeError("Invalid block type.")
+    elif "blockPattern" in yaml:
+        if yaml["blockPattern"] == "ComplexToScalar":
+            makoVars["inputDTypeArgs"] = blockTypeToDictString(["complex"])
+            makoVars["inputDTypeArgs"] = blockTypeToDictString(["float"])
+        else:
+            raise RuntimeError("Invalid block pattern.")
+
+    return Template(PythonFactoryFunctionTemplate).render(makoVars=makoVars)
+
+def generatePythonFactoryFunctionOld(func,yaml):
     # Generate variables for processing.
     makoVars = dict()
     makoVars["name"] = yaml["name"]
@@ -160,6 +234,8 @@ def generatePythonOutput(expandedYAML):
 #
 # This file was auto-generated on {1}.
 #
+
+from . import Utility
 
 from .OneToOneBlock import *
 from .TwoToOneBlock import *
