@@ -81,3 +81,354 @@ class Beta(SingleOutputSource):
 
     def __updateArgs(self):
         self.funcArgs = [self.__alpha, self.__beta]
+
+    def work(self):
+        N = self.workInfo().minAllOutElements
+        if 0 == N:
+            return
+
+        out = self.output(0).buffer()
+        out[:N] = self.func(*self.funcArgs, size=(N)).astype(self.numpyOutputDType)
+        out.produce(N)
+
+class Binomial(SingleOutputSource):
+    def __init__(self, dtype, N, P):
+        outputArgs = dict(supportUInt=True)
+        SingleOutputSource.__init__(self, GetNumPyRandom().binomial, dtype, outputArgs, useDType=False)
+
+        self.__N = None
+        self.__P = None
+
+        self.setN(N)
+        self.setP(P)
+
+    def getN(self):
+        return self.__N
+
+    def setN(self, N):
+        self.validateParameter(N, self.numpyOutputDType)
+
+        self.__N = N
+        self.__updateArgs()
+
+    def getP(self):
+        return self.__P
+
+    def setP(self, P):
+        self.validateParameter(P, numpy.float32)
+
+        if (P < 0.0) or (P > 1.0):
+            raise ValueError("P must be in the range [0.0, 1.0]")
+
+        self.__P = P
+        self.__updateArgs()
+
+    def __updateArgs(self):
+        self.funcArgs = [self.__N, self.__P]
+
+    def work(self):
+        N = self.workInfo().minAllOutElements
+        if 0 == N:
+            return
+
+        out = self.output(0).buffer()
+        out[:N] = self.func(*self.funcArgs, size=(N)).astype(self.numpyOutputDType)
+        out.produce(N)
+
+class ChiSquare(SingleOutputSource):
+    def __init__(self, dtype, degreesOfFreedom):
+        outputArgs = dict(supportFloat=True)
+        SingleOutputSource.__init__(self, GetNumPyRandom().binomial, dtype, outputArgs, useDType=False)
+
+        self.__degreesOfFreedom = None
+
+        self.setDegreesOfFreedom(degreesOfFreedom)
+
+    def getDegreesOfFreedom(self):
+        return self.__degreesOfFreedom
+
+    def setDegreesOfFreedom(self, degreesOfFreedom):
+        self.validateParameter(degreesOfFreedom, self.numpyOutputDType)
+
+        if degreesOfFreedom <= 0.0:
+            raise ValueError("degreesOfFreedom must be > 0.0")
+
+        self.__degreesOfFreedom = degreesOfFreedom
+        self.__updateArgs()
+
+    def __updateArgs(self):
+        self.funcArgs = [self.__degreesOfFreedom]
+
+    def work(self):
+        N = self.workInfo().minAllOutElements
+        if 0 == N:
+            return
+
+        out = self.output(0).buffer()
+        out[:N] = self.func(*self.funcArgs, size=(N)).astype(self.numpyOutputDType)
+        out.produce(N)
+
+class Exponential(SingleOutputSource):
+    def __init__(self, dtype, scale):
+        outputArgs = dict(supportFloat=True)
+        SingleOutputSource.__init__(self, GetNumPyRandom().exponential, dtype, outputArgs, useDType=False)
+
+        self.__scale = None
+
+        self.setScale(scale)
+
+    def getScale(self):
+        return self.__scale
+
+    def setScale(self, scale):
+        self.validateParameter(scale, self.numpyOutputDType)
+
+        if scale < 0.0:
+            raise ValueError("scale must be >= 0.0")
+
+        self.__scale = scale
+        self.__updateArgs()
+
+    def __updateArgs(self):
+        self.funcArgs = [self.__scale]
+
+    def work(self):
+        N = self.workInfo().minAllOutElements
+        if 0 == N:
+            return
+
+        out = self.output(0).buffer()
+        out[:N] = self.func(*self.funcArgs, size=(N)).astype(self.numpyOutputDType)
+        out.produce(N)
+
+class F(SingleOutputSource):
+    def __init__(self, dtype, numerator, denominator):
+        outputArgs = dict(supportUInt=True)
+        SingleOutputSource.__init__(self, GetNumPyRandom().f, dtype, outputArgs, useDType=False)
+
+        self.__numerator = None
+        self.__denominator = None
+
+        self.setNumerator(N)
+        self.setDenominator(P)
+
+    def getNumerator(self):
+        return self.__numerator
+
+    def setNumerator(self, numerator):
+        self.validateParameter(numerator, self.numpyOutputDType)
+
+        if numerator < 0.0:
+            raise ValueError("numerator must be >= 0.0")
+
+        self.__numerator = numerator
+        self.__updateArgs()
+
+    def getDenominator(self):
+        return self.__denominator
+
+    def setDenominator(self, denominator):
+        self.validateParameter(denominator, self.numpyOutputDType)
+
+        if denominator < 0.0:
+            raise ValueError("denominator must be >= 0.0")
+
+        self.__denominator = denominator
+        self.__updateArgs()
+
+    def __updateArgs(self):
+        self.funcArgs = [self.__numerator, self.__denominator]
+
+    def work(self):
+        N = self.workInfo().minAllOutElements
+        if 0 == N:
+            return
+
+        out = self.output(0).buffer()
+        out[:N] = self.func(*self.funcArgs, size=(N)).astype(self.numpyOutputDType)
+        out.produce(N)
+
+class RandomGamma(SingleOutputSource):
+    def __init__(self, dtype, shape, scale):
+        outputArgs = dict(supportFloat=True)
+        SingleOutputSource.__init__(self, GetNumPyRandom().gamma, dtype, outputArgs, useDType=False)
+
+        self.__shape = None
+        self.__scale = None
+
+        self.setShape(shape)
+        self.setScale(scale)
+
+    def getShape(self):
+        return self.__shape
+
+    def setShape(self, shape):
+        self.validateParameter(shape, self.numpyOutputDType)
+
+        if shape < 0.0:
+            raise ValueError("shape must be >= 0.0")
+
+        self.__shape = shape
+        self.__updateArgs()
+
+    def getScale(self):
+        return self.__scale
+
+    def setScale(self, scale):
+        self.validateParameter(scale, self.numpyOutputDType)
+
+        if scale < 0.0:
+            raise ValueError("scale must be >= 0.0")
+
+        self.__scale = scale
+        self.__updateArgs()
+
+    def __updateArgs(self):
+        self.funcArgs = [self.__shape, self.__scale]
+
+    def work(self):
+        N = self.workInfo().minAllOutElements
+        if 0 == N:
+            return
+
+        out = self.output(0).buffer()
+        out[:N] = self.func(*self.funcArgs, size=(N)).astype(self.numpyOutputDType)
+        out.produce(N)
+
+class Geometric(SingleOutputSource):
+    def __init__(self, dtype, P):
+        outputArgs = dict(supportUInt=True)
+        SingleOutputSource.__init__(self, GetNumPyRandom().geometric, dtype, outputArgs, useDType=False)
+
+        self.__P = None
+
+        self.setP(P)
+
+    def getP(self):
+        return self.__P
+
+    def setP(self, P):
+        self.validateParameter(P, numpy.float32)
+
+        if P < 0.0:
+            raise ValueError("P must be >= 0.0")
+
+        self.__P = P
+        self.__updateArgs()
+
+    def __updateArgs(self):
+        self.funcArgs = [self.__P]
+
+    def work(self):
+        N = self.workInfo().minAllOutElements
+        if 0 == N:
+            return
+
+        out = self.output(0).buffer()
+        out[:N] = self.func(*self.funcArgs, size=(N)).astype(self.numpyOutputDType)
+        out.produce(N)
+
+class Gumbel(SingleOutputSource):
+    def __init__(self, dtype, location, scale):
+        outputArgs = dict(supportFloat=True)
+        SingleOutputSource.__init__(self, GetNumPyRandom().gumbel, dtype, outputArgs, useDType=False)
+
+        self.__location = None
+        self.__scale = None
+
+        self.setLocation(location)
+        self.setScale(scale)
+
+    def getLocation(self):
+        return self.__location
+
+    def setLocation(self, location):
+        self.validateParameter(location, self.numpyOutputDType)
+
+        self.__location = location
+        self.__updateArgs()
+
+    def getScale(self):
+        return self.__scale
+
+    def setScale(self, scale):
+        self.validateParameter(scale, self.numpyOutputDType)
+
+        if scale < 0.0:
+            raise ValueError("scale must be >= 0.0")
+
+        self.__scale = scale
+        self.__updateArgs()
+
+    def __updateArgs(self):
+        self.funcArgs = [self.__location, self.__scale]
+
+    def work(self):
+        N = self.workInfo().minAllOutElements
+        if 0 == N:
+            return
+
+        out = self.output(0).buffer()
+        out[:N] = self.func(*self.funcArgs, size=(N)).astype(self.numpyOutputDType)
+        out.produce(N)
+
+class Hypergeometric(SingleOutputSource):
+    def __init__(self, dtype, numGood, numBad, numSampled):
+        outputArgs = dict(supportUInt=True)
+        SingleOutputSource.__init__(self, GetNumPyRandom().hypergeometric, dtype, outputArgs, useDType=False)
+
+        self.__numGood = None
+        self.__numBad = None
+        self.__numSampled = None
+
+        self.setNumGood(numGood)
+        self.setNumBad(numBad)
+        self.setNumSampled(numSampled)
+
+    def getNumGood(self):
+        return self.__numGood
+
+    def setNumGood(self, numGood):
+        self.validateParameter(numGood, self.numpyOutputDType)
+
+        if (numGood < 0) or (numGood > 10e9):
+            raise ValueError("numGood must be in range [0, 10e9].")
+
+        self.__numGood = numGood
+        self.__updateArgs()
+
+    def getNumBad(self):
+        return self.__numBad
+
+    def setNumBad(self, numBad):
+        self.validateParameter(numBad, self.numpyOutputDType)
+
+        if (numBad < 0) or (numBad > 10e9):
+            raise ValueError("numBad must be in range [0, 10e9].")
+
+        self.__numBad = numBad
+        self.__updateArgs()
+
+    def __updateArgs(self):
+        self.funcArgs = [self.__numGood, self.__numBad, self.__numSampled]
+
+    def getNumSampled(self):
+        return self.__numSampled
+
+    def setNumSampled(self, numSampled):
+        self.validateParameter(numSampled, self.numpyOutputDType)
+
+        if numSampled > (self.__numGood + self.__numBad):
+            raise ValueError("numSampled must be <= numGood+numBad.")
+
+        self.__numSampled = numSampled
+        self.__updateArgs()
+
+    def work(self):
+        N = self.workInfo().minAllOutElements
+        if 0 == N:
+            return
+
+        out = self.output(0).buffer()
+        out[:N] = self.func(*self.funcArgs, size=(N)).astype(self.numpyOutputDType)
+        out.produce(N)

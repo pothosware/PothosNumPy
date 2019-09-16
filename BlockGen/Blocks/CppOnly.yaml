@@ -1,10 +1,4 @@
 # TODO: figure out what here can be automated
-fft/fft: {name: FFT}
-fft/ifft: {name: IFFT}
-fft/rfft: {name: RFFT}
-fft/irfft: {name: IRFFT}
-fft/hfft: {name: HFFT}
-fft/ihfft: {name: IHFFT}
 arange: {name: ARange}
 linspace: {name: LinSpace}
 logspace: {name: LogSpace}
@@ -21,3 +15,23 @@ save: {name: Save, niceName: "Save to .npy"}
 savez: {name: SaveZ, niceName: "Save to .npz"}
 savez_compressed: {name: SaveZCompressed, niceName: "Save to .npz (compressed)"}
 flip: {name: Flip}
+
+fft/fft: {name: FFT}
+fft/ifft: {name: IFFT}
+fft/rfft: {name: RFFT}
+fft/irfft: {name: IRFFT}
+fft/hfft: {name: HFFT}
+fft/ihfft: {name: IHFFT}
+
+random/permutation: {name: Permutation}
+random/integers: {name: Integers}
+random/beta: {name: Beta}
+random/binomial: {name: Binomial}
+random/chisquare: {name: ChiSquare}
+# TODO: dirichlet?
+random/exponential: {name: Exponential}
+random/f: {name: F}
+random/gamma: {name: RandomGamma}
+random/geometric: {name: Geometric}
+random/gumbel: {name: Gumbel}
+random/hypergeometric: {name: Hypergeometric}
