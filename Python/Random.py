@@ -2,6 +2,8 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 from .BaseBlock import *
+from .OneToOneBlock import *
+from .Source import *
 from . import Utility
 
 import Pothos
@@ -15,7 +17,7 @@ def GetNumPyRandom():
     rand = None
     try:
         rand = numpy.random.default_rng()
-    else:
+    except:
         rand = numpy.random
 
     return rand
@@ -24,7 +26,7 @@ def GetNumPyRandomIntegersFunc():
     randints = None
     try:
         rand = numpy.random.default_rng().integers
-    else:
+    except:
         rand = numpy.random.random_integers
 
     return rand
@@ -33,16 +35,14 @@ def GetNumPyRandomIntegersFunc():
 # Blocks whose invocations ore implementations are different enough to not auto-generate
 #
 
-# TODO: postBuffer
 class Permutation(OneToOneBlock):
     def __init__(self, dtype):
         dtypeArgs = dict(supportAll=True)
-        OneToOneBlock.__init__(self, GetNumPyRandom().permutation, dtype, dtype, dtypeArgs, dtypeArgs)
+        OneToOneBlock.__init__(self, GetNumPyRandom().permutation, dtype, dtype, dtypeArgs, dtypeArgs, callPostBuffer=True)
 
 def Integers(dtype):
     outputArgs = dict(supportInt=True)
-
-    return SingleOutputSource(GetNumPyRandomIntegersFunc(), dtype, outputArgs, useDType=True)
+    return SingleOutputSource(GetNumPyRandomIntegersFunc(), dtype, outputArgs, useDType=False)
 
 class Beta(SingleOutputSource):
     def __init__(self, dtype, alpha, beta):
@@ -59,9 +59,9 @@ class Beta(SingleOutputSource):
         return self.__alpha
 
     def setAlpha(self, alpha):
-        self.validateParameter(alpha, self.numpyOutputDType)
+        Utility.validateParameter(alpha, self.numpyOutputDType)
 
-        if alpha < 0.0:
+        if alpha <= 0.0:
             raise ValueError("Alpha must be > 0.0")
 
         self.__alpha = alpha
@@ -71,9 +71,9 @@ class Beta(SingleOutputSource):
         return self.__beta
 
     def setBeta(self, beta):
-        self.validateParameter(beta, self.numpyOutputDType)
+        Utility.validateParameter(beta, self.numpyOutputDType)
 
-        if beta < 0.0:
+        if beta <= 0.0:
             raise ValueError("Beta must be > 0.0")
 
         self.__beta = beta
@@ -89,11 +89,11 @@ class Beta(SingleOutputSource):
 
         out = self.output(0).buffer()
         out[:N] = self.func(*self.funcArgs, size=(N)).astype(self.numpyOutputDType)
-        out.produce(N)
+        self.output(0).produce(N)
 
 class Binomial(SingleOutputSource):
     def __init__(self, dtype, N, P):
-        outputArgs = dict(supportUInt=True)
+        outputArgs = dict(supportInt=True, supportUInt=True)
         SingleOutputSource.__init__(self, GetNumPyRandom().binomial, dtype, outputArgs, useDType=False)
 
         self.__N = None
@@ -106,7 +106,7 @@ class Binomial(SingleOutputSource):
         return self.__N
 
     def setN(self, N):
-        self.validateParameter(N, self.numpyOutputDType)
+        Utility.validateParameter(N, self.numpyOutputDType)
 
         self.__N = N
         self.__updateArgs()
@@ -115,7 +115,7 @@ class Binomial(SingleOutputSource):
         return self.__P
 
     def setP(self, P):
-        self.validateParameter(P, numpy.float32)
+        Utility.validateParameter(P, numpy.dtype("float32"))
 
         if (P < 0.0) or (P > 1.0):
             raise ValueError("P must be in the range [0.0, 1.0]")
@@ -133,12 +133,12 @@ class Binomial(SingleOutputSource):
 
         out = self.output(0).buffer()
         out[:N] = self.func(*self.funcArgs, size=(N)).astype(self.numpyOutputDType)
-        out.produce(N)
+        self.output(0).produce(N)
 
 class ChiSquare(SingleOutputSource):
     def __init__(self, dtype, degreesOfFreedom):
         outputArgs = dict(supportFloat=True)
-        SingleOutputSource.__init__(self, GetNumPyRandom().binomial, dtype, outputArgs, useDType=False)
+        SingleOutputSource.__init__(self, GetNumPyRandom().chisquare, dtype, outputArgs, useDType=False)
 
         self.__degreesOfFreedom = None
 
@@ -148,7 +148,7 @@ class ChiSquare(SingleOutputSource):
         return self.__degreesOfFreedom
 
     def setDegreesOfFreedom(self, degreesOfFreedom):
-        self.validateParameter(degreesOfFreedom, self.numpyOutputDType)
+        Utility.validateParameter(degreesOfFreedom, self.numpyOutputDType)
 
         if degreesOfFreedom <= 0.0:
             raise ValueError("degreesOfFreedom must be > 0.0")
@@ -166,7 +166,7 @@ class ChiSquare(SingleOutputSource):
 
         out = self.output(0).buffer()
         out[:N] = self.func(*self.funcArgs, size=(N)).astype(self.numpyOutputDType)
-        out.produce(N)
+        self.output(0).produce(N)
 
 class Exponential(SingleOutputSource):
     def __init__(self, dtype, scale):
@@ -181,7 +181,7 @@ class Exponential(SingleOutputSource):
         return self.__scale
 
     def setScale(self, scale):
-        self.validateParameter(scale, self.numpyOutputDType)
+        Utility.validateParameter(scale, self.numpyOutputDType)
 
         if scale < 0.0:
             raise ValueError("scale must be >= 0.0")
@@ -199,7 +199,7 @@ class Exponential(SingleOutputSource):
 
         out = self.output(0).buffer()
         out[:N] = self.func(*self.funcArgs, size=(N)).astype(self.numpyOutputDType)
-        out.produce(N)
+        self.output(0).produce(N)
 
 class F(SingleOutputSource):
     def __init__(self, dtype, numerator, denominator):
@@ -216,7 +216,7 @@ class F(SingleOutputSource):
         return self.__numerator
 
     def setNumerator(self, numerator):
-        self.validateParameter(numerator, self.numpyOutputDType)
+        Utility.validateParameter(numerator, self.numpyOutputDType)
 
         if numerator < 0.0:
             raise ValueError("numerator must be >= 0.0")
@@ -228,7 +228,7 @@ class F(SingleOutputSource):
         return self.__denominator
 
     def setDenominator(self, denominator):
-        self.validateParameter(denominator, self.numpyOutputDType)
+        Utility.validateParameter(denominator, self.numpyOutputDType)
 
         if denominator < 0.0:
             raise ValueError("denominator must be >= 0.0")
@@ -246,7 +246,7 @@ class F(SingleOutputSource):
 
         out = self.output(0).buffer()
         out[:N] = self.func(*self.funcArgs, size=(N)).astype(self.numpyOutputDType)
-        out.produce(N)
+        self.output(0).produce(N)
 
 class RandomGamma(SingleOutputSource):
     def __init__(self, dtype, shape, scale):
@@ -263,7 +263,7 @@ class RandomGamma(SingleOutputSource):
         return self.__shape
 
     def setShape(self, shape):
-        self.validateParameter(shape, self.numpyOutputDType)
+        Utility.validateParameter(shape, self.numpyOutputDType)
 
         if shape < 0.0:
             raise ValueError("shape must be >= 0.0")
@@ -275,7 +275,7 @@ class RandomGamma(SingleOutputSource):
         return self.__scale
 
     def setScale(self, scale):
-        self.validateParameter(scale, self.numpyOutputDType)
+        Utility.validateParameter(scale, self.numpyOutputDType)
 
         if scale < 0.0:
             raise ValueError("scale must be >= 0.0")
@@ -293,7 +293,7 @@ class RandomGamma(SingleOutputSource):
 
         out = self.output(0).buffer()
         out[:N] = self.func(*self.funcArgs, size=(N)).astype(self.numpyOutputDType)
-        out.produce(N)
+        self.output(0).produce(N)
 
 class Geometric(SingleOutputSource):
     def __init__(self, dtype, P):
@@ -308,7 +308,7 @@ class Geometric(SingleOutputSource):
         return self.__P
 
     def setP(self, P):
-        self.validateParameter(P, numpy.float32)
+        Utility.validateParameter(P, numpy.dtype("float32"))
 
         if P < 0.0:
             raise ValueError("P must be >= 0.0")
@@ -326,7 +326,7 @@ class Geometric(SingleOutputSource):
 
         out = self.output(0).buffer()
         out[:N] = self.func(*self.funcArgs, size=(N)).astype(self.numpyOutputDType)
-        out.produce(N)
+        self.output(0).produce(N)
 
 class Gumbel(SingleOutputSource):
     def __init__(self, dtype, location, scale):
@@ -343,7 +343,7 @@ class Gumbel(SingleOutputSource):
         return self.__location
 
     def setLocation(self, location):
-        self.validateParameter(location, self.numpyOutputDType)
+        Utility.validateParameter(location, self.numpyOutputDType)
 
         self.__location = location
         self.__updateArgs()
@@ -352,7 +352,7 @@ class Gumbel(SingleOutputSource):
         return self.__scale
 
     def setScale(self, scale):
-        self.validateParameter(scale, self.numpyOutputDType)
+        Utility.validateParameter(scale, self.numpyOutputDType)
 
         if scale < 0.0:
             raise ValueError("scale must be >= 0.0")
@@ -370,7 +370,7 @@ class Gumbel(SingleOutputSource):
 
         out = self.output(0).buffer()
         out[:N] = self.func(*self.funcArgs, size=(N)).astype(self.numpyOutputDType)
-        out.produce(N)
+        self.output(0).produce(N)
 
 class Hypergeometric(SingleOutputSource):
     def __init__(self, dtype, numGood, numBad, numSampled):
@@ -389,7 +389,7 @@ class Hypergeometric(SingleOutputSource):
         return self.__numGood
 
     def setNumGood(self, numGood):
-        self.validateParameter(numGood, self.numpyOutputDType)
+        Utility.validateParameter(numGood, self.numpyOutputDType)
 
         if (numGood < 0) or (numGood > 10e9):
             raise ValueError("numGood must be in range [0, 10e9].")
@@ -401,7 +401,7 @@ class Hypergeometric(SingleOutputSource):
         return self.__numBad
 
     def setNumBad(self, numBad):
-        self.validateParameter(numBad, self.numpyOutputDType)
+        Utility.validateParameter(numBad, self.numpyOutputDType)
 
         if (numBad < 0) or (numBad > 10e9):
             raise ValueError("numBad must be in range [0, 10e9].")
@@ -416,7 +416,7 @@ class Hypergeometric(SingleOutputSource):
         return self.__numSampled
 
     def setNumSampled(self, numSampled):
-        self.validateParameter(numSampled, self.numpyOutputDType)
+        Utility.validateParameter(numSampled, self.numpyOutputDType)
 
         if numSampled > (self.__numGood + self.__numBad):
             raise ValueError("numSampled must be <= numGood+numBad.")
@@ -431,4 +431,4 @@ class Hypergeometric(SingleOutputSource):
 
         out = self.output(0).buffer()
         out[:N] = self.func(*self.funcArgs, size=(N)).astype(self.numpyOutputDType)
-        out.produce(N)
+        self.output(0).produce(N)

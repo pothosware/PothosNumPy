@@ -80,7 +80,7 @@ BUILD_PYTHON_MODULE(
         Python/Load.py
         Python/NToOneBlock.py
         Python/OneToOneBlock.py
-        #Python/Random.py
+        Python/Random.py
         Python/RegisteredCallHelpers.py
         Python/Save.py
         Python/SaveZ.py
@@ -95,6 +95,7 @@ BUILD_PYTHON_MODULE(
 
         Testing/TestFFT.cpp
         Testing/TestNumPyFileIO.cpp
+        Testing/TestRandomSources.cpp
         Testing/TestRegisteredCalls.cpp
     DOC_SOURCES
         ${autogenOutputs}
