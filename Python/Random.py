@@ -41,7 +41,7 @@ class Permutation(OneToOneBlock):
         OneToOneBlock.__init__(self, GetNumPyRandom().permutation, dtype, dtype, dtypeArgs, dtypeArgs, callPostBuffer=True)
 
 def Integers(dtype):
-    outputArgs = dict(supportInt=True)
+    outputArgs = dict(supportInt=True, supportUInt=True)
     return SingleOutputSource(GetNumPyRandomIntegersFunc(), dtype, outputArgs, useDType=False)
 
 class Beta(SingleOutputSource):
@@ -203,14 +203,14 @@ class Exponential(SingleOutputSource):
 
 class F(SingleOutputSource):
     def __init__(self, dtype, numerator, denominator):
-        outputArgs = dict(supportUInt=True)
+        outputArgs = dict(supportFloat=True)
         SingleOutputSource.__init__(self, GetNumPyRandom().f, dtype, outputArgs, useDType=False)
 
         self.__numerator = None
         self.__denominator = None
 
-        self.setNumerator(N)
-        self.setDenominator(P)
+        self.setNumerator(numerator)
+        self.setDenominator(denominator)
 
     def getNumerator(self):
         return self.__numerator
@@ -230,8 +230,8 @@ class F(SingleOutputSource):
     def setDenominator(self, denominator):
         Utility.validateParameter(denominator, self.numpyOutputDType)
 
-        if denominator < 0.0:
-            raise ValueError("denominator must be >= 0.0")
+        if denominator <= 0.0:
+            raise ValueError("denominator must be > 0.0")
 
         self.__denominator = denominator
         self.__updateArgs()
@@ -297,7 +297,7 @@ class RandomGamma(SingleOutputSource):
 
 class Geometric(SingleOutputSource):
     def __init__(self, dtype, P):
-        outputArgs = dict(supportUInt=True)
+        outputArgs = dict(supportUInt=True, supportInt=True)
         SingleOutputSource.__init__(self, GetNumPyRandom().geometric, dtype, outputArgs, useDType=False)
 
         self.__P = None
@@ -310,8 +310,8 @@ class Geometric(SingleOutputSource):
     def setP(self, P):
         Utility.validateParameter(P, numpy.dtype("float32"))
 
-        if P < 0.0:
-            raise ValueError("P must be >= 0.0")
+        if (P < 0.0) or (P > 1.0):
+            raise ValueError("P must be in range [0.0, 1.0]")
 
         self.__P = P
         self.__updateArgs()
@@ -374,7 +374,7 @@ class Gumbel(SingleOutputSource):
 
 class Hypergeometric(SingleOutputSource):
     def __init__(self, dtype, numGood, numBad, numSampled):
-        outputArgs = dict(supportUInt=True)
+        outputArgs = dict(supportUInt=True, supportInt=True)
         SingleOutputSource.__init__(self, GetNumPyRandom().hypergeometric, dtype, outputArgs, useDType=False)
 
         self.__numGood = None
@@ -409,20 +409,23 @@ class Hypergeometric(SingleOutputSource):
         self.__numBad = numBad
         self.__updateArgs()
 
-    def __updateArgs(self):
-        self.funcArgs = [self.__numGood, self.__numBad, self.__numSampled]
-
     def getNumSampled(self):
         return self.__numSampled
 
     def setNumSampled(self, numSampled):
         Utility.validateParameter(numSampled, self.numpyOutputDType)
 
-        if numSampled > (self.__numGood + self.__numBad):
-            raise ValueError("numSampled must be <= numGood+numBad.")
+        if (numSampled < 0) or (numSampled > (self.__numGood + self.__numBad)):
+            raise ValueError("numSampled must be in range [0, numGood+numBad].")
 
         self.__numSampled = numSampled
         self.__updateArgs()
+
+    def __updateArgs(self):
+        # If numGood/numBad pushes numSampled out of range, pull it back.
+        if None not in [self.__numGood, self.__numBad, self.__numSampled]:
+            self.__numSampled = min(self.__numSampled, (self.__numGood+self.__numBad))
+            self.funcArgs = [self.__numGood, self.__numBad, self.__numSampled]
 
     def work(self):
         N = self.workInfo().minAllOutElements

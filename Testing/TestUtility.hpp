@@ -61,6 +61,12 @@ using EnableIfTypeMatches = typename std::enable_if<std::is_same<T, U>::value, R
 template <typename T, typename U, typename Ret>
 using EnableIfTypeDoesNotMatch = typename std::enable_if<!std::is_same<T, U>::value, Ret>::type;
 
+template <typename T, typename Ret, size_t size>
+using EnableIfTypeSizeIsGE = typename std::enable_if<sizeof(T) >= size, Ret>::type;
+
+template <typename T, typename Ret, size_t size>
+using EnableIfTypeSizeIsLT = typename std::enable_if<sizeof(T) < size, Ret>::type;
+
 //
 // Utility functions
 //
