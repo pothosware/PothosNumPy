@@ -25,7 +25,7 @@ class Save(BaseBlock):
                 "WARNING")
 
         dtypeArgs = dict(supportAll=True)
-        BaseBlock.__init__(self, numpy.save, dtype, None, dtypeArgs, None, None, None)
+        BaseBlock.__init__(self, numpy.save, dtype, None, dtypeArgs, None, list(), dict())
 
         self.__filepath = filepath
         self.__buffer = numpy.array([], dtype=self.numpyInputDType)

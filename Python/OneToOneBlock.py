@@ -8,7 +8,7 @@ import Pothos
 import numpy
 
 class OneToOneBlock(BaseBlock):
-    def __init__(self, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, funcArgs, funcKWargs, *funcArgs, **kwargs):
+    def __init__(self, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, funcArgs, funcKWargs, *args, **kwargs):
         if inputDType is None:
             raise ValueError("For non-source blocks, inputDType cannot be None.")
         if outputDType is None:

@@ -102,15 +102,15 @@ def processBlock(yaml, makoVars):
         makoVars["factoryParams"] = ["inputDType", "outputDType"] + makoVars["factoryParams"]
 
 def processSource(yaml, makoVars):
-    makoVars["classParams"] = ["dtype"] + makoVars["classParams"]
-    makoVars["factoryParams"] = ["dtype"] + makoVars["factoryParams"]
-
     for key in ["blockType", "outputType"]:
         if key in yaml:
             makoVars["outputDTypeArgs"] = blockTypeToDictString(yaml[key])
             makoVars["classParams"] = ["outputDTypeArgs"] + makoVars["classParams"]
             makoVars["factoryVars"] += ["outputDTypeArgs"]
             break
+
+    makoVars["classParams"] = ["dtype"] + makoVars["classParams"]
+    makoVars["factoryParams"] = ["dtype"] + makoVars["factoryParams"]
 
 def generatePythonFactoryFunction(func,yaml):
     # Generate variables for processing.
@@ -157,8 +157,8 @@ def generatePythonFactoryFunction(func,yaml):
 
     makoVars["classParams"] = ["{0}.{1}".format(makoVars["prefix"], func)] + makoVars["classParams"]
 
-    for key in ["funcArgs", "funcKWargs"]:
-        makoVars["classParams"] += [makoVars.get(key, "None")]
+    makoVars["classParams"] += [makoVars.get("funcArgs", "list()")]
+    makoVars["classParams"] += [makoVars.get("funcKWargs", "dict()")]
     if "args" in makoVars:
         makoVars["classParams"] += ["*args"]
     if "kwargs" in makoVars:

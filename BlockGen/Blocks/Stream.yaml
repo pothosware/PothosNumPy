@@ -39,24 +39,28 @@ intersect1d:
         name: Intersect1D
         niceName: Set Intersection
         class: TwoToOneBlock
+        skipExecTest: True
 
 setdiff1d:
         copy: unique
         name: SetDiff1D
         niceName: Set Difference
         class: TwoToOneBlock
+        skipExecTest: True
 
 setxor1d:
         copy: unique
         name: SetXor1D
         niceName: Set XOR
         class: TwoToOneBlock
+        skipExecTest: True
 
 union1d:
         copy: unique
         name: Union1D
         niceName: Set Union
         class: TwoToOneBlock
+        skipExecTest: True
 
 sort:
         copy: unique

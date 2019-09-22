@@ -152,6 +152,13 @@ static void testBlockExecutionFunc(
         // When this block exits, the flowgraph will stop.
         Poco::Thread::sleep(5);
     }
+
+    // Make sure the blocks output data.
+    for(const auto& collectorSinkMapPair: collectorSinks)
+    {
+        const auto& collectorSink = collectorSinkMapPair.second;
+        POTHOS_TEST_TRUE(collectorSink.call("getBuffer").call<size_t>("elements") > 0);
+    }
 }
 
 //

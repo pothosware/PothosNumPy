@@ -22,7 +22,7 @@ class LoadNpyBlock(BaseBlock):
                 "WARNING")
 
         dtypeArgs = dict(supportAll=True)
-        BaseBlock.__init__(self, numpy.load, None, dtype, None, dtypeArgs, None, None)
+        BaseBlock.__init__(self, numpy.load, None, dtype, None, dtypeArgs, list(), dict())
 
         self.__filepath = filepath
         self.__data = None
