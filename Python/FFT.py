@@ -11,7 +11,7 @@ import numpy.fft
 
 class FFTClass(BaseBlock):
     def __init__(self, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, numBins, warnIfSuboptimal=False):
-        BaseBlock.__init__(self, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs)
+        BaseBlock.__init__(self, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, None, None)
 
         # The FFT algorithm is fastest for powers of 2.
         if warnIfSuboptimal and not numpy.log2(numBins).is_integer():

@@ -73,6 +73,14 @@ def blockTypeToDictString(blockTypeYAML):
     return "dict({0})".format(", ".join(["support{0}=True".format(formatTypeText(typeText)) for typeText in blockTypeYAML]))
 
 def processBlock(yaml, makoVars):
+    if yaml["class"] in ["NToOneBlock"]:
+        makoVars["factoryParams"] = ["nchans"] + makoVars["factoryParams"]
+        makoVars["classParams"] = ["nchans"] + makoVars["classParams"]
+    if yaml["class"] in ["ForwardAndPostLabelBlock"]:
+        label = "\"{0}\"".format(yaml["label"]) if "label" in yaml else "None"
+        makoVars["classParams"] = [label] + makoVars["classParams"]
+        makoVars["classParams"] = [yaml.get("findIndexFunc", "None")] + makoVars["classParams"]
+
     for key in ["blockType", "outputType"]:
         if key in yaml:
             makoVars["outputDTypeArgs"] = blockTypeToDictString(yaml[key])
@@ -86,31 +94,23 @@ def processBlock(yaml, makoVars):
             makoVars["factoryVars"] += ["inputDTypeArgs"]
             break
 
-    if yaml["class"] in ["NToOneBlock"]:
-        makoVars["factoryParams"] = ["nchans"] + makoVars["factoryParams"]
-        makoVars["classParams"] = ["nchans"] + makoVars["classParams"]
-    if yaml["class"] in ["ForwardAndPostLabelBlock"]:
-        label = "\"{0}\"".format(yaml["label"]) if "label" in yaml else "None"
-        makoVars["classParams"] = [label] + makoVars["classParams"]
-        makoVars["classParams"] = [yaml.get("findIndexFunc", "None")] + makoVars["classParams"]
-
     if "blockType" in yaml:
-        makoVars["classParams"] = ["dtype"] + makoVars["classParams"]
+        makoVars["classParams"] = ["dtype, dtype"] + makoVars["classParams"]
         makoVars["factoryParams"] = ["dtype"] + makoVars["factoryParams"]
     else:
         makoVars["classParams"] = ["inputDType", "outputDType"] + makoVars["classParams"]
         makoVars["factoryParams"] = ["inputDType", "outputDType"] + makoVars["factoryParams"]
 
 def processSource(yaml, makoVars):
+    makoVars["classParams"] = ["dtype"] + makoVars["classParams"]
+    makoVars["factoryParams"] = ["dtype"] + makoVars["factoryParams"]
+
     for key in ["blockType", "outputType"]:
         if key in yaml:
             makoVars["outputDTypeArgs"] = blockTypeToDictString(yaml[key])
             makoVars["classParams"] = ["outputDTypeArgs"] + makoVars["classParams"]
             makoVars["factoryVars"] += ["outputDTypeArgs"]
             break
-
-    makoVars["classParams"] = ["dtype"] + makoVars["classParams"]
-    makoVars["factoryParams"] = ["dtype"] + makoVars["factoryParams"]
 
 def generatePythonFactoryFunction(func,yaml):
     # Generate variables for processing.

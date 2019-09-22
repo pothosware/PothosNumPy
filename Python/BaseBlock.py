@@ -8,19 +8,19 @@ import Pothos
 import numpy
 
 class BaseBlock(Pothos.Block):
-    def __init__(self, func, inputDType, outputDType, inputArgs, outputArgs, *funcArgs, **kwargs):
+    def __init__(self, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, funcArgs, funcKWargs, *args, **kwargs):
         Pothos.Block.__init__(self)
 
         if inputDType is not None:
-            Utility.validateDType(inputDType, inputArgs)
+            Utility.validateDType(inputDType, inputDTypeArgs)
         if outputDType is not None:
-            Utility.validateDType(outputDType, outputArgs)
+            Utility.validateDType(outputDType, outputDTypeArgs)
 
         self.inputDType = inputDType
         self.outputDType = outputDType
         self.func = func
-        self.funcArgs = funcArgs
-        self.funcKWargs = dict()
+        self.funcArgs = funcArgs if funcArgs is not None else None
+        self.funcKWargs = funcKWargs if funcKWargs is not None else None
 
         # Common kwargs values
         self.useDType = kwargs.get("useDType", True)

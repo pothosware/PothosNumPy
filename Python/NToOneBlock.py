@@ -9,13 +9,13 @@ import functools
 import numpy
 
 class NToOneBlock(BaseBlock):
-    def __init__(self, func, inputDType, outputDType, inputArgs, outputArgs, nchans, *funcArgs, **kwargs):
+    def __init__(self, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, nchans, *funcArgs, **kwargs):
         if inputDType is None:
             raise ValueError("For non-source blocks, inputDType cannot be None.")
         if outputDType is None:
             raise ValueError("For non-sink blocks, outputDType cannot be None.")
 
-        BaseBlock.__init__(self, func, inputDType, outputDType, inputArgs, outputArgs, *funcArgs, **kwargs)
+        BaseBlock.__init__(self, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, *funcArgs, **kwargs)
 
         self.callReduce = kwargs.get("callReduce", True)
 

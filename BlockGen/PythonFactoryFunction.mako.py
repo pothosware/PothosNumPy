@@ -5,7 +5,7 @@ Corresponding NumPy function: ${makoVars["prefix"]}.${makoVars["func"]}
 
 |category ${makoVars['category']}
 |keywords ${makoVars['keywords']}
-|factory /numpy/${makoVars['func']}(${", ".join(makoVars['factoryParams'])})
+|factory /numpy/${makoVars['func']}(${",".join(makoVars['factoryParams'])})
 %if "alias" in makoVars:
 %for alias in makoVars["alias"]:
 |alias /numpy/${alias}
