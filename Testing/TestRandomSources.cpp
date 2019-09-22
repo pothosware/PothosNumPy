@@ -363,6 +363,31 @@ static EnableIfAnyInt<T, void> testRandomSources()
             hypergeometric.template call("setNumBad", (max+1)),
             Pothos::ProxyExceptionMessage);*/
     }
+
+    //
+    // LogSeries
+    //
+    {
+        const std::string logseriesPath = "/numpy/random/logseries";
+        Pothos::Proxy logseries;
+        constexpr double P1 = 0.05;
+        constexpr double P2 = 0.95;
+
+        testOneParamRandomSource<T, double>(
+            logseriesPath,
+            "P",
+            P1,
+            P2,
+            logseries);
+
+        // Check input validation.
+        POTHOS_TEST_THROWS(
+            logseries.template call("setP", 0.0),
+            Pothos::ProxyExceptionMessage);
+        POTHOS_TEST_THROWS(
+            logseries.template call("setP", 1.0),
+            Pothos::ProxyExceptionMessage);
+    }
 }
 
 template <typename T>
@@ -514,6 +539,75 @@ static EnableIfFloat<T, void> testRandomSources()
         // Check input validation.
         POTHOS_TEST_THROWS(
             gumbel.template call("setScale", T(-0.01)),
+            Pothos::ProxyExceptionMessage);
+    }
+
+    //
+    // Laplace
+    //
+    {
+        const std::string laplacePath = "/numpy/random/laplace";
+        Pothos::Proxy laplace;
+        constexpr T param1 = T(2.5);
+        constexpr T param2 = T(5.2);
+
+        testTwoParamRandomSource<T, T, T>(
+            laplacePath,
+            "Position",
+            param1,
+            "Scale",
+            param2,
+            laplace);
+
+        // Check input validation.
+        POTHOS_TEST_THROWS(
+            laplace.template call("setScale", T(-0.01)),
+            Pothos::ProxyExceptionMessage);
+    }
+
+    //
+    // Logistic
+    //
+    {
+        const std::string logisticPath = "/numpy/random/logistic";
+        Pothos::Proxy logistic;
+        constexpr T param1 = T(2.5);
+        constexpr T param2 = T(5.2);
+
+        testTwoParamRandomSource<T, T, T>(
+            logisticPath,
+            "Position",
+            param1,
+            "Scale",
+            param2,
+            logistic);
+
+        // Check input validation.
+        POTHOS_TEST_THROWS(
+            logistic.template call("setScale", T(-0.01)),
+            Pothos::ProxyExceptionMessage);
+    }
+
+    //
+    // LogNormal
+    //
+    {
+        const std::string lognormalPath = "/numpy/random/lognormal";
+        Pothos::Proxy lognormal;
+        constexpr T param1 = T(2.5);
+        constexpr T param2 = T(5.2);
+
+        testTwoParamRandomSource<T, T, T>(
+            lognormalPath,
+            "Mean",
+            param1,
+            "Sigma",
+            param2,
+            lognormal);
+
+        // Check input validation.
+        POTHOS_TEST_THROWS(
+            lognormal.template call("setSigma", T(-0.01)),
             Pothos::ProxyExceptionMessage);
     }
 }

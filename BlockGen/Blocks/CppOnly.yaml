@@ -35,3 +35,7 @@ random/gamma: {name: RandomGamma}
 random/geometric: {name: Geometric}
 random/gumbel: {name: Gumbel}
 random/hypergeometric: {name: Hypergeometric}
+random/laplace: {name: Laplace}
+random/logistic: {name: Logistic}
+random/lognormal: {name: LogNormal}
+random/logseries: {name: LogSeries}

@@ -435,3 +435,130 @@ class Hypergeometric(SingleOutputSource):
         out = self.output(0).buffer()
         out[:N] = self.func(*self.funcArgs, size=(N)).astype(self.numpyOutputDType)
         self.output(0).produce(N)
+
+class LaplaceLogistic(SingleOutputSource):
+    def __init__(self, func, dtype, position, scale):
+        outputArgs = dict(supportFloat=True)
+        SingleOutputSource.__init__(self, func, dtype, outputArgs, useDType=False)
+
+        self.__position = None
+        self.__scale = None
+
+        self.setPosition(position)
+        self.setScale(scale)
+
+    def getPosition(self):
+        return self.__position
+
+    def setPosition(self, position):
+        Utility.validateParameter(position, numpy.dtype("float32"))
+
+        self.__position = position
+        self.__updateArgs()
+
+    def getScale(self):
+        return self.__scale
+
+    def setScale(self, scale):
+        Utility.validateParameter(scale, numpy.dtype("float32"))
+
+        if scale < 0.0:
+            raise ValueError("scale must be >= 0.0.")
+
+        self.__scale = scale
+        self.__updateArgs()
+
+    def __updateArgs(self):
+        self.funcArgs = [self.__position, self.__scale]
+
+    def work(self):
+        N = self.workInfo().minAllOutElements
+        if 0 == N:
+            return
+
+        out = self.output(0).buffer()
+        out[:N] = self.func(*self.funcArgs, size=(N)).astype(self.numpyOutputDType)
+        self.output(0).produce(N)
+
+def Laplace(dtype, position, scale):
+    return LaplaceLogistic(GetNumPyRandom().laplace, dtype, position, scale)
+
+def Logistic(dtype, position, scale):
+    return LaplaceLogistic(GetNumPyRandom().logistic, dtype, position, scale)
+
+class LogNormal(SingleOutputSource):
+    def __init__(self, dtype, mean, sigma):
+        outputArgs = dict(supportFloat=True)
+        SingleOutputSource.__init__(self, GetNumPyRandom().lognormal, dtype, outputArgs, useDType=False)
+
+        self.__mean = None
+        self.__sigma = None
+
+        self.setMean(mean)
+        self.setSigma(sigma)
+
+    def getMean(self):
+        return self.__mean
+
+    def setMean(self, mean):
+        Utility.validateParameter(mean, self.numpyOutputDType)
+
+        self.__mean = mean
+        self.__updateArgs()
+
+    def getSigma(self):
+        return self.__sigma
+
+    def setSigma(self, sigma):
+        Utility.validateParameter(sigma, self.numpyOutputDType)
+
+        if sigma < 0.0:
+            raise ValueError("sigma must be >= 0.0")
+
+        self.__sigma = sigma
+        self.__updateArgs()
+
+    def __updateArgs(self):
+        self.funcArgs = [self.__mean, self.__sigma]
+
+    def work(self):
+        N = self.workInfo().minAllOutElements
+        if 0 == N:
+            return
+
+        out = self.output(0).buffer()
+        out[:N] = self.func(*self.funcArgs, size=(N)).astype(self.numpyOutputDType)
+        self.output(0).produce(N)
+
+class LogSeries(SingleOutputSource):
+    def __init__(self, dtype, P):
+        outputArgs = dict(supportUInt=True, supportInt=True)
+        SingleOutputSource.__init__(self, GetNumPyRandom().logseries, dtype, outputArgs, useDType=False)
+
+        self.__P = None
+
+        self.setP(P)
+
+    def getP(self):
+        return self.__P
+
+    def setP(self, P):
+        Utility.validateParameter(P, numpy.dtype("float32"))
+
+        if (P <= 0.0) or (P >= 1.0):
+            raise ValueError("P must be in range (0.0, 1.0)")
+
+        self.__P = P
+        self.__updateArgs()
+
+    def __updateArgs(self):
+        self.funcArgs = [self.__P]
+
+    def work(self):
+        N = self.workInfo().minAllOutElements
+        if 0 == N:
+            return
+
+        out = self.output(0).buffer()
+        out[:N] = self.func(*self.funcArgs, size=(N)).astype(self.numpyOutputDType)
+        self.output(0).produce(N)
