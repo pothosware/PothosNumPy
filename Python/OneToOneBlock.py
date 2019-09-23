@@ -34,18 +34,13 @@ class OneToOneBlock(BaseBlock):
             return
 
         in0 = self.input(0).buffer()
-        out = None
-
-        if self.useDType:
-            out = self.func(in0, *self.funcArgs, dtype=self.numpyInputDType)
-        else:
-            out = self.func(in0, *self.funcArgs).astype(self.numpyOutputDType)
+        out = self.func(in0, *self.funcArgs, **self.funcKWargs).astype(self.numpyOutputDType, copy=False)
 
         self.input(0).consume(elems)
         self.output(0).postBuffer(out)
 
     def workWithGivenOutputBuffer(self):
-        elems = self.workInfo().minAllElements
+        elems = self.workInfo().minAllInElements
         if 0 == elems:
             return
 
@@ -53,10 +48,7 @@ class OneToOneBlock(BaseBlock):
         out0 = self.output(0).buffer()
         N = min(len(in0), len(out0))
 
-        if self.useDType:
-            out0[:N] = self.func(in0[:N], *self.funcArgs, dtype=self.numpyInputDType)
-        else:
-            out0[:N] = self.func(in0[:N], *self.funcArgs)
+        out0[:N] = self.func(in0, *self.funcArgs, **self.funcKWargs).astype(self.numpyOutputDType, copy=False)
 
         self.input(0).consume(elems)
         self.output(0).produce(elems)
@@ -64,13 +56,6 @@ class OneToOneBlock(BaseBlock):
 #
 # Blocks too different to be auto-generated
 #
-
-# TODO: remove when funcKWargs is added
-class Flip(OneToOneBlock):
-    def __init__(self, dtype):
-        dtypeArgs = dict(supportAll=True)
-        OneToOneBlock.__init__(self, numpy.roll, dtype, dtype, dtypeArgs, dtypeArgs)
-        self.funcKWargs["axis"] = None
 
 class Roll(OneToOneBlock):
     def __init__(self, dtype, roll):

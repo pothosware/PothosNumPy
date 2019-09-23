@@ -19,8 +19,8 @@ class BaseBlock(Pothos.Block):
         self.inputDType = inputDType
         self.outputDType = outputDType
         self.func = func
-        self.funcArgs = funcArgs if funcArgs is not None else None
-        self.funcKWargs = funcKWargs if funcKWargs is not None else None
+        self.funcArgs = funcArgs
+        self.funcKWargs = funcKWargs
 
         # Common kwargs values
         self.useDType = kwargs.get("useDType", True)

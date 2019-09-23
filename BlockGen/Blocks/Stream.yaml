@@ -72,3 +72,12 @@ sort_complex:
         name: SortComplex
         niceName: "Sort Complex"
         blockType: [complex]
+
+flip:
+        name: Flip
+        class: OneToOneBlock
+        categories: ["/NumPy/Stream"]
+        blockType: [all]
+        kwargs: [useDType=False, callPostBuffer=True]
+        funcKWargs:
+                - axis: {isPublic: False, value: -1}

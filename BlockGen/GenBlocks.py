@@ -136,10 +136,24 @@ def generatePythonFactoryFunction(func,yaml):
             makoVars["factoryVars"] += [key]
             makoVars[key] = "[{0}]".format(", ".join(yaml[key]))
 
-    for key in ["kwargs", "funcKWargs"]:
-        if key in yaml:
-            makoVars["factoryVars"] += [key]
-            makoVars[key] = "dict({0})".format(", ".join(yaml[key]))
+    if "kwargs" in yaml:
+        makoVars["factoryVars"] += ["kwargs"]
+        makoVars["kwargs"] = "dict({0})".format(", ".join(yaml["kwargs"]))
+
+    if "funcKWargs" in yaml:
+        assert(type(yaml["funcKWargs"]) is list)
+        funcKWargs = []
+
+        for arg in yaml["funcKWargs"]:
+            for param,attrs in arg.items():
+                if attrs.get("isPublic", True):
+                    makoVars["factoryParams"] = [param] + makoVars["factoryParams"]
+                    funcKWargs += ["{0}={0}".format(param)]
+                else:
+                    funcKWargs += ["{0}={1}".format(param, attrs.get("value", "None"))]
+
+        makoVars["factoryVars"] += ["funcKWargs"]
+        makoVars["funcKWargs"] = "dict({0})".format(", ".join(funcKWargs))
 
     if "blockType" in yaml:
         if "Block" in yaml["class"]:
@@ -158,7 +172,7 @@ def generatePythonFactoryFunction(func,yaml):
     makoVars["classParams"] = ["{0}.{1}".format(makoVars["prefix"], func)] + makoVars["classParams"]
 
     makoVars["classParams"] += [makoVars.get("funcArgs", "list()")]
-    makoVars["classParams"] += [makoVars.get("funcKWargs", "dict()")]
+    makoVars["classParams"] += ["funcKWargs" if "funcKWargs" in makoVars else "dict()"]
     if "args" in makoVars:
         makoVars["classParams"] += ["*args"]
     if "kwargs" in makoVars:
