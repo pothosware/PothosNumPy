@@ -2,6 +2,7 @@
 
 import datetime
 from mako.template import Template
+import mako.exceptions
 import os
 import sys
 import yaml
@@ -13,11 +14,13 @@ Now = datetime.datetime.now()
 
 CppFactoryTemplate = None
 PythonFactoryFunctionTemplate = None
+PythonSubclassTemplate = None
 BlockExecutionTestTemplate = None
 
 def populateTemplates():
     global CppFactoryTemplate
     global PythonFactoryFunctionTemplate
+    global PythonSubclassTemplate
     global BlockExecutionTestTemplate
 
     cppFactoryFunctionTemplatePath = os.path.join(ScriptDirName, "Factory.mako.cpp")
@@ -27,6 +30,10 @@ def populateTemplates():
     pythonFactoryFunctionTemplatePath = os.path.join(ScriptDirName, "PythonFactoryFunction.mako.py")
     with open(pythonFactoryFunctionTemplatePath) as f:
         PythonFactoryFunctionTemplate = f.read()
+
+    pythonSubclassTemplatePath = os.path.join(ScriptDirName, "PythonSubclass.mako.py")
+    with open(pythonSubclassTemplatePath) as f:
+        PythonSubclassTemplate = f.read()
 
     blockExecutionTestTemplatePath = os.path.join(ScriptDirName, "BlockExecutionTest.mako.cpp")
     with open(blockExecutionTestTemplatePath) as f:
@@ -73,10 +80,10 @@ def blockTypeToDictString(blockTypeYAML):
     return "dict({0})".format(", ".join(["support{0}=True".format(formatTypeText(typeText)) for typeText in blockTypeYAML]))
 
 def processBlock(yaml, makoVars):
-    if yaml["class"] in ["NToOneBlock"]:
+    if makoVars["class"] in ["NToOneBlock"]:
         makoVars["factoryParams"] = ["nchans"] + makoVars["factoryParams"]
         makoVars["classParams"] = ["nchans"] + makoVars["classParams"]
-    if yaml["class"] in ["ForwardAndPostLabelBlock"]:
+    if makoVars["class"] in ["ForwardAndPostLabelBlock"]:
         label = "\"{0}\"".format(yaml["label"]) if "label" in yaml else "None"
         makoVars["classParams"] = [label] + makoVars["classParams"]
         makoVars["classParams"] = [yaml.get("findIndexFunc", "None")] + makoVars["classParams"]
@@ -112,73 +119,93 @@ def processSource(yaml, makoVars):
     makoVars["classParams"] = ["dtype"] + makoVars["classParams"]
     makoVars["factoryParams"] = ["dtype"] + makoVars["factoryParams"]
 
-def generatePythonFactoryFunction(func,yaml):
+def generatePythonEntryPoint(func,yaml):
     # Generate variables for processing.
     makoVars = dict()
     makoVars["name"] = yaml["name"]
+    makoVars["class"] = yaml["class"]
     makoVars["category"] = " ".join(yaml["categories"])
     makoVars["func"] = func
     makoVars["keywords"] = func
-    makoVars["class"] = yaml["class"]
     makoVars["prefix"] = yaml.get("prefix", "numpy")
     makoVars["factoryVars"] = []
 
+    isEntryPointSubclass = yaml.get("subclass", False)
+
+    if "funcArgs" in yaml:
+        for arg in yaml["funcArgs"]:
+            arg["title"] = arg["name"][0].upper() + arg["name"][1:]
+            arg["privateVar"] = "__{0}".format(arg["name"])
+        makoVars["funcArgsList"] = ["self.{0}".format(arg["privateVar"]) for arg in yaml["funcArgs"]]
+
     # Some keys are just straight copies.
-    for key in ["alias", "niceName"]:
+    for key in ["alias", "niceName", "funcArgs"]:
         if key in yaml:
             makoVars[key] = yaml[key]
 
     makoVars["classParams"] = []
     makoVars["factoryParams"] = []
 
-    for key in ["args", "funcArgs"]:
-        if key in yaml:
-            makoVars["factoryVars"] += [key]
-            makoVars[key] = "[{0}]".format(", ".join(yaml[key]))
+    if "args" in yaml:
+        makoVars["factoryVars"] += ["args"]
+        makoVars["args"] = "[{0}]".format(", ".join(yaml["args"]))
 
     if "kwargs" in yaml:
         makoVars["factoryVars"] += ["kwargs"]
         makoVars["kwargs"] = "dict({0})".format(", ".join(yaml["kwargs"]))
+
+    if "funcArgs" in yaml:
+        assert(type(yaml["funcArgs"]) is list)
+
+        for arg in yaml["funcArgs"]:
+            if arg.get("isPublic", True):
+                makoVars["factoryParams"] = [arg["name"]] + makoVars["factoryParams"]
 
     if "funcKWargs" in yaml:
         assert(type(yaml["funcKWargs"]) is list)
         funcKWargs = []
 
         for arg in yaml["funcKWargs"]:
-            for param,attrs in arg.items():
-                if attrs.get("isPublic", True):
-                    makoVars["factoryParams"] = [param] + makoVars["factoryParams"]
-                    funcKWargs += ["{0}={0}".format(param)]
-                else:
-                    funcKWargs += ["{0}={1}".format(param, attrs.get("value", "None"))]
+            if arg.get("isPublic", True):
+                makoVars["factoryParams"] = [arg["name"]] + makoVars["factoryParams"]
+                funcKWargs += ["{0}={0}".format(arg["name"])]
+            else:
+                funcKWargs += ["{0}={1}".format(arg["name"], arg.get("value", "None"))]
 
         makoVars["factoryVars"] += ["funcKWargs"]
         makoVars["funcKWargs"] = "dict({0})".format(", ".join(funcKWargs))
 
     if "blockType" in yaml:
-        if "Block" in yaml["class"]:
+        if "Block" in makoVars["class"]:
             processBlock(yaml, makoVars)
-        elif "Source" in yaml["class"]:
+        elif "Source" in makoVars["class"]:
             processSource(yaml, makoVars)
         else:
             raise RuntimeError("Invalid block type.")
     elif "blockPattern" in yaml:
         if yaml["blockPattern"] == "ComplexToScalar":
-            makoVars["inputDTypeArgs"] = blockTypeToDictString(["complex"])
-            makoVars["outputDTypeArgs"] = blockTypeToDictString(["float"])
+            yaml["inputType"] = ["complex"]
+            yaml["outputType"] = ["float"]
+            processBlock(yaml, makoVars)
         else:
             raise RuntimeError("Invalid block pattern.")
 
     makoVars["classParams"] = ["{0}.{1}".format(makoVars["prefix"], func)] + makoVars["classParams"]
 
-    makoVars["classParams"] += [makoVars.get("funcArgs", "list()")]
+    makoVars["classParams"] += ["funcArgs" if "funcArgs" in makoVars else "list()"]
     makoVars["classParams"] += ["funcKWargs" if "funcKWargs" in makoVars else "dict()"]
     if "args" in makoVars:
         makoVars["classParams"] += ["*args"]
     if "kwargs" in makoVars:
         makoVars["classParams"] += ["**kwargs"]
 
-    return Template(PythonFactoryFunctionTemplate).render(makoVars=makoVars)
+    try:
+        if isEntryPointSubclass:
+            return Template(PythonSubclassTemplate).render(makoVars=makoVars)
+        else:
+            return Template(PythonFactoryFunctionTemplate).render(makoVars=makoVars)
+    except:
+        print(mako.exceptions.text_error_template().render())
 
 def generateCppOutput(expandedYAML):
     prefix = """// Copyright (c) 2019-{0} Nicholas Corgan
@@ -207,7 +234,10 @@ def generateCppOutput(expandedYAML):
         for alias in v["alias"]:
             factories += [generateCppFactory(alias,v["name"])]
 
-    rendered = Template(CppFactoryTemplate).render(factories=factories)
+    try:
+        rendered = Template(CppFactoryTemplate).render(factories=factories)
+    except:
+        print(mako.exceptions.text_error_template().render())
 
     output = "{0}\n{1}".format(prefix, rendered)
 
@@ -232,10 +262,14 @@ from .ForwardAndPostLabelBlock import *
 from .Source import *
 """.format(Now.year, Now)
 
-    pythonFactoryFunctionsList = [generatePythonFactoryFunction(k,v) for k,v in expandedYAML.items() if not v.get("cppOnly", False)]
-    pythonFactoryFunctionsStr = "\n".join(pythonFactoryFunctionsList)
+    try:
+        pythonEntryPointsList = [generatePythonEntryPoint(k,v) for k,v in expandedYAML.items() if not v.get("cppOnly", False)]
+    except:
+        print(mako.exceptions.text_error_template().render())
 
-    output = "{0}\n{1}".format(prefix, pythonFactoryFunctionsStr)
+    pythonEntryPointsStr = "\n".join(pythonEntryPointsList)
+
+    output = "{0}\n{1}".format(prefix, pythonEntryPointsStr)
 
     outputFilepath = os.path.join(OutputDir, "CppEntryPoints.py")
     with open(outputFilepath, 'w') as f:
@@ -249,7 +283,10 @@ def generateBlockExecutionTest(expandedYAML):
         Complex="complex"
     )
 
-    output = Template(BlockExecutionTestTemplate).render(blockYAML=expandedYAML, Now=Now, sfinaeMap=sfinaeMap)
+    try:
+        output = Template(BlockExecutionTestTemplate).render(blockYAML=expandedYAML, Now=Now, sfinaeMap=sfinaeMap)
+    except:
+        print(mako.exceptions.text_error_template().render())
 
     outputFilepath = os.path.join(OutputDir, "BlockExecutionTest.cpp")
     with open(outputFilepath, 'w') as f:

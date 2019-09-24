@@ -46,6 +46,7 @@ set(autogenDeps
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Factory.mako.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/BlockExecutionTest.mako.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/PythonFactoryFunction.mako.py
+    ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/PythonSubclass.mako.py
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/GenBlocks.py)
 set(autogenOutputs
     ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/CppEntryPoints.py

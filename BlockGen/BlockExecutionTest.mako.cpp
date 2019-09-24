@@ -170,7 +170,7 @@ template <typename T>
 static EnableIf${typedefName}<T, void> testBlockExecution()
 {
 %for blockName,blockInfo in blockYAML.items():
-    %if (not blockInfo.get("skipExecTest", False)):
+    %if (not blockInfo.get("skipExecTest", False) and not blockInfo.get("subclass", False)):
         %if "blockType" in blockInfo:
             %if (typeName in blockInfo["blockType"]) or ("all" in blockInfo["blockType"]):
     testBlockExecutionFunc<T>("/numpy/${blockName}", ${"true" if blockInfo["class"] == "NToOneBlock" else "false"});

@@ -80,4 +80,14 @@ flip:
         blockType: [all]
         kwargs: [useDType=False, callPostBuffer=True]
         funcKWargs:
-                - axis: {isPublic: False, value: -1}
+                - {name: axis, isPublic: False, value: -1}
+
+roll:
+        name: Roll
+        class: OneToOneBlock
+        subclass: True
+        categories: ["/NumPy/Stream"]
+        blockType: [all]
+        kwargs: [useDType=False, callPostBuffer=True]
+        funcArgs:
+                - {name: shift, dtype: "int32"}

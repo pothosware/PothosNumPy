@@ -57,37 +57,6 @@ class OneToOneBlock(BaseBlock):
 # Blocks too different to be auto-generated
 #
 
-class Roll(OneToOneBlock):
-    def __init__(self, dtype, roll):
-        dtypeArgs = dict(supportAll=True)
-        OneToOneBlock.__init__(self, numpy.roll, dtype, dtype, dtypeArgs, dtypeArgs)
-        self.setRoll(roll)
-
-    def getShift(self):
-        return self.__shift
-
-    def setShift(self, shift):
-        if type(shift) != int:
-            raise TypeError("The value of \"shift\" must be an int.")
-
-        self.__shift = shift
-        self.__refreshArgs()
-
-    def __refreshArgs(self):
-        self.funcArgs = tuple(self.__roll)
-
-    # TODO: remove when funcKWargs is added
-    def work(self):
-        elems = self.workInfo().minAllInElements
-        if 0 == elems:
-            return
-
-        in0 = self.input(0).buffer()
-        out = self.func(in0, self.__shift)
-
-        self.input(0).consume(elems)
-        self.output(0).postBuffer(out)
-
 class Partition(OneToOneBlock):
     def __init__(self, dtype, index):
         dtypeArgs = dict(supportAll=True)
