@@ -49,7 +49,7 @@ set(autogenDeps
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/PythonSubclass.mako.py
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/GenBlocks.py)
 set(autogenOutputs
-    ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/CppEntryPoints.py
+    ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/BlockEntryPoints.py
     ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/BlockExecutionTest.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/Factory.cpp)
 add_custom_command(
@@ -88,7 +88,7 @@ BUILD_PYTHON_MODULE(
         Python/Source.py
         Python/TwoToOneBlock.py
         Python/Utility.py
-        ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/CppEntryPoints.py
+        ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/BlockEntryPoints.py
     CPP_SOURCES
         ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/Factory.cpp
         ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/BlockExecutionTest.cpp

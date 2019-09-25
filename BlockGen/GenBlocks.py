@@ -271,7 +271,7 @@ from .Source import *
 
     output = "{0}\n{1}".format(prefix, pythonEntryPointsStr)
 
-    outputFilepath = os.path.join(OutputDir, "CppEntryPoints.py")
+    outputFilepath = os.path.join(OutputDir, "BlockEntryPoints.py")
     with open(outputFilepath, 'w') as f:
         f.write(output)
 
