@@ -62,42 +62,17 @@ static EnableIfComplex<T, std::vector<T>> getTestInputs()
 }
 
 //
-// Test function (TODO: different input and output types)
+// Test function
 //
 
 template <typename T>
-static void testBlockExecutionFunc(
-    const std::string& blockRegistryPath,
-    bool hasNChans)
+static void testBlockExecutionCommon(const Pothos::Proxy& testBlock)
 {
-    static constexpr size_t nchans = 3;
-
-    static const Pothos::DType dtype(typeid(T));
-    std::cout << blockRegistryPath << "(" << dtype.toString() << ")" << std::endl;
-
-    static const std::vector<T> testInputs = getTestInputs<T>();
-
-    Pothos::Proxy testBlock;
-    if(hasNChans)
-    {
-        testBlock = Pothos::BlockRegistry::make(
-                        blockRegistryPath,
-                        dtype,
-                        nchans);
-        POTHOS_TEST_EQUAL(
-            nchans,
-            testBlock.call<size_t>("getNumChannels"));
-    }
-    else
-    {
-        testBlock = Pothos::BlockRegistry::make(
-                        blockRegistryPath,
-                        dtype);
-    }
-
     std::unordered_map<std::string, Pothos::Proxy> feederSources;
     for(const auto& portInfo: testBlock.call<std::vector<Pothos::PortInfo>>("inputPortInfo"))
     {
+        static const std::vector<T> testInputs = getTestInputs<T>();
+
         auto feederSource = Pothos::BlockRegistry::make(
                                 "/blocks/feeder_source",
                                 portInfo.dtype);
@@ -161,6 +136,64 @@ static void testBlockExecutionFunc(
     }
 }
 
+template <typename T>
+static void testBlockExecutionFunc(
+    const std::string& blockRegistryPath,
+    bool hasNChans)
+{
+    static constexpr size_t nchans = 3;
+
+    static const Pothos::DType dtype(typeid(T));
+    std::cout << blockRegistryPath << "(" << dtype.toString() << ")" << std::endl;
+
+    Pothos::Proxy testBlock;
+    if(hasNChans)
+    {
+        testBlock = Pothos::BlockRegistry::make(
+                        blockRegistryPath,
+                        dtype,
+                        nchans);
+        POTHOS_TEST_EQUAL(
+            nchans,
+            testBlock.call<size_t>("getNumChannels"));
+    }
+    else
+    {
+        testBlock = Pothos::BlockRegistry::make(
+                        blockRegistryPath,
+                        dtype);
+    }
+
+    testBlockExecutionCommon<T>(testBlock);
+}
+
+// TODO: dynamically determine how many of these to generate
+
+template <typename BlockType, typename Param1Type>
+static void testBlockExecutionFunc1Param(
+    const std::string& blockRegistryPath,
+    const std::string& param1Name,
+    Param1Type param1Value1,
+    Param1Type param1Value2)
+{
+    static const Pothos::DType dtype(typeid(BlockType));
+    std::cout << blockRegistryPath << "(" << dtype.toString() << ")" << std::endl;
+
+    const std::string getter = "get" + param1Name;
+    const std::string setter = "set" + param1Name;
+
+    auto testBlock = Pothos::BlockRegistry::make(
+                         blockRegistryPath,
+                         dtype,
+                         param1Value1);
+    testEqual(param1Value1, testBlock.template call<Param1Type>(getter));
+
+    testBlock.template call(setter, param1Value2);
+    testEqual(param1Value2, testBlock.template call<Param1Type>(getter));
+
+    testBlockExecutionCommon<BlockType>(testBlock);
+}
+
 //
 // Test code
 //
@@ -170,7 +203,20 @@ template <typename T>
 static EnableIf${typedefName}<T, void> testBlockExecution()
 {
 %for blockName,blockInfo in blockYAML.items():
-    %if (not blockInfo.get("skipExecTest", False) and not blockInfo.get("subclass", False)):
+    %if (not blockInfo.get("skipExecTest", False) and blockInfo.get("subclass", False)):
+        %if "blockType" in blockInfo:
+            %if (typeName in blockInfo["blockType"]) or ("all" in blockInfo["blockType"]):
+    testBlockExecutionFunc${len(blockInfo["funcArgs"])}Param<T, ${", ".join([param["dtype"] for param in blockInfo["funcArgs"]])}>(
+        "/numpy/${blockName}"
+                %for funcArg in blockInfo["funcArgs"]:
+        ,"${funcArg["name"][0].upper() + funcArg["name"][1:]}"
+        ,${funcArg["testValue1"]}
+        ,${funcArg["testValue2"]}
+                %endfor
+        );
+            %endif
+        %endif
+    %elif (not blockInfo.get("skipExecTest", False) and not blockInfo.get("subclass", False)):
         %if "blockType" in blockInfo:
             %if (typeName in blockInfo["blockType"]) or ("all" in blockInfo["blockType"]):
     testBlockExecutionFunc<T>("/numpy/${blockName}", ${"true" if blockInfo["class"] == "NToOneBlock" else "false"});

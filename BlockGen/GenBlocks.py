@@ -192,7 +192,7 @@ def generatePythonEntryPoint(func,yaml):
 
     makoVars["classParams"] = ["{0}.{1}".format(makoVars["prefix"], func)] + makoVars["classParams"]
 
-    makoVars["classParams"] += ["funcArgs" if "funcArgs" in makoVars else "list()"]
+    makoVars["classParams"] += ["list()"] # TODO: don't pass funcArgs as param
     makoVars["classParams"] += ["funcKWargs" if "funcKWargs" in makoVars else "dict()"]
     if "args" in makoVars:
         makoVars["classParams"] += ["*args"]
