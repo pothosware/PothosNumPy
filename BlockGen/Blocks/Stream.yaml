@@ -90,4 +90,4 @@ roll:
         blockType: [all]
         kwargs: [useDType=False, callPostBuffer=True]
         funcArgs:
-                - {name: shift, dtype: "int32"}
+                - {name: shift, dtype: "int32", testValue1: 10, testValue: 2}
