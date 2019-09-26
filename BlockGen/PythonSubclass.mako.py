@@ -28,7 +28,23 @@ class ${makoVars["name"]}(${makoVars["class"]}):
         return self.${arg["privateVar"]}
 
     def set${arg["title"]}(self, ${arg["name"]}):
+        # Input validation
         Utility.validateParameter(${arg["name"]}, numpy.dtype("${arg["dtype"]}"))
+    %if ">" in arg:
+        if ${arg["name"]} <= ${arg[">"]}:
+            raise ValueError("${arg["name"]} must be > ${arg[">"]}")
+    %elif ">=" in arg:
+        if ${arg["name"]} < ${arg[">="]}:
+            raise ValueError("${arg["name"]} must be >= ${arg[">="]}")
+    %endif
+    %if "<" in arg:
+        if ${arg["name"]} >= ${arg["<"]}:
+            raise ValueError("${arg["name"]} must be < ${arg["<"]}")
+    %elif "<=" in arg:
+        if ${arg["name"]} > ${arg["<="]}:
+            raise ValueError("${arg["name"]} must be <= ${arg["<="]}")
+    %endif
+
         self.${arg["privateVar"]} = ${arg["name"]}
         self.__refreshArgs()
 %endfor

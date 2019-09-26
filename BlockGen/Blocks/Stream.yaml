@@ -91,3 +91,13 @@ roll:
         kwargs: [useDType=False, callPostBuffer=True]
         funcArgs:
                 - {name: shift, dtype: int, testValue1: 10, testValue2: 2}
+
+partition:
+        name: Partition
+        class: OneToOneBlock
+        subclass: True
+        categories: ["/NumPy/Stream"]
+        blockType: [all]
+        kwargs: [useDType=False, callPostBuffer=True]
+        funcArgs:
+                - {name: index, dtype: int, testValue1: 10, testValue2: 2, ">=": 0, badValues: [-1]}

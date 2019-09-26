@@ -10,7 +10,6 @@ linspace: {name: LinSpace}
 logspace: {name: LogSpace}
 geomspace: {name: GeomSpace}
 full: {name: Full}
-partition: {name: Partition}
 amax: {name: AMax, niceName: "Max"}
 amin: {name: AMin, niceName: "Min"}
 median: {name: Median}

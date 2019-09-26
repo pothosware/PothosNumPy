@@ -174,7 +174,8 @@ static void testBlockExecutionFunc1Param(
     const std::string& blockRegistryPath,
     const std::string& param1Name,
     Param1Type param1Value1,
-    Param1Type param1Value2)
+    Param1Type param1Value2,
+    const std::vector<Param1Type>& param1InvalidValues)
 {
     static const Pothos::DType dtype(typeid(BlockType));
     std::cout << blockRegistryPath << "(" << dtype.toString() << ")" << std::endl;
@@ -186,10 +187,16 @@ static void testBlockExecutionFunc1Param(
                          blockRegistryPath,
                          dtype,
                          param1Value1);
-    testEqual(param1Value1, testBlock.template call<Param1Type>(getter));
 
+    testEqual(param1Value1, testBlock.template call<Param1Type>(getter));
     testBlock.template call(setter, param1Value2);
     testEqual(param1Value2, testBlock.template call<Param1Type>(getter));
+    for(const Param1Type& invalidParam: param1InvalidValues)
+    {
+        POTHOS_TEST_THROWS(
+            testBlock.template call(setter, invalidParam),
+            Pothos::ProxyExceptionMessage);
+    }
 
     testBlockExecutionCommon<BlockType>(testBlock);
 }
@@ -212,6 +219,7 @@ static EnableIf${typedefName}<T, void> testBlockExecution()
         ,"${funcArg["name"][0].upper() + funcArg["name"][1:]}"
         ,${funcArg["testValue1"]}
         ,${funcArg["testValue2"]}
+        ,std::vector<${funcArg["dtype"]}>{${", ".join([str(x) for x in funcArg.get("badValues", [])])}}
                 %endfor
         );
             %endif
