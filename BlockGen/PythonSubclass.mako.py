@@ -22,14 +22,22 @@ class ${makoVars["name"]}(${makoVars["class"]}):
 %for arg in makoVars["funcArgs"]:
         self.set${arg["title"]}(${arg["name"]})
 %endfor
-
 %for arg in makoVars["funcArgs"]:
+
     def get${arg["title"]}(self):
         return self.${arg["privateVar"]}
 
     def set${arg["title"]}(self, ${arg["name"]}):
         # Input validation
+    %if arg["dtype"] == "blockType":
+        %if "Source" in makoVars["class"]:
+        Utility.validateParameter(${arg["name"]}, self.numpyOutputDType)
+        %else:
+        Utility.validateParameter(${arg["name"]}, self.numpyInputDType)
+        %endif
+    %else:
         Utility.validateParameter(${arg["name"]}, numpy.dtype("${arg["dtype"]}"))
+    %endif
     %if ">" in arg:
         if ${arg["name"]} <= ${arg[">"]}:
             raise ValueError("${arg["name"]} must be > ${arg[">"]}")

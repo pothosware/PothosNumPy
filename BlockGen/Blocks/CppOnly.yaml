@@ -6,9 +6,6 @@ fft/irfft: {name: IRFFT}
 fft/hfft: {name: HFFT}
 fft/ihfft: {name: IHFFT}
 arange: {name: ARange}
-linspace: {name: LinSpace}
-logspace: {name: LogSpace}
-geomspace: {name: GeomSpace}
 full: {name: Full}
 amax: {name: AMax, niceName: "Max"}
 amin: {name: AMin, niceName: "Min"}

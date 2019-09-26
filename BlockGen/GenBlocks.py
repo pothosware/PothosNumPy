@@ -159,7 +159,7 @@ def generatePythonEntryPoint(func,yaml):
 
         for arg in yaml["funcArgs"]:
             if arg.get("isPublic", True):
-                makoVars["factoryParams"] = [arg["name"]] + makoVars["factoryParams"]
+                makoVars["factoryParams"] += [arg["name"]]
 
     if "funcKWargs" in yaml:
         assert(type(yaml["funcKWargs"]) is list)
@@ -283,8 +283,11 @@ def generateBlockExecutionTest(expandedYAML):
         Complex="complex"
     )
 
+    maxNumParams = max([len(expandedYAML[block].get("funcArgs", [])) for block in expandedYAML])
+    assert(maxNumParams > 0)
+
     try:
-        output = Template(BlockExecutionTestTemplate).render(blockYAML=expandedYAML, Now=Now, sfinaeMap=sfinaeMap)
+        output = Template(BlockExecutionTestTemplate).render(blockYAML=expandedYAML, Now=Now, sfinaeMap=sfinaeMap, maxNumParams=maxNumParams)
     except:
         print(mako.exceptions.text_error_template().render())
 

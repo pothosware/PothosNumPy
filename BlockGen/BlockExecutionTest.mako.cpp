@@ -19,6 +19,8 @@
 #include <type_traits>
 #include <unordered_map>
 
+using uint = unsigned int;
+
 //
 // Utility
 //
@@ -167,39 +169,53 @@ static void testBlockExecutionFunc(
     testBlockExecutionCommon<T>(testBlock);
 }
 
-// TODO: dynamically determine how many of these to generate
-
-template <typename BlockType, typename Param1Type>
-static void testBlockExecutionFunc1Param(
-    const std::string& blockRegistryPath,
-    const std::string& param1Name,
-    Param1Type param1Value1,
-    Param1Type param1Value2,
-    const std::vector<Param1Type>& param1InvalidValues)
+%for numParams in range(1,maxNumParams+1):
+template <typename BlockType
+%for paramNum in range(numParams):
+         ,typename Param${paramNum}Type
+%endfor
+         >
+static void testBlockExecutionFunc${numParams}Param(
+    const std::string& blockRegistryPath
+%for paramNum in range(numParams):
+    ,const std::string& param${paramNum}Name
+    ,Param${paramNum}Type param${paramNum}Value1
+    ,Param${paramNum}Type param${paramNum}Value2
+    ,const std::vector<Param${paramNum}Type>& param${paramNum}InvalidValues
+%endfor
+    )
 {
     static const Pothos::DType dtype(typeid(BlockType));
     std::cout << blockRegistryPath << "(" << dtype.toString() << ")" << std::endl;
 
-    const std::string getter = "get" + param1Name;
-    const std::string setter = "set" + param1Name;
+%for paramNum in range(numParams):
+    const std::string getter${paramNum} = "get" + param${paramNum}Name;
+    const std::string setter${paramNum} = "set" + param${paramNum}Name;
+%endfor
 
     auto testBlock = Pothos::BlockRegistry::make(
                          blockRegistryPath,
-                         dtype,
-                         param1Value1);
+                         dtype
+%for paramNum in range(numParams):
+                         ,param${paramNum}Value1
+%endfor
+                         );
 
-    testEqual(param1Value1, testBlock.template call<Param1Type>(getter));
-    testBlock.template call(setter, param1Value2);
-    testEqual(param1Value2, testBlock.template call<Param1Type>(getter));
-    for(const Param1Type& invalidParam: param1InvalidValues)
+%for paramNum in range(numParams):
+    testEqual(param${paramNum}Value1, testBlock.template call<Param${paramNum}Type>(getter${paramNum}));
+    testBlock.template call(setter${paramNum}, param${paramNum}Value2);
+    testEqual(param${paramNum}Value2, testBlock.template call<Param${paramNum}Type>(getter${paramNum}));
+    for(const Param${paramNum}Type& invalidParam: param${paramNum}InvalidValues)
     {
         POTHOS_TEST_THROWS(
-            testBlock.template call(setter, invalidParam),
+            testBlock.template call(setter${paramNum}, invalidParam),
             Pothos::ProxyExceptionMessage);
     }
+%endfor
 
     testBlockExecutionCommon<BlockType>(testBlock);
 }
+%endfor
 
 //
 // Test code
@@ -213,13 +229,13 @@ static EnableIf${typedefName}<T, void> testBlockExecution()
     %if (not blockInfo.get("skipExecTest", False) and blockInfo.get("subclass", False)):
         %if "blockType" in blockInfo:
             %if (typeName in blockInfo["blockType"]) or ("all" in blockInfo["blockType"]):
-    testBlockExecutionFunc${len(blockInfo["funcArgs"])}Param<T, ${", ".join([param["dtype"] for param in blockInfo["funcArgs"]])}>(
+    testBlockExecutionFunc${len(blockInfo["funcArgs"])}Param<T, ${", ".join([("T" if param["dtype"] == "blockType" else param["dtype"]) for param in blockInfo["funcArgs"]])}>(
         "/numpy/${blockName}"
                 %for funcArg in blockInfo["funcArgs"]:
         ,"${funcArg["name"][0].upper() + funcArg["name"][1:]}"
         ,${funcArg["testValue1"]}
         ,${funcArg["testValue2"]}
-        ,std::vector<${funcArg["dtype"]}>{${", ".join([str(x) for x in funcArg.get("badValues", [])])}}
+        ,std::vector<${"T" if funcArg["dtype"] == "blockType" else funcArg["dtype"]}>{${", ".join([str(x) for x in funcArg.get("badValues", [])])}}
                 %endfor
         );
             %endif
