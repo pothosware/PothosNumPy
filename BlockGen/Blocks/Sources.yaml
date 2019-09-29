@@ -1,9 +1,0 @@
-ones:
-        name: Ones
-        class: SingleOutputSource
-        categories: ["/NumPy/Sources"]
-        blockType: [all]
-
-zeros:
-        name: Zeros
-        copy: ones
