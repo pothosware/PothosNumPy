@@ -257,7 +257,7 @@ static EnableIf${typedefName}<T, void> testBlockExecution()
         ,"${funcArg["name"][0].upper() + funcArg["name"][1:]}"
         ,${funcArg["testValue1"]}
         ,${funcArg["testValue2"]}
-        ,std::vector<${"T" if funcArg["dtype"] == "blockType" else funcArg["dtype"]}>{${", ".join([str(x) for x in funcArg.get("badValues", [])])}}
+        ,std::vector<${"T" if funcArg["dtype"] == "blockType" else funcArg["dtype"]}>{${", ".join([str(x) for x in funcArg.get(badParamsMap[typedefName], funcArg.get("badValues", []))])}}
                 %endfor
         );
             %endif

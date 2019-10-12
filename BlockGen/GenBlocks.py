@@ -282,12 +282,18 @@ def generateBlockExecutionTest(expandedYAML):
         Float="float",
         Complex="complex"
     )
+    badParamsMap = dict(
+        Integer="badIntValues",
+        UnsignedInt="badUIntValues",
+        Float="badFloatValues",
+        Complex="badComplexValues"
+    )
 
     maxNumParams = max([len(expandedYAML[block].get("funcArgs", [])) for block in expandedYAML])
     assert(maxNumParams > 0)
 
     try:
-        output = Template(BlockExecutionTestTemplate).render(blockYAML=expandedYAML, Now=Now, sfinaeMap=sfinaeMap, maxNumParams=maxNumParams)
+        output = Template(BlockExecutionTestTemplate).render(blockYAML=expandedYAML, Now=Now, sfinaeMap=sfinaeMap, maxNumParams=maxNumParams, badParamsMap=badParamsMap)
     except:
         print(mako.exceptions.text_error_template().render())
 

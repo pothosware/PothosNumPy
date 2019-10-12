@@ -16,13 +16,13 @@ linspace:
         blockType: [int, uint, float]
         kwargs: [useDType=True, callPostBuffer=True, useShape=False]
         funcArgs:
-                - {name: start, dtype: blockType, testValue1: 10, testValue2: 2, badValues: [9],
+                - {name: start, dtype: blockType, testValue1: 10, testValue2: 2, badIntValues: [9], badUIntValues: [9],
                    addedValidation:
                    ["Utility.errorForUnevenIntegralSpace(self.func, start, self.__stop, self.__numValues, self.numpyOutputDType)"]}
-                - {name: stop, dtype: blockType, testValue1: 4, testValue2: 10, badValues: [11],
+                - {name: stop, dtype: blockType, testValue1: 4, testValue2: 10, badIntValues: [11], badUIntValues: [11],
                    addedValidation:
                    ["Utility.errorForUnevenIntegralSpace(self.func, self.__start, stop, self.__numValues, self.numpyOutputDType)"]}
-                - {name: numValues, dtype: uint, testValue1: 3, testValue2: 4, ">": 0, badValues: [0, 5],
+                - {name: numValues, dtype: uint, testValue1: 3, testValue2: 4, ">": 0, badIntValues: [0, 5], badUIntValues: [0, 5],
                    addedValidation:
                    ["Utility.errorForUnevenIntegralSpace(self.func, self.__start, self.__stop, numValues, self.numpyOutputDType)"]}
 
