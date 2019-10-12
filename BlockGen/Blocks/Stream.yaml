@@ -100,4 +100,4 @@ partition:
         blockType: [all]
         kwargs: [useDType=False, callPostBuffer=True]
         funcArgs:
-                - {name: index, dtype: int, testValue1: 10, testValue2: 2, ">=": 0, badValues: [-1]}
+                - {name: index, dtype: int, testValue1: 4, testValue2: 2, ">=": 0, badValues: [-1]}

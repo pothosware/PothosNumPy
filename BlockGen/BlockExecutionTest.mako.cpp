@@ -200,20 +200,42 @@ static void testBlockExecutionFunc${numParams}Param(
                          ,param${paramNum}Value1
 %endfor
                          );
-
 %for paramNum in range(numParams):
     testEqual(param${paramNum}Value1, testBlock.template call<Param${paramNum}Type>(getter${paramNum}));
-    testBlock.template call(setter${paramNum}, param${paramNum}Value2);
-    testEqual(param${paramNum}Value2, testBlock.template call<Param${paramNum}Type>(getter${paramNum}));
-    for(const Param${paramNum}Type& invalidParam: param${paramNum}InvalidValues)
-    {
-        POTHOS_TEST_THROWS(
-            testBlock.template call(setter${paramNum}, invalidParam),
-            Pothos::ProxyExceptionMessage);
-    }
 %endfor
 
     testBlockExecutionCommon<BlockType>(testBlock);
+
+%for setParamNum in range(numParams):
+    {
+        testBlock = Pothos::BlockRegistry::make(
+                        blockRegistryPath,
+                        dtype
+%for paramNum in range(numParams):
+                        ,param${paramNum}Value1
+%endfor
+                        );
+        testBlock.template call(setter${setParamNum}, param${setParamNum}Value2);
+        testEqual(param${setParamNum}Value2, testBlock.template call<Param${setParamNum}Type>(getter${setParamNum}));
+    }
+%endfor
+%for badParamNum in range(numParams):
+    {
+        testBlock = Pothos::BlockRegistry::make(
+                        blockRegistryPath,
+                        dtype
+%for paramNum in range(numParams):
+                        ,param${paramNum}Value1
+%endfor
+                        );
+        for(const Param${badParamNum}Type& invalidParam: param${badParamNum}InvalidValues)
+        {
+            POTHOS_TEST_THROWS(
+                testBlock.template call(setter${badParamNum}, invalidParam),
+                Pothos::ProxyExceptionMessage);
+        }
+    }
+%endfor
 }
 %endfor
 

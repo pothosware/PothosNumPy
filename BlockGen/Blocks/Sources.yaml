@@ -16,9 +16,15 @@ linspace:
         blockType: [int, uint, float]
         kwargs: [useDType=True, callPostBuffer=True, useShape=False]
         funcArgs:
-                - {name: start, dtype: blockType, testValue1: 10, testValue2: 2}
-                - {name: stop, dtype: blockType, testValue1: 2, testValue2: 10}
-                - {name: numValues, dtype: uint, testValue1: 3, testValue2: 5, ">": 0, badValues: [0]}
+                - {name: start, dtype: blockType, testValue1: 10, testValue2: 2, badValues: [9],
+                   addedValidation:
+                   ["Utility.errorForUnevenIntegralSpace(self.func, start, self.__stop, self.__numValues, self.numpyOutputDType)"]}
+                - {name: stop, dtype: blockType, testValue1: 4, testValue2: 10, badValues: [11],
+                   addedValidation:
+                   ["Utility.errorForUnevenIntegralSpace(self.func, self.__start, stop, self.__numValues, self.numpyOutputDType)"]}
+                - {name: numValues, dtype: uint, testValue1: 3, testValue2: 4, ">": 0, badValues: [0, 5],
+                   addedValidation:
+                   ["Utility.errorForUnevenIntegralSpace(self.func, self.__start, self.__stop, numValues, self.numpyOutputDType)"]}
 
 logspace:
         name: LogSpace
@@ -27,3 +33,8 @@ logspace:
 geomspace:
         name: GeomSpace
         copy: linspace
+        blockType: [float]
+        funcArgs:
+                - {name: start, dtype: blockType, testValue1: 10, testValue2: 2}
+                - {name: stop, dtype: blockType, testValue1: 4, testValue2: 10}
+                - {name: numValues, dtype: uint, testValue1: 3, testValue2: 4, ">": 0, badValues: [0]}

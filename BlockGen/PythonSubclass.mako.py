@@ -52,6 +52,11 @@ class ${makoVars["name"]}(${makoVars["class"]}):
         if ${arg["name"]} > ${arg["<="]}:
             raise ValueError("${arg["name"]} must be <= ${arg["<="]}")
     %endif
+    %if "addedValidation" in arg:
+        %for line in arg["addedValidation"]:
+        ${line}
+        %endfor
+    %endif
 
         self.${arg["privateVar"]} = ${arg["name"]}
         self.__refreshArgs()

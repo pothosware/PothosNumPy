@@ -5,15 +5,6 @@ import Pothos
 
 import numpy
 
-class BlockParams():
-    def __init__(self):
-        self.blockArgs = None
-        self.blockKWargs = None
-        self.funcArgs = None
-        self.funcKWargs = None
-        self.inputDTypeArgs = None
-        self.outputDTypeArgs = None
-
 # Pothos supports all complex types, but NumPy does not support
 # complex integral types, so we must catch this on block instantiation.
 # Also confirm that the given DType is 1-dimensional, as that is all
@@ -111,3 +102,14 @@ def DType(*args):
     env = Pothos.ProxyEnvironment("managed")
     reg = env.findProxy("Pothos/DType")
     return reg(*args)
+
+def errorForUnevenIntegralSpace(func, start, stop, numValues, numpyDType):
+    if (type(start) is int) and (type(stop) is int) and (type(numValues) is int):
+        output = func(start, stop, numValues)
+        areAnyFloat = not all([val.is_integer() for val in output])
+        if areAnyFloat:
+            ERROR_FORMAT = "The parameters start={0}, stop={1}, numValues={2} " \
+                           "resulted in non-integral values, which cannot be " \
+                           "represented with DType {3}."
+            errorString = ERROR_FORMAT.format(start, stop, numValues, numpyDType.name)
+            raise ValueError(errorString)
