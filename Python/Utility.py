@@ -68,7 +68,7 @@ def validateScalarParamRange(param, blockDType):
 # Since Python is not strongly typed, we need this to make sure callers can't
 # change variable types after the fact.
 def validateParameter(param, blockDType):
-    TYPE_ERROR_TEMPLATE = "Given value {0} is of type {1}, which is incompatible with block type {2}."
+    TYPE_ERROR_TEMPLATE = "Given value {0} is of type {1}, which is incompatible with parameter type {2}."
 
     # Make sure we're checking the actual scalar type, since blockDType may
     # describe an array type.

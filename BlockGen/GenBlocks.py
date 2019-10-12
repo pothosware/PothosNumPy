@@ -45,7 +45,7 @@ def processYAMLFile(yamlPath):
         yml = yaml.load(f.read())
 
     if not yml:
-        raise RuntimeError("No YAML found in {0}".format(filepath))
+        raise RuntimeError("No YAML found in {0}".format(yamlPath))
 
     # These entries are fully defined, so when other entries have a "copy"
     # field, the script will look in this dict.
