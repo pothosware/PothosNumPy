@@ -259,11 +259,12 @@ from .OneToOneBlock import *
 from .TwoToOneBlock import *
 from .NToOneBlock import *
 from .ForwardAndPostLabelBlock import *
+from .Random import *
 from .Source import *
 """.format(Now.year, Now)
 
     try:
-        pythonEntryPointsList = [generatePythonEntryPoint(k,v) for k,v in expandedYAML.items() if not v.get("cppOnly", False)]
+        pythonEntryPointsList = [generatePythonEntryPoint(k.split("/")[-1],v) for k,v in expandedYAML.items() if not v.get("cppOnly", False)]
     except:
         print(mako.exceptions.text_error_template().render())
 

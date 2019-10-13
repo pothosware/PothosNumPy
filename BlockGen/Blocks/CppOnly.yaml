@@ -17,19 +17,4 @@ fft/irfft: {name: IRFFT}
 fft/hfft: {name: HFFT}
 fft/ihfft: {name: IHFFT}
 
-random/permutation: {name: Permutation}
 random/integers: {name: Integers}
-random/beta: {name: Beta}
-random/binomial: {name: Binomial}
-random/chisquare: {name: ChiSquare}
-# TODO: dirichlet?
-random/exponential: {name: Exponential}
-random/f: {name: F}
-random/gamma: {name: RandomGamma}
-random/geometric: {name: Geometric}
-random/gumbel: {name: Gumbel}
-random/hypergeometric: {name: Hypergeometric}
-random/laplace: {name: Laplace}
-random/logistic: {name: Logistic}
-random/lognormal: {name: LogNormal}
-random/logseries: {name: LogSeries}

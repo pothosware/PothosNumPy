@@ -25,6 +25,7 @@ class BaseBlock(Pothos.Block):
         # Common kwargs values
         self.useDType = kwargs.get("useDType", True)
         self.callPostBuffer = kwargs.get("callPostBuffer", False)
+        self.sizeParam = kwargs.get("sizeParam", False)
 
         # Other values to assemble from user input
         self.numpyInputDType = None if inputDType is None else Pothos.Buffer.dtype_to_numpy(self.inputDType)

@@ -1,2 +1,1 @@
-Make small classes out of args, parameter lists are getting long
-Add function arguments to YAML
+Some scale parameters can ctually be 0.0, go back and check

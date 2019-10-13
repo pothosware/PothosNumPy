@@ -1,0 +1,202 @@
+random/permutation:
+        name: Permutation
+        class: OneToOneBlock
+        categories: ["/NumPy/Random"]
+        prefix: GetNumPyRandom()
+        blockType: [all]
+        kwargs: [useDType=False, callPostBuffer=True]
+
+random/beta:
+        name: Beta
+        class: SingleOutputSource
+        subclass: True
+        categories: ["/NumPy/Random"]
+        prefix: GetNumPyRandom()
+        blockType: [float]
+        kwargs: [useDType=False, useShape=False, sizeParam=True]
+        funcArgs:
+                - {name: alpha, dtype: float, testValue1: 2.0, testValue2: 4.0, ">": 0.0, badValues: [0.0]}
+                - {name: beta, dtype: float, testValue1: 4.0, testValue2: 2.0, ">": 0.0, badValues: [0.0]}
+
+random/binomial:
+        name: Binomial
+        copy: random/beta
+        funcArgs:
+                - {name: N, dtype: uint, testValue1: 0, testValue2: 1}
+                - {name: P, dtype: float, testValue1: 0.25, testValue2: 0.75, ">=": 0.0, "<=": 1.0, badValues: [-0.01, 1.01]}
+
+random/chisquare:
+        name: ChiSquare
+        copy: random/beta
+        funcArgs:
+                - {name: degreesOfFreedom, dtype: float, testValue1: 0.5, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
+
+# TODO: dirichlet, manual
+
+random/exponential:
+        name: Exponential
+        copy: random/beta
+        funcArgs:
+                - {name: scale, dtype: float, testValue1: 0.5, testValue2: 1.5, ">": 0.0, badValues: [0.0]}
+
+random/f:
+        name: F
+        copy: random/beta
+        funcArgs:
+                - {name: numeratorDOF, dtype: float, testValue1: 0.5, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
+                - {name: denominatorDOF, dtype: float, testValue1: 0.5, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
+
+random/gamma:
+        name: Gamma
+        copy: random/beta
+        kwargs: [useDType=False, useShape=False, sizeParam=True] # Shape parameter means something different here
+        funcArgs:
+                - {name: shape, dtype: float, testValue1: 0.5, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
+                - {name: scale, dtype: float, testValue1: 0.5, testValue2: 1.5, ">": 0.0, badValues: [0.0]}
+
+random/geometric:
+        name: Geometric
+        copy: random/beta
+        funcArgs:
+                - {name: P, dtype: float, testValue1: 0.0, testValue2: 0.5, ">=": 0.0, "<=": 1.0, badValues: [-0.01, 1.01]}
+
+random/gumbel:
+        name: Gumbel
+        copy: random/beta
+        funcArgs:
+                - {name: location, dtype: float, testValue1: -5.0, testValue2: 5.0}
+                - {name: scale, dtype: float, testValue1: 0.5, testValue2: 1.5, ">=": 0.0, badValues: [-0.01]}
+
+# TODO: hypergeometric, manual
+
+random/laplace:
+        name: Laplace
+        copy: random/beta
+        funcArgs:
+                - {name: location, dtype: float, testValue1: -5.0, testValue2: 5.0}
+                - {name: scale, dtype: float, testValue1: 0.5, testValue2: 1.5, ">=": 0.0, badValues: [-0.01]}
+
+random/logistic:
+        name: Logistic
+        copy: random/beta
+        funcArgs:
+                - {name: location, dtype: float, testValue1: -5.0, testValue2: 5.0}
+                - {name: scale, dtype: float, testValue1: 0.0, testValue2: 1.5, ">=": 0.0, badValues: [-0.01]}
+
+random/lognormal:
+        name: LogNormal
+        copy: random/beta
+        funcArgs:
+                - {name: mean, dtype: float, testValue1: -5.0, testValue2: 5.0}
+                - {name: sigma, dtype: float, testValue1: 0.0, testValue2: 1.5, ">=": 0.0, badValues: [-0.01]}
+
+random/logseries:
+        name: LogSeries
+        copy: random/beta
+        funcArgs:
+                - {name: P, dtype: float, testValue1: 0.25, testValue2: 0.75, ">": 0.0, "<": 1.0, badValues: [0.0, 1.0]}
+
+# TODO: multinomial, manual
+# TODO: multivariate_normal? Is there a good way to do this?
+
+random/negative_binomial:
+        name: NegativeBinomial
+        copy: random/beta
+        funcArgs:
+                - {name: N, dtype: float, testValue1: 0.01, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
+                - {name: P, dtype: float, testValue1: 0.25, testValue2: 0.75, ">=": 0.0, "<=": 1.0, badValues: [-0.01, 1.01]}
+
+# TODO: figure out version-specific boundaries
+random/noncentral_chisquare:
+        name: NonCentralChisquare
+        copy: random/beta
+        funcArgs:
+                - {name: degreesOfFreedom, dtype: float, testValue1: 0.01, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
+                - {name: nonCentrality, dtype: float, testValue1: 0.25, testValue2: 0.75, ">=": 0.0, badValues: [-0.01]}
+
+# TODO: figure out version-specific boundaries
+random/noncentral_f:
+        name: NonCentralF
+        copy: random/beta
+        funcArgs:
+                - {name: numeratorDOF, dtype: float, testValue1: 1.5, testValue2: 2.0, ">": 1.0, badValues: [1.0]}
+                - {name: denominatorDOF, dtype: float, testValue1: 0.5, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
+                - {name: nonCentrality, dtype: float, testValue1: 0.25, testValue2: 0.75, ">=": 0.0, badValues: [-0.01]}
+
+random/normal:
+        name: Normal
+        copy: random/beta
+        funcArgs:
+                - {name: location, dtype: float, testValue1: -5.0, testValue2: 5.0}
+                - {name: scale, dtype: float, testValue1: 0.5, testValue2: 1.5, ">=": 0.0, badValues: [-0.01]}
+
+random/pareto:
+        name: Pareto
+        copy: random/beta
+        funcArgs:
+                - {name: A, dtype: float, testValue1: 0.5, testValue2: 1.5, ">": 0.0, badValues: [0.0]}
+
+# TODO: enforce mu not being within 10 sigma of int64 max?
+random/poisson:
+        name: Poisson
+        copy: random/beta
+        funcArgs:
+                - {name: mu, dtype: float, testValue1: 0.0, testValue2: 0.5, ">=": 0.0, badValues: [-0.01]}
+
+random/power:
+        name: Power
+        copy: random/beta
+        funcArgs:
+                - {name: A, dtype: float, testValue1: 1.0, testValue2: 1.5, ">=": 1.0, badValues: [0.99]}
+
+random/rayleigh:
+        name: Rayleigh
+        copy: random/beta
+        funcArgs:
+                - {name: scale, dtype: float, testValue1: 0.0, testValue2: 1.5, ">=": 0.0, badValues: [-0.01]}
+
+random/standard_cauchy:
+        name: StandardCauchy
+        copy: random/beta
+        subclass: False
+        funcArgs: []
+
+# Do these need to be manual? Depends on where we automatically put the DType parameter
+# TODO: standard_exponential, manual
+#       standard_gamma
+#       standard_normal
+
+random/standard_t:
+        name: StandardT
+        copy: random/beta
+        funcArgs:
+                - {name: degreesOfFreedom, dtype: float, testValue1: 0.5, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
+
+# TODO: triangular, manual
+#       uniform
+
+random/vonmises:
+        name: VonMises
+        copy: random/beta
+        funcArgs:
+                - {name: mu, dtype: float, testValue1: -5.0, testValue2: 5.0}
+                - {name: kappa, dtype: float, testValue1: 0.5, testValue2: 1.5, ">=": 0.0, badValues: [-0.01]}
+
+random/wald:
+        name: Wald
+        copy: random/beta
+        funcArgs:
+                - {name: mean, dtype: float, testValue1: 0.5, testValue2: 1.5, ">": 0.0, badValues: [0.0]}
+                - {name: scale, dtype: float, testValue1: 0.5, testValue2: 1.5, ">": 0.0, badValues: [0.0]}
+
+random/weibull:
+        name: Weibull
+        copy: random/beta
+        funcArgs:
+                - {name: A, dtype: float, testValue1: 0.0, testValue2: 0.5, ">=": 0.0, badValues: [-0.01]}
+
+random/zipf:
+        name: Zipf
+        copy: random/beta
+        funcArgs:
+                - {name: A, dtype: float, testValue1: 1.5, testValue2: 2.0, ">": 1.0, badValues: [1.0]}

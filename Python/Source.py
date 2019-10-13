@@ -36,6 +36,7 @@ class SingleOutputSource(BaseBlock):
             return
 
         funcArgs = ([elems] + self.funcArgs) if self.useShape else self.funcArgs
+        funcArgs = funcArgs + [elems] if self.sizeParam else funcArgs
 
         out0 = self.output(0).buffer()
         out0[:elems] = self.func(*funcArgs, **self.funcKWargs).astype(self.numpyOutputDType, copy=False)
