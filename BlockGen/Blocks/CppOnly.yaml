@@ -1,6 +1,4 @@
 # TODO: figure out what here can be automated
-arange: {name: ARange}
-full: {name: Full}
 amax: {name: AMax, niceName: "Max"}
 amin: {name: AMin, niceName: "Min"}
 median: {name: Median}

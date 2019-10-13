@@ -106,7 +106,7 @@ def DType(*args):
 def errorForUnevenIntegralSpace(func, start, stop, numValues, numpyDType):
     if (type(start) is int) and (type(stop) is int) and (type(numValues) is int):
         output = func(start, stop, numValues)
-        areAnyFloat = not all([val.is_integer() for val in output])
+        areAnyFloat = not all(numpy.float32(numpyDType.type(output)) == numpy.float32(output))
         if areAnyFloat:
             ERROR_FORMAT = "The parameters start={0}, stop={1}, numValues={2} " \
                            "resulted in non-integral values, which cannot be " \
