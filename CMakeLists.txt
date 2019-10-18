@@ -51,7 +51,7 @@ set(autogenDeps
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/GenBlocks.py)
 set(autogenOutputs
     ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/BlockEntryPoints.py
-    ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/BlockExecutionTest.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/BlockExecutionTestAuto.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/Factory.cpp)
 add_custom_command(
     OUTPUT ${autogenOutputs}
@@ -92,9 +92,10 @@ BUILD_PYTHON_MODULE(
         ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/BlockEntryPoints.py
     CPP_SOURCES
         ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/Factory.cpp
-        ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/BlockExecutionTest.cpp
+        ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/BlockExecutionTestAuto.cpp
         Cpp/RegisteredCalls.cpp
 
+        Testing/BlockExecutionTestManual.cpp
         Testing/TestFFT.cpp
         Testing/TestNumPyFileIO.cpp
         Testing/TestRegisteredCalls.cpp

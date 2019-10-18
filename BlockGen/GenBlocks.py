@@ -298,7 +298,7 @@ def generateBlockExecutionTest(expandedYAML):
     except:
         print(mako.exceptions.text_error_template().render())
 
-    outputFilepath = os.path.join(OutputDir, "BlockExecutionTest.cpp")
+    outputFilepath = os.path.join(OutputDir, "BlockExecutionTestAuto.cpp")
     with open(outputFilepath, 'w') as f:
         f.write(output)
 
