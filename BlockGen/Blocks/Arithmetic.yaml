@@ -3,11 +3,13 @@ add:
         categories: ["/NumPy/Arithmetic"]
         class: NToOneBlock
         blockType: [all]
+        description: "Add arguments element-wise."
 
 multiply:
         copy: add
         name: Multiply
         blockType: [float, complex]
+        description: "Multiply arguments element-wise."
 
 #ldexp:
 #        copy: add
@@ -19,23 +21,33 @@ subtract:
         categories: ["/NumPy/Arithmetic"]
         class: TwoToOneBlock
         blockType: [all]
+        description: "Subtract arguments, element-wise."
 
 divide:
         copy: subtract
         name: Divide
         blockType: [float, complex]
+        description: "Returns a true division of the inputs, element-wise.
+
+Instead of the Python traditional 'floor division', this returns a true division. True division adjusts the output type to present the best answer, regardless of input types."
 
 true_divide:
         copy: subtract
         name: TrueDivide
         niceName: "True Divide"
         blockType: [float, complex]
+        description: "Returns a true division of the inputs, element-wise.
+
+Instead of the Python traditional 'floor division', this returns a true division. True division adjusts the output type to present the best answer, regardless of input types."
 
 floor_divide:
         copy: subtract
         name: FloorDivide
         niceName: "Floor Divide"
         blockType: [float, complex]
+        description: "Return the largest integer smaller or equal to the division of the inputs.
+
+It is equivalent to the Python // operator and pairs with the Python % (remainder), function so that <b>a = a % b + b * (a // b)</b> up to roundoff."
 
 remainder:
         copy: subtract
@@ -43,40 +55,57 @@ remainder:
         niceName: Remainder
         blockType: [int, uint, float]
         alias: [mod]
+        description: "Return element-wise remainder of division.
+
+Computes the remainder complementary to the <b>/numpy/floor_divide</b> block. It is equivalent to the Python modulus operator <b>x1 % x2</b> and has the same sign as the divisor x2. The MATLAB function equivalent to <b>/numpy/remainder</b> is <b>mod</b>."
 
 fmod:
         copy: subtract
         name: FMod
         blockType: [int, uint, float]
+        description: "Return the element-wise remainder of division.
+
+This is the NumPy implementation of the C library function <b>fmod</b>, the remainder has the same sign as the dividend <b>x1</b>. It is equivalent to the Matlab(TM) <b>rem</b> function and should not be confused with the Python modulus operator <b>x1 % x2</b>."
 
 reciprocal:
         name: Reciprocal
         categories: ["/NumPy/Arithmetic"]
         class: OneToOneBlock
         blockType: [float, complex]
+        description: "Return the reciprocal of the argument, element-wise.
+
+Calculates <b>1/x</b>."
 
 sqrt:
         copy: reciprocal
         name: SqRt
         niceName: Square Root
+        description: "Return the non-negative square-root of an array, element-wise."
 
 cbrt:
         name: CbRt
         copy: reciprocal
         blockType: [float]
         niceName: Cube Root
+        description: "Return the cube-root of an array, element-wise."
 
 square:
         name: Square
         copy: reciprocal
         blockType: [all]
+        description: "Return the element-wise square of the input."
 
 absolute:
         name: Absolute
         copy: reciprocal
-        blockType: [float, int]
+        blockType: [float, int, complex]
+        description: "Calculate the absolute value element-wise."
+        alias: [abs]
 
 fabs:
         name: FAbs
         copy: reciprocal
         blockType: [float]
+        description: "Compute the absolute values element-wise.
+
+This function returns the absolute values (positive magnitude) of the data in x. Complex values are not handled, use <b>/numpy/absolute</b> to find the absolute values of complex data."

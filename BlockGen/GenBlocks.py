@@ -143,6 +143,9 @@ def generatePythonEntryPoint(func,yaml):
         if key in yaml:
             makoVars[key] = yaml[key]
 
+    if "description" in yaml:
+        makoVars["description"] = yaml["description"].replace("\n", "\n *\n * ")
+
     makoVars["classParams"] = []
     makoVars["factoryParams"] = []
 

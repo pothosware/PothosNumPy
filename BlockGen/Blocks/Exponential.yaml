@@ -3,33 +3,44 @@ exp:
         categories: ["/NumPy/Exponential"]
         class: OneToOneBlock
         blockType: [float, complex]
+        description: "Calculate the exponential of all elements in the input array."
 
 expm1:
         copy: exp
         name: ExpM1
         niceName: "Exp(x) - 1"
+        description: "Calculate <b>exp(x) - 1</b> for all elements in the array."
 
 exp2:
         copy: exp
         name: Exp2
         niceName: "2**x"
+        description: "Calculate <b>2<sup>p</sup></b> for all <b>p</b> in the input array."
 
 log:
         copy: exp
         name: Log
+        description: "Natural logarithm, element-wise.
+
+The natural logarithm log is the inverse of the exponential function, so that <b>log(exp(x)) = x</b>. The natural logarithm is logarithm in base <b>e</b>."
 
 log10:
         copy: exp
         name: Log10
+        description: "Return the base 10 logarithm of the input array, element-wise."
 
 log2:
         copy: exp
         name: Log2
+        description: "Base-2 logarithm of <b>x</b>."
 
 log1p:
         copy: exp
         name: Log1P
         niceName: "Log(x + 1)"
+        description: "Return the natural logarithm of one plus the input array, element-wise.
+
+Calculates <b>log(1 + x)</b>."
 
 logaddexp:
         copy: exp
@@ -37,6 +48,9 @@ logaddexp:
         niceName: "Log(Exp(x1) + Exp(x2))"
         class: TwoToOneBlock
         blockType: [float]
+        description: "Logarithm of the sum of exponentiations of the inputs.
+
+Calculates <b>log(exp(x1) + exp(x2))</b>. This function is useful in statistics where the calculated probabilities of events may be so small as to exceed the range of normal floating point numbers. In such cases the logarithm of the calculated probability is stored. This function allows adding probabilities stored in such a fashion."
 
 logaddexp2:
         copy: exp
@@ -44,3 +58,6 @@ logaddexp2:
         niceName: "Log2(Exp(x1) + Exp(x2))"
         class: TwoToOneBlock
         blockType: [float]
+        description: "Logarithm of the sum of exponentiations of the inputs in base-2.
+
+Calculates <b>log2(2<sup>x1</sup> + 2<sup>x2</sup>)</b>. This function is useful in machine learning when the calculated probabilities of events may be so small as to exceed the range of normal floating point numbers. In such cases the base-2 logarithm of the calculated probability can be used instead. This function allows adding probabilities stored in such a fashion."

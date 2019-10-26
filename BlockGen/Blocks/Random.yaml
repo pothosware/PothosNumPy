@@ -5,6 +5,7 @@ random/permutation:
         prefix: Random.NumPyRandom
         blockType: [all]
         kwargs: [useDType=False, callPostBuffer=True]
+        description: "Randomly permute a sequence, or return a permuted range."
 
 random/integers:
         name: Integers
@@ -14,6 +15,7 @@ random/integers:
         prefix: Random
         blockType: [int, uint]
         kwargs: [useDType=True, useShape=False, sizeParam=True, callPostBuffer=False]
+        description: "Return random integers from the \"discrete uniform\" distribution of the specified dtype."
         funcArgs:
                 - {name: low, dtype: blockType, testValue1: 10, testValue2: 20, badValues: [100],
                    addedValidation:
@@ -30,6 +32,9 @@ random/beta:
         prefix: Random.NumPyRandom
         blockType: [float]
         kwargs: [useDType=False, useShape=False, sizeParam=True]
+        description: "Draw samples from a Beta distribution.
+
+The Beta distribution is a special case of the Dirichlet distribution, and is related to the Gamma distribution. It is often seen in Bayesian inference and order statistics."
         funcArgs:
                 - {name: alpha, dtype: float, testValue1: 2.0, testValue2: 4.0, ">": 0.0, badValues: [0.0]}
                 - {name: beta, dtype: float, testValue1: 4.0, testValue2: 2.0, ">": 0.0, badValues: [0.0]}
@@ -37,6 +42,9 @@ random/beta:
 random/binomial:
         name: Binomial
         copy: random/beta
+        description: "Draw samples from a binomial distribution.
+
+Samples are drawn from a binomial distribution with specified parameters, <b>n</b> trials and <b>p</b> probability of success where <b>n</b> is an integer >= 0 and <b>p</b> is in the interval <b>[0,1]</b>."
         funcArgs:
                 - {name: N, dtype: uint, testValue1: 0, testValue2: 1}
                 - {name: P, dtype: float, testValue1: 0.25, testValue2: 0.75, ">=": 0.0, "<=": 1.0, badValues: [-0.01, 1.01]}
@@ -44,6 +52,9 @@ random/binomial:
 random/chisquare:
         name: ChiSquare
         copy: random/beta
+        description: "Draw samples from a chi-square distribution.
+
+When <b>df</b> independent random variables, each with standard normal distributions (mean 0, variance 1), are squared and summed, the resulting distribution is chi-square. This distribution is often used in hypothesis testing."
         funcArgs:
                 - {name: degreesOfFreedom, dtype: float, testValue1: 0.5, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
 

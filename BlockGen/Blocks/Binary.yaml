@@ -3,21 +3,37 @@ invert:
         categories: ["/NumPy/Binary"]
         class: OneToOneBlock
         blockType: [int, uint]
+        description: "Compute bit-wise inversion, or bit-wise NOT, element-wise.
+
+Computes the bit-wise NOT of the underlying binary representation of the integers in the input arrays. This ufunc implements the C/Python operator <b>~</b>.
+
+For signed integer inputs, the two's complement is returned. In a two's-complement system negative numbers are represented by the two's complement of the absolute value. This is the most common method of representing signed integers on computers <b>[1]</b>. A N-bit two's-complement system can represent every integer in the range <b>-2<sup>N-1</sup> to +2<sup>N-1</sup>-1</b>.
+
+<b>[1]</b> Wikipedia, \"Two's complement\", https://en.wikipedia.org/wiki/Two's_complement"
 
 bitwise_and:
         copy: invert
         name: BitwiseAnd
         niceName: Bitwise And
         class: TwoToOneBlock
+        description: "Compute the bit-wise AND of two arrays element-wise.
+
+Computes the bit-wise AND of the underlying binary representation of the integers in the input arrays. This ufunc implements the C/Python operator <b>&</b>."
 
 bitwise_or:
         copy: invert
         name: BitwiseOr
         niceName: Bitwise Or
         class: TwoToOneBlock
+        description: "Compute the bit-wise OR of two arrays element-wise.
+
+Computes the bit-wise OR of the underlying binary representation of the integers in the input arrays. This ufunc implements the C/Python operator <b>|</b>."
 
 bitwise_xor:
         copy: invert
         name: BitwiseXor
         niceName: Bitwise XOR
         class: TwoToOneBlock
+        description: "Compute the bit-wise XOR of two arrays element-wise.
+
+Computes the bit-wise XOR of the underlying binary representation of the integers in the input arrays. This ufunc implements the C/Python operator <b>^</b>."

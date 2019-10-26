@@ -4,16 +4,19 @@ angle:
         class: OneToOneBlock
         blockPattern: ComplexToScalar
         kwargs: [useDType=False]
+        description: "Return the angle of the complex argument."
 
 real:
         copy: angle
         name: Real
         niceName: Complex to Real
+        description: "Return the real part of the complex argument."
 
 imag:
         copy: angle
         name: Imag
         niceName: Complex to Imaginary
+        description: "Return the imaginary part of the complex argument."
 
 conjugate:
         name: Conjugate
@@ -21,3 +24,6 @@ conjugate:
         class: OneToOneBlock
         blockType: [complex]
         alias: [conj]
+        description: "Return the complex conjugate, element-wise.
+
+The complex conjugate of a complex number is obtained by changing the sign of its imaginary part."
