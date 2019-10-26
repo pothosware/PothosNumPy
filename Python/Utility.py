@@ -113,3 +113,7 @@ def errorForUnevenIntegralSpace(func, start, stop, numValues, numpyDType):
                            "represented with DType {3}."
             errorString = ERROR_FORMAT.format(start, stop, numValues, numpyDType.name)
             raise ValueError(errorString)
+
+def errorForLeftGERight(left, right):
+    if (type(left) in [int, float]) and (type(right) in [int, float]) and (left >= right):
+        raise ValueError("{0} >= {1}".format(left, right))

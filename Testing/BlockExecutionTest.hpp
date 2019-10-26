@@ -133,3 +133,26 @@ static void testBlockExecutionCommon(const Pothos::Proxy& testBlock)
         POTHOS_TEST_TRUE(collectorSink.call("getBuffer").call<size_t>("elements") > 0);
     }
 }
+
+//
+// Calls into manual tests
+//
+
+template <typename T>
+void testManualBlockExecution();
+
+template <> void testManualBlockExecution<std::int8_t>();
+template <> void testManualBlockExecution<std::int16_t>();
+template <> void testManualBlockExecution<std::int32_t>();
+template <> void testManualBlockExecution<std::int64_t>();
+
+template <> void testManualBlockExecution<std::uint8_t>();
+template <> void testManualBlockExecution<std::uint16_t>();
+template <> void testManualBlockExecution<std::uint32_t>();
+template <> void testManualBlockExecution<std::uint64_t>();
+
+template <> void testManualBlockExecution<float>();
+template <> void testManualBlockExecution<double>();
+
+template <> void testManualBlockExecution<std::complex<float>>();
+template <> void testManualBlockExecution<std::complex<double>>();

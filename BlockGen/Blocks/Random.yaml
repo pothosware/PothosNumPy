@@ -2,16 +2,32 @@ random/permutation:
         name: Permutation
         class: OneToOneBlock
         categories: ["/NumPy/Random"]
-        prefix: GetNumPyRandom()
+        prefix: Random.NumPyRandom
         blockType: [all]
         kwargs: [useDType=False, callPostBuffer=True]
+
+random/integers:
+        name: Integers
+        class: SingleOutputSource
+        subclass: True
+        categories: ["/NumPy/Random"]
+        prefix: Random
+        blockType: [int, uint]
+        kwargs: [useDType=True, useShape=False, sizeParam=True, callPostBuffer=False]
+        funcArgs:
+                - {name: low, dtype: blockType, testValue1: 10, testValue2: 20, badValues: [100],
+                   addedValidation:
+                   ["Utility.errorForLeftGERight(low, self.__high)"]}
+                - {name: high, dtype: blockType, testValue1: 25, testValue2: 30, badValues: [5],
+                   addedValidation:
+                   ["Utility.errorForLeftGERight(self.__low, high)"]}
 
 random/beta:
         name: Beta
         class: SingleOutputSource
         subclass: True
         categories: ["/NumPy/Random"]
-        prefix: GetNumPyRandom()
+        prefix: Random.NumPyRandom
         blockType: [float]
         kwargs: [useDType=False, useShape=False, sizeParam=True]
         funcArgs:
@@ -30,8 +46,6 @@ random/chisquare:
         copy: random/beta
         funcArgs:
                 - {name: degreesOfFreedom, dtype: float, testValue1: 0.5, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
-
-# TODO: dirichlet, manual
 
 random/exponential:
         name: Exponential

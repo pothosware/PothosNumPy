@@ -154,6 +154,8 @@ static EnableIf${typedefName}<T, void> testAutoBlockExecution()
         %endif
     %endif
 %endfor
+
+    testManualBlockExecution<T>();
 }
 %endfor
 

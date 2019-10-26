@@ -14,5 +14,3 @@ fft/rfft: {name: RFFT}
 fft/irfft: {name: IRFFT}
 fft/hfft: {name: HFFT}
 fft/ihfft: {name: IHFFT}
-
-random/integers: {name: Integers}

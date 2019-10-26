@@ -253,13 +253,13 @@ def generatePythonOutput(expandedYAML):
 # This file was auto-generated on {1}.
 #
 
+from . import Random
 from . import Utility
 
 from .OneToOneBlock import *
 from .TwoToOneBlock import *
 from .NToOneBlock import *
 from .ForwardAndPostLabelBlock import *
-from .Random import *
 from .Source import *
 """.format(Now.year, Now)
 

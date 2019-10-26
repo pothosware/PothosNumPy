@@ -32,4 +32,4 @@ class BaseBlock(Pothos.Block):
         self.numpyOutputDType = None if outputDType is None else Pothos.Buffer.dtype_to_numpy(self.outputDType)
 
         if kwargs.get("useDType", True):
-            self.funcKWargs["dtype"] = self.numpyInputDType
+            self.funcKWargs["dtype"] = self.numpyInputDType if self.numpyInputDType is not None else self.numpyOutputDType
