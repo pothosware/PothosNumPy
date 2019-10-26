@@ -5,7 +5,27 @@ i0:
         class: OneToOneBlock
         blockType: [float]
         kwargs: [useDType=False]
+        description: "Modified Bessel function of the first kind, order 0.
+
+We use the algorithm published by Clenshaw <b>[1]</b> and referenced by Abramowitz and Stegun <b>[2]</b>, for which the function domain is partitioned into the two intervals <b>[0,8]</b> and <b>(8,inf)</b>, and Chebyshev polynomial expansions are employed in each interval. Relative error on the domain <b>[0,30]</b> using IEEE arithmetic is documented <b>[3]</b> as having a peak of 5.8e-16 with an rms of 1.4e-16 (n = 30000).
+
+
+<b>[1]</b> C. W. Clenshaw, \"Chebyshev series for mathematical functions\", in National Physical Laboratory Mathematical Tables, vol. 5, London: Her Majesty\"s Stationery Office, 1962.
+<b>[2]</b> M. Abramowitz and I. A. Stegun, Handbook of Mathematical Functions, 10th printing, New York: Dover, 1964, pp. 379. http://www.math.sfu.ca/~cbm/aands/page_379.htm
+<b>[3]</b> http://kobesearch.cpan.org/htdocs/Math-Cephes/Math/Cephes.html
+"
 
 sinc:
         name: Sinc
         copy: i0
+        description: "Return the sinc function.
+
+The sinc function is <b>sin(pi*x)/(pi*x).</b>
+
+<b>sinc(0)</b> is the limit value 1.
+
+The name sinc is short for \"sine cardinal\" or \"sinus cardinalis\".
+
+The sinc function is used in various signal processing applications, including in anti-aliasing, in the construction of a Lanczos resampling filter, and in interpolation.
+
+For bandlimited interpolation of discrete-time signals, the ideal interpolation kernel is proportional to the sinc function."

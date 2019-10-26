@@ -58,7 +58,7 @@ def processYAMLFile(yamlPath):
                 raise RuntimeError('Could not find template entry: "{0}".'.format(v["copy"]))
 
             fullEntry = templateEntries[v["copy"]].copy()
-            for keyToErase in ["alias", "niceName"]:
+            for keyToErase in ["alias", "niceName", "description"]:
                 if keyToErase in fullEntry:
                     del fullEntry[keyToErase]
             fullEntry.update(v)

@@ -61,12 +61,23 @@ When <b>df</b> independent random variables, each with standard normal distribut
 random/exponential:
         name: Exponential
         copy: random/beta
+        description: "Draw samples from an exponential distribution.
+
+The exponential distribution is a continuous analogue of the geometric distribution. It describes many common situations, such as the size of raindrops measured over many rainstorms [1], or the time between page requests to Wikipedia [2].
+
+<b>[1]</b> Peyton Z. Peebles Jr., \"Probability, Random Variables and Random Signal Principles\", 4th ed, 2001, p. 57.
+<b>[2]</b> Wikipedia, \"Poisson process\", https://en.wikipedia.org/wiki/Poisson_process"
         funcArgs:
                 - {name: scale, dtype: float, testValue1: 0.5, testValue2: 1.5, ">": 0.0, badValues: [0.0]}
 
 random/f:
         name: F
         copy: random/beta
+        description: "Draw samples from an F distribution.
+
+Samples are drawn from an <b>F</b> distribution with specified parameters, <b>dfnum</b> (degrees of freedom in numerator) and <b>dfden</b> (degrees of freedom in denominator), where both parameters must be greater than zero.
+
+The random variate of the F distribution (also known as the Fisher distribution) is a continuous probability distribution that arises in ANOVA tests, and is the ratio of two chi-square variates."
         funcArgs:
                 - {name: numeratorDOF, dtype: float, testValue1: 0.5, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
                 - {name: denominatorDOF, dtype: float, testValue1: 0.5, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
@@ -75,6 +86,9 @@ random/gamma:
         name: Gamma
         copy: random/beta
         kwargs: [useDType=False, useShape=False, sizeParam=True] # Shape parameter means something different here
+        description: "Draw samples from a Gamma distribution.
+
+Samples are drawn from a Gamma distribution with specified parameters, <b>shape</b> (sometimes designated <b>\"k\"</b>) and <b>scale</b> (sometimes designated <b>\"theta\"</b>), where both parameters are <b>> 0</b>."
         funcArgs:
                 - {name: shape, dtype: float, testValue1: 0.5, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
                 - {name: scale, dtype: float, testValue1: 0.5, testValue2: 1.5, ">": 0.0, badValues: [0.0]}
@@ -82,12 +96,18 @@ random/gamma:
 random/geometric:
         name: Geometric
         copy: random/beta
+        description: "Draw samples from the geometric distribution.
+
+Bernoulli trials are experiments with one of two outcomes: success or failure (an example of such an experiment is flipping a coin). The geometric distribution models the number of trials that must be run in order to achieve success. It is therefore supported on the positive integers, <b>k = 1, 2, ....</b>"
         funcArgs:
                 - {name: P, dtype: float, testValue1: 0.0, testValue2: 0.5, ">=": 0.0, "<=": 1.0, badValues: [-0.01, 1.01]}
 
 random/gumbel:
         name: Gumbel
         copy: random/beta
+        description: "Draw samples from a Gumbel distribution.
+
+The Gumbel (or Smallest Extreme Value (SEV) or the Smallest Extreme Value Type I) distribution is one of a class of Generalized Extreme Value (GEV) distributions used in modeling extreme value problems. The Gumbel is a special case of the Extreme Value Type I distribution for maximums from distributions with \"exponential-like\" tails."
         funcArgs:
                 - {name: location, dtype: float, testValue1: -5.0, testValue2: 5.0}
                 - {name: scale, dtype: float, testValue1: 0.5, testValue2: 1.5, ">=": 0.0, badValues: [-0.01]}
@@ -97,6 +117,9 @@ random/gumbel:
 random/laplace:
         name: Laplace
         copy: random/beta
+        description: "Draw samples from the Laplace or double exponential distribution with specified location (or mean) and scale (decay).
+
+The Laplace distribution is similar to the Gaussian/normal distribution, but is sharper at the peak and has fatter tails. It represents the difference between two independent, identically distributed exponential random variables."
         funcArgs:
                 - {name: location, dtype: float, testValue1: -5.0, testValue2: 5.0}
                 - {name: scale, dtype: float, testValue1: 0.5, testValue2: 1.5, ">=": 0.0, badValues: [-0.01]}
@@ -104,6 +127,9 @@ random/laplace:
 random/logistic:
         name: Logistic
         copy: random/beta
+        description: "Draw samples from a logistic distribution.
+
+The Logistic distribution is used in Extreme Value problems where it can act as a mixture of Gumbel distributions, in Epidemiology, and by the World Chess Federation (FIDE) where it is used in the Elo ranking system, assuming the performance of each player is a logistically distributed random variable."
         funcArgs:
                 - {name: location, dtype: float, testValue1: -5.0, testValue2: 5.0}
                 - {name: scale, dtype: float, testValue1: 0.0, testValue2: 1.5, ">=": 0.0, badValues: [-0.01]}
@@ -111,6 +137,9 @@ random/logistic:
 random/lognormal:
         name: LogNormal
         copy: random/beta
+        description: "Draw samples from a log-normal distribution with specified mean, standard deviation, and array shape. Note that the mean and standard deviation are not the values for the distribution itself, but of the underlying normal distribution it is derived from.
+
+A variable <b>x</b> has a log-normal distribution if <b>log(x)</b> is normally distributed. A log-normal distribution results if a random variable is the product of a large number of independent, identically-distributed variables in the same way that a normal distribution results if the variable is the sum of a large number of independent, identically-distributed variables."
         funcArgs:
                 - {name: mean, dtype: float, testValue1: -5.0, testValue2: 5.0}
                 - {name: sigma, dtype: float, testValue1: 0.0, testValue2: 1.5, ">=": 0.0, badValues: [-0.01]}
@@ -118,6 +147,9 @@ random/lognormal:
 random/logseries:
         name: LogSeries
         copy: random/beta
+        description: "Draw samples from a logarithmic series distribution.
+
+Samples are drawn from a log series distribution with specified shape parameter, <b>0 < p < 1</b>."
         funcArgs:
                 - {name: P, dtype: float, testValue1: 0.25, testValue2: 0.75, ">": 0.0, "<": 1.0, badValues: [0.0, 1.0]}
 
@@ -127,6 +159,9 @@ random/logseries:
 random/negative_binomial:
         name: NegativeBinomial
         copy: random/beta
+        description: "Draw samples from a negative binomial distribution.
+
+Samples are drawn from a negative binomial distribution with specified parameters, <b>n</b> successes and <b>p</b> probability of success where <b>n</b> is <b>> 0</b> and <b>p</b> is in the interval <b>[0, 1]</b>."
         funcArgs:
                 - {name: N, dtype: float, testValue1: 0.01, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
                 - {name: P, dtype: float, testValue1: 0.25, testValue2: 0.75, ">=": 0.0, "<=": 1.0, badValues: [-0.01, 1.01]}
@@ -135,6 +170,9 @@ random/negative_binomial:
 random/noncentral_chisquare:
         name: NonCentralChisquare
         copy: random/beta
+        description: "Draw samples from a noncentral chi-square distribution.
+
+The noncentral chi-square distribution is a generalization of the chi-square distribution (<b>/blocks/numpy/random/chisquare</b>)."
         funcArgs:
                 - {name: degreesOfFreedom, dtype: float, testValue1: 0.01, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
                 - {name: nonCentrality, dtype: float, testValue1: 0.25, testValue2: 0.75, ">=": 0.0, badValues: [-0.01]}
@@ -143,6 +181,9 @@ random/noncentral_chisquare:
 random/noncentral_f:
         name: NonCentralF
         copy: random/beta
+        description: "Draw samples from the noncentral F distribution.
+
+Samples are drawn from an F distribution with specified parameters, <b>dfnum</b> (degrees of freedom in numerator) and <b>dfden</b> (degrees of freedom in denominator), where both parameters <b>> 1</b>. <b>nonc</b> is the non-centrality parameter."
         funcArgs:
                 - {name: numeratorDOF, dtype: float, testValue1: 1.5, testValue2: 2.0, ">": 1.0, badValues: [1.0]}
                 - {name: denominatorDOF, dtype: float, testValue1: 0.5, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
@@ -151,6 +192,13 @@ random/noncentral_f:
 random/normal:
         name: Normal
         copy: random/beta
+        description: "Draw random samples from a normal (Gaussian) distribution.
+
+The probability density function of the normal distribution, first derived by De Moivre and 200 years later by both Gauss and Laplace independently <b>[1]</b>, is often called the bell curve because of its characteristic shape.
+
+The normal distributions occurs often in nature. For example, it describes the commonly occurring distribution of samples influenced by a large number of tiny, random disturbances, each with its own unique distribution <b>[1]</b>.
+
+<b>[1]</b> P. R. Peebles Jr., \"Central Limit Theorem\" in \"Probability, Random Variables and Random Signal Principles\", 4th ed., 2001, pp. 51, 51, 125."
         funcArgs:
                 - {name: location, dtype: float, testValue1: -5.0, testValue2: 5.0}
                 - {name: scale, dtype: float, testValue1: 0.5, testValue2: 1.5, ">=": 0.0, badValues: [-0.01]}
@@ -158,6 +206,11 @@ random/normal:
 random/pareto:
         name: Pareto
         copy: random/beta
+        description: "Draw samples from a Pareto II or Lomax distribution with specified shape.
+
+The Lomax or Pareto II distribution is a shifted Pareto distribution. The classical Pareto distribution can be obtained from the Lomax distribution by adding 1 and multiplying by the scale parameter <b>m</b>. The smallest value of the Lomax distribution is zero while for the classical Pareto distribution it is <b>mu</b>, where the standard Pareto distribution has location <b>mu = 1</b>. Lomax can also be considered as a simplified version of the Generalized Pareto distribution (available in SciPy), with the scale set to one and the location set to zero.
+
+The Pareto distribution must be greater than zero, and is unbounded above. It is also known as the \"80-20 rule\". In this distribution, 80 percent of the weights are in the lowest 20 percent of the range, while the other 20 percent fill the remaining 80 percent of the range."
         funcArgs:
                 - {name: A, dtype: float, testValue1: 0.5, testValue2: 1.5, ">": 0.0, badValues: [0.0]}
 
@@ -165,18 +218,27 @@ random/pareto:
 random/poisson:
         name: Poisson
         copy: random/beta
+        description: "Draw samples from a Poisson distribution.
+
+The Poisson distribution is the limit of the binomial distribution for large <b>N</b>."
         funcArgs:
                 - {name: mu, dtype: float, testValue1: 0.0, testValue2: 0.5, ">=": 0.0, badValues: [-0.01]}
 
 random/power:
         name: Power
         copy: random/beta
+        description: "Draws samples in <b>[0, 1]</b> from a power distribution with positive exponent <b>a - 1</b>.
+
+Also known as the power function distribution."
         funcArgs:
                 - {name: A, dtype: float, testValue1: 1.0, testValue2: 1.5, ">=": 1.0, badValues: [0.99]}
 
 random/rayleigh:
         name: Rayleigh
         copy: random/beta
+        description: "Draw samples from a Rayleigh distribution.
+
+The Chi and Weibull distributions are generalizations of the Rayleigh."
         funcArgs:
                 - {name: scale, dtype: float, testValue1: 0.0, testValue2: 1.5, ">=": 0.0, badValues: [-0.01]}
 
@@ -184,6 +246,13 @@ random/standard_cauchy:
         name: StandardCauchy
         copy: random/beta
         subclass: False
+        description: "Draw samples from a standard Cauchy distribution with <b>mode = 0</b>.
+
+Also known as the Lorentz distribution.
+
+The Cauchy distribution arises in the solution to the driven harmonic oscillator problem, and also describes spectral line broadening. It also describes the distribution of values at which a line tilted at a random angle will cut the <b>x</b> axis.
+
+When studying hypothesis tests that assume normality, seeing how the tests perform on data from a Cauchy distribution is a good indicator of their sensitivity to a heavy-tailed distribution, since the Cauchy looks very much like a Gaussian distribution, but with heavier tails."
         funcArgs: []
 
 # Do these need to be manual? Depends on where we automatically put the DType parameter
@@ -194,6 +263,9 @@ random/standard_cauchy:
 random/standard_t:
         name: StandardT
         copy: random/beta
+        description: "Draw samples from a standard Student's <b>t</b> distribution with <b>df</b> degrees of freedom.
+
+A special case of the hyperbolic distribution. As <b>df</b> gets large, the result resembles that of the standard normal distribution (<b>/blocks/numpy/random/standard_normal</b>)."
         funcArgs:
                 - {name: degreesOfFreedom, dtype: float, testValue1: 0.5, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
 
@@ -203,6 +275,11 @@ random/standard_t:
 random/vonmises:
         name: VonMises
         copy: random/beta
+        description: "Draw samples from a von Mises distribution.
+
+Samples are drawn from a von Mises distribution with specified mode (<b>mu</b>) and dispersion (<b>kappa</b>), on the interval <b>[-pi, pi]</b>.
+
+The von Mises distribution (also known as the circular normal distribution) is a continuous probability distribution on the unit circle. It may be thought of as the circular analogue of the normal distribution."
         funcArgs:
                 - {name: mu, dtype: float, testValue1: -5.0, testValue2: 5.0}
                 - {name: kappa, dtype: float, testValue1: 0.5, testValue2: 1.5, ">=": 0.0, badValues: [-0.01]}
@@ -210,6 +287,9 @@ random/vonmises:
 random/wald:
         name: Wald
         copy: random/beta
+        description: "Draw samples from a Wald, or inverse Gaussian, distribution.
+
+As the scale approaches infinity, the distribution becomes more like a Gaussian. Some references claim that the Wald is an inverse Gaussian with mean equal to 1, but this is by no means universal."
         funcArgs:
                 - {name: mean, dtype: float, testValue1: 0.5, testValue2: 1.5, ">": 0.0, badValues: [0.0]}
                 - {name: scale, dtype: float, testValue1: 0.5, testValue2: 1.5, ">": 0.0, badValues: [0.0]}
@@ -217,11 +297,21 @@ random/wald:
 random/weibull:
         name: Weibull
         copy: random/beta
+        description: "Draw samples from a Weibull distribution.
+
+Draw samples from a 1-parameter Weibull distribution with the given shape parameter <b>a</b>.
+
+The Weibull (or Type III asymptotic extreme value distribution for smallest values, SEV Type III, or Rosin-Rammler distribution) is one of a class of Generalized Extreme Value (GEV) distributions used in modeling extreme value problems. This class includes the Gumbel and Frechet distributions."
         funcArgs:
                 - {name: A, dtype: float, testValue1: 0.0, testValue2: 0.5, ">=": 0.0, badValues: [-0.01]}
 
 random/zipf:
         name: Zipf
         copy: random/beta
+        description: "Draw samples from a Zipf distribution.
+
+Samples are drawn from a Zipf distribution with specified parameter a > 1.
+
+The Zipf distribution (also known as the zeta distribution) is a continuous probability distribution that satisfies Zipf's law: the frequency of an item is inversely proportional to its rank in a frequency table."
         funcArgs:
                 - {name: A, dtype: float, testValue1: 1.5, testValue2: 2.0, ">": 1.0, badValues: [1.0]}

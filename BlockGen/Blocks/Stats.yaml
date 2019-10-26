@@ -6,41 +6,68 @@ ptp:
         blockType: [all]
         label: "PTP"
         kwargs: [useDType=False]
+        description: "Calculates the peak-to-peak (maximum - minimum) of the input.
+
+The input buffer is forwarded without copying, and the calculated PTP is posted under the label <b>\"PTP\"</b> at index 0."
 
 mean:
         copy: ptp
         name: Mean
         label: "MEAN"
+        description: "Compute the arithmetic mean.
+
+The input buffer is forwarded without copying, and the calculated mean is posted under the label <b>\"MEAN\"</b> at index 0."
 
 std:
         copy: ptp
         name: Std
         niceName: Standard Deviation
         label: "STD"
+        description: "Compute the standard deviation, a measure of the spread of a distribution, of the array elements.
+
+The input buffer is forwarded without copying, and the calculated standard deviation is posted under the label <b>\"STD\"</b> at index 0."
 
 var:
         copy: ptp
         name: Var
         niceName: Variance
         label: "VAR"
+        description: "Compute the variance, a measure of the spread of a distribution, of the array elements.
+
+The input buffer is forwarded without copying, and the calculated variance is posted under the label <b>\"VAR\"</b> at index 0."
 
 nanmean:
         copy: ptp
         name: NaNMean
         niceName: Mean (ignores NaN)
         label: "MEAN"
+        description: "Compute the arithmetic mean, ignoring NaNs.
+
+The input buffer is forwarded without copying, and the calculated mean is posted under the label <b>\"MEAN\"</b> at index 0.
+
+For all-NaN slices, NaN is returned and a <i>RuntimeWarning</i> is raised."
 
 nanstd:
         copy: ptp
         name: NaNStd
         niceName: Standard Deviation (ignores NaN)
         label: "STD"
+        description: "Compute the standard deviation, a measure of the spread of a distribution, of the array elements.
+
+The input buffer is forwarded without copying, and the calculated standard deviation is posted under the label <b>\"STD\"</b> at index 0.
+
+For all-NaN slices, NaN is returned and a <i>RuntimeWarning</i> is raised."
 
 nanvar:
         copy: ptp
         name: NaNVar
         niceName: Variance (ignores NaN)
         label: "VAR"
+        description: "Compute the variance, a measure of the spread of a distribution, of the array elements.
+
+The input buffer is forwarded without copying, and the calculated variance is posted under the label <b>\"VAR\"</b> at index 0.
+
+For all-NaN slices, NaN is returned and a <i>RuntimeWarning</i> is raised."
 
 nanmax:
         copy: ptp
@@ -48,6 +75,11 @@ nanmax:
         niceName: Max (ignores NaN)
         findIndexFunc: numpy.nanargmax
         label: "MAX"
+        description: "Compute the maximum of all values in the given array.
+
+The input buffer is forwarded without copying, and the calculated value is posted under the label \"MAX\" at the index of the max value.
+
+For all-NaN slices, NaN is returned and a <i>RuntimeWarning</i> is raised."
 
 nanmin:
         copy: ptp
@@ -55,9 +87,17 @@ nanmin:
         niceName: Min (ignores NaN)
         findIndexFunc: numpy.nanargmin
         label: "MIN"
+        description: "Compute the minimum of all values in the given array.
+
+The input buffer is forwarded without copying, and the calculated value is posted under the label \"MIN\" at the index of the min value.
+
+For all-NaN slices, NaN is returned and a <i>RuntimeWarning</i> is raised."
 
 count_nonzero:
         copy: ptp
         name: CountNonZero
         niceName: Count Non-Zeros
         label: "NONZERO"
+        description: "Counts the number of non-zero values in the array.
+
+The input buffer is forwarded without copying, and the calculated value is posted under the label <b>\"NONZERO\"</b> at index 0."
