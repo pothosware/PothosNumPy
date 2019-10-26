@@ -64,10 +64,15 @@ static EnableIfComplex<T, std::vector<T>> getTestInputs()
 //
 
 template <typename T>
-static void testBlockExecutionCommon(const Pothos::Proxy& testBlock)
+static void testBlockExecutionCommon(
+    const Pothos::Proxy& testBlock,
+    bool longTimeout = false)
 {
     std::unordered_map<std::string, Pothos::Proxy> feederSources;
-    for(const auto& portInfo: testBlock.call<std::vector<Pothos::PortInfo>>("inputPortInfo"))
+    auto inputPortInfo = testBlock.call<std::vector<Pothos::PortInfo>>("inputPortInfo");
+    const bool isSource = inputPortInfo.empty();
+
+    for(const auto& portInfo: inputPortInfo)
     {
         static const std::vector<T> testInputs = getTestInputs<T>();
 
@@ -122,8 +127,17 @@ static void testBlockExecutionCommon(const Pothos::Proxy& testBlock)
 
         topology.commit();
 
-        // When this block exits, the flowgraph will stop.
-        Poco::Thread::sleep(5);
+        if(isSource)
+        {
+            // When this block exits, the flowgraph will stop.
+            Poco::Thread::sleep(longTimeout ? 10 : 5);
+        }
+        else
+        {
+            POTHOS_TEST_TRUE(topology.waitInactive(
+                                 0.01,
+                                 (longTimeout ? 0.0 : 1.0)));
+        }
     }
 
     // Make sure the blocks output data.
