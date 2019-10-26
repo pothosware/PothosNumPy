@@ -98,7 +98,7 @@ square:
 absolute:
         name: Absolute
         copy: reciprocal
-        blockType: [float, int, complex]
+        blockType: [float, int]
         description: "Calculate the absolute value element-wise."
         alias: [abs]
 
