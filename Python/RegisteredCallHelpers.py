@@ -7,6 +7,7 @@ import Pothos
 
 import json
 import numpy
+import os
 
 def getNumPyConfigInfoJSONString():
     KEYS = [
@@ -26,8 +27,23 @@ def getNumPyConfigInfoJSONString():
     ]
 
     topLevel = dict()
+    topLevel["NumPy Info"] = dict()
+    topLevel["NumPy Info"]["Version"] = numpy.__version__
+    topLevel["NumPy Info"]["Install Directory"] = os.path.dirname(os.path.dirname(numpy.__file__))
+
     for key in KEYS:
-        topLevel[key] = numpy.__config__.get_info(key)
+        info = numpy.__config__.get_info(key)
+        if info:
+            for k,v in info.items():
+                if type(v) is list:
+                    if type(v[0]) is tuple:
+                        infoLists = [list(t) for t in v]
+                        infoLists = [[str(u) for u in l if u is not None] for l in infoLists]
+                        infoLists = ["=".join(u) for u in infoLists]
+                        info[k] = ",".join(list(set(infoLists)))
+                    elif type(v[0]) is str:
+                        info[k] = ",".join(list(set(v)))
+            topLevel["NumPy Info"][key] = info
 
     return json.dumps(topLevel)
 

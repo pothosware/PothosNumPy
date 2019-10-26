@@ -123,12 +123,11 @@ POTHOS_TEST_BLOCK("/numpy/tests", test_finfo)
 POTHOS_TEST_BLOCK("/numpy/tests", test_registered_string_calls)
 {
     // Make sure this is valid JSON. This will throw if the JSON is invalid.
-    std::string numpyConfigInfo = getAndCallPlugin<std::string>("/numpy/info/config_info");
+    std::string numpyConfigInfo = getAndCallPlugin<std::string>("/devices/numpy/info");
     POTHOS_TEST_TRUE(!numpyConfigInfo.empty());
     auto json = nlohmann::json::parse(numpyConfigInfo);
 
-    std::string numpyVersion = getAndCallPlugin<std::string>("/numpy/info/version");
-    POTHOS_TEST_TRUE(!numpyVersion.empty());
+    std::cout << json.dump() << std::endl;
 }
 
 POTHOS_TEST_BLOCK("/numpy/tests", test_windows)

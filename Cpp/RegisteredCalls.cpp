@@ -16,13 +16,6 @@ static std::string getNumPyConfigInfoJSONString()
     return PothosNumPy.call<std::string>("getNumPyConfigInfoJSONString");
 }
 
-static std::string getNumPyVersion()
-{
-    auto pythonEnv = Pothos::ProxyEnvironment::make("python");
-    auto numpy = pythonEnv->findProxy("numpy");
-    return numpy.get<std::string>("__version__");
-}
-
 static Pothos::Proxy getNumPyIntInfo(const Pothos::DType& dtype)
 {
     auto pythonEnv = Pothos::ProxyEnvironment::make("python");
@@ -60,7 +53,7 @@ static Pothos::BufferChunk getNumPyKaiser(size_t windowSize, double beta)
 pothos_static_block(registerCalls)
 {
     Pothos::PluginRegistry::addCall(
-        "/numpy/info/config_info",
+        "/devices/numpy/info",
         Pothos::Callable(getNumPyConfigInfoJSONString));
 
     Pothos::PluginRegistry::addCall(
@@ -70,10 +63,6 @@ pothos_static_block(registerCalls)
     Pothos::PluginRegistry::addCall(
         "/numpy/info/iinfo",
         Pothos::Callable(getNumPyIntInfo));
-
-    Pothos::PluginRegistry::addCall(
-        "/numpy/info/version",
-        Pothos::Callable(getNumPyVersion));
 
     const std::vector<std::string> windowTypes =
     {
