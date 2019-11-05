@@ -95,6 +95,7 @@ BUILD_PYTHON_MODULE(
         ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/BlockExecutionTestAuto.cpp
         Cpp/RegisteredCalls.cpp
 
+        Testing/BlockExecutionTest.cpp
         Testing/BlockExecutionTestManual.cpp
         Testing/TestFFT.cpp
         Testing/TestNumPyFileIO.cpp

@@ -81,50 +81,20 @@ static EnableIfComplex<T, void> _testManualBlockExecution()
 // Actual template specializations here
 //
 
-template <>
-void testManualBlockExecution<std::int8_t>()
-{_testManualBlockExecution<std::int8_t>();}
+#define SPECIALIZE_MANUAL_BLOCK_EXECUTION(T) \
+    template <> \
+    void testManualBlockExecution<T>() \
+    {_testManualBlockExecution<T>();}
 
-template <>
-void testManualBlockExecution<std::int16_t>()
-{_testManualBlockExecution<std::int16_t>();}
-
-template <>
-void testManualBlockExecution<std::int32_t>()
-{_testManualBlockExecution<std::int32_t>();}
-
-template <>
-void testManualBlockExecution<std::int64_t>()
-{_testManualBlockExecution<std::int64_t>();}
-
-template <>
-void testManualBlockExecution<std::uint8_t>()
-{_testManualBlockExecution<std::uint8_t>();}
-
-template <>
-void testManualBlockExecution<std::uint16_t>()
-{_testManualBlockExecution<std::uint16_t>();}
-
-template <>
-void testManualBlockExecution<std::uint32_t>()
-{_testManualBlockExecution<std::uint32_t>();}
-
-template <>
-void testManualBlockExecution<std::uint64_t>()
-{_testManualBlockExecution<std::uint64_t>();}
-
-template <>
-void testManualBlockExecution<float>()
-{_testManualBlockExecution<float>();}
-
-template <>
-void testManualBlockExecution<double>()
-{_testManualBlockExecution<double>();}
-
-template <>
-void testManualBlockExecution<std::complex<float>>()
-{_testManualBlockExecution<std::complex<float>>();}
-
-template <>
-void testManualBlockExecution<std::complex<double>>()
-{_testManualBlockExecution<std::complex<double>>();}
+SPECIALIZE_MANUAL_BLOCK_EXECUTION(std::int8_t)
+SPECIALIZE_MANUAL_BLOCK_EXECUTION(std::int16_t)
+SPECIALIZE_MANUAL_BLOCK_EXECUTION(std::int32_t)
+SPECIALIZE_MANUAL_BLOCK_EXECUTION(std::int64_t)
+SPECIALIZE_MANUAL_BLOCK_EXECUTION(std::uint8_t)
+SPECIALIZE_MANUAL_BLOCK_EXECUTION(std::uint16_t)
+SPECIALIZE_MANUAL_BLOCK_EXECUTION(std::uint32_t)
+SPECIALIZE_MANUAL_BLOCK_EXECUTION(std::uint64_t)
+SPECIALIZE_MANUAL_BLOCK_EXECUTION(float)
+SPECIALIZE_MANUAL_BLOCK_EXECUTION(double)
+SPECIALIZE_MANUAL_BLOCK_EXECUTION(std::complex<float>)
+SPECIALIZE_MANUAL_BLOCK_EXECUTION(std::complex<double>)

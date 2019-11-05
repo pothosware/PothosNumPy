@@ -64,89 +64,9 @@ static EnableIfComplex<T, std::vector<T>> getTestInputs()
 //
 
 template <typename T>
-static void testBlockExecutionCommon(
+void testBlockExecutionCommon(
     const Pothos::Proxy& testBlock,
-    bool longTimeout = false)
-{
-    std::unordered_map<std::string, Pothos::Proxy> feederSources;
-    auto inputPortInfo = testBlock.call<std::vector<Pothos::PortInfo>>("inputPortInfo");
-    const bool isSource = inputPortInfo.empty();
-
-    for(const auto& portInfo: inputPortInfo)
-    {
-        static const std::vector<T> testInputs = getTestInputs<T>();
-
-        auto feederSource = Pothos::BlockRegistry::make(
-                                "/blocks/feeder_source",
-                                portInfo.dtype);
-        feederSource.call(
-            "feedBuffer",
-            stdVectorToBufferChunk<T>(
-                portInfo.dtype,
-                testInputs));
-        feederSources.emplace(
-            std::string(portInfo.name),
-            std::move(feederSource));
-    }
-
-    std::unordered_map<std::string, Pothos::Proxy> collectorSinks;
-    for(const auto& portInfo: testBlock.call<std::vector<Pothos::PortInfo>>("outputPortInfo"))
-    {
-        collectorSinks.emplace(
-            portInfo.name,
-            Pothos::BlockRegistry::make(
-                "/blocks/collector_sink",
-                portInfo.dtype));
-    }
-
-    // Execute the topology.
-    {
-        Pothos::Topology topology;
-        for(const auto& feederSourceMapPair: feederSources)
-        {
-            const auto& port = feederSourceMapPair.first;
-            const auto& feederSource = feederSourceMapPair.second;
-
-            topology.connect(
-                feederSource,
-                "0",
-                testBlock,
-                port);
-        }
-        for(const auto& collectorSinkMapPair: collectorSinks)
-        {
-            const auto& port = collectorSinkMapPair.first;
-            const auto& collectorSink = collectorSinkMapPair.second;
-
-            topology.connect(
-                testBlock,
-                port,
-                collectorSink,
-                "0");
-        }
-
-        topology.commit();
-
-        if(isSource)
-        {
-            // When this block exits, the flowgraph will stop.
-            Poco::Thread::sleep(longTimeout ? 10 : 5);
-        }
-        else
-        {
-            POTHOS_TEST_TRUE(topology.waitInactive(
-                                 0.01,
-                                 (longTimeout ? 0.0 : 1.0)));
-        }
-    }
-
-    // Make sure the blocks output data.
-    for(const auto& collectorSinkMapPair: collectorSinks)
-    {
-        const auto& collectorSink = collectorSinkMapPair.second;
-        POTHOS_TEST_TRUE(collectorSink.call("getBuffer").call<size_t>("elements") > 0);
-    }
-}
+    bool longTimeout = false);
 
 //
 // Calls into manual tests
@@ -154,19 +74,3 @@ static void testBlockExecutionCommon(
 
 template <typename T>
 void testManualBlockExecution();
-
-template <> void testManualBlockExecution<std::int8_t>();
-template <> void testManualBlockExecution<std::int16_t>();
-template <> void testManualBlockExecution<std::int32_t>();
-template <> void testManualBlockExecution<std::int64_t>();
-
-template <> void testManualBlockExecution<std::uint8_t>();
-template <> void testManualBlockExecution<std::uint16_t>();
-template <> void testManualBlockExecution<std::uint32_t>();
-template <> void testManualBlockExecution<std::uint64_t>();
-
-template <> void testManualBlockExecution<float>();
-template <> void testManualBlockExecution<double>();
-
-template <> void testManualBlockExecution<std::complex<float>>();
-template <> void testManualBlockExecution<std::complex<double>>();
