@@ -88,7 +88,7 @@ random/gamma:
         kwargs: [useDType=False, useShape=False, sizeParam=True] # Shape parameter means something different here
         description: "Draw samples from a Gamma distribution.
 
-Samples are drawn from a Gamma distribution with specified parameters, <b>shape</b> (sometimes designated <b>\"k\"</b>) and <b>scale</b> (sometimes designated <b>\"theta\"</b>), where both parameters are <b>> 0</b>."
+Samples are drawn from a Gamma distribution with specified parameters, <b>shape</b> (sometimes designated <b>\"k\"</b>) and <b>scale</b> (sometimes designated <b>\"theta\"</b>), where both parameters are <b>0</b>."
         funcArgs:
                 - {name: shape, dtype: float, testValue1: 0.5, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
                 - {name: scale, dtype: float, testValue1: 0.5, testValue2: 1.5, ">": 0.0, badValues: [0.0]}
