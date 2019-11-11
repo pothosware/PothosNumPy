@@ -81,8 +81,12 @@ def validateParameter(param, blockDType):
 
     paramDType = numpy.dtype(type(param))
 
-    if (paramDType.kind in ["i","u"]) != (blockDType.kind in ["i","u"]):
-        raise TypeError(TYPE_ERROR_TEMPLATE.format(param, type(param), blockDType.name))
+    if paramDType.kind in "iu":
+        if blockDType.kind == "f":
+            # Avoids creating invalid iinfo/finfo
+            param = float(param)
+        elif blockDType.kind not in "iu":
+            raise TypeError(TYPE_ERROR_TEMPLATE.format(param, type(param), blockDType.name))
     if ("complex" in paramDType.name) != ("complex" in blockDType.name):
         raise TypeError(TYPE_ERROR_TEMPLATE.format(param, type(param), blockDType.name))
 
