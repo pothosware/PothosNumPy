@@ -12,8 +12,14 @@ class BaseBlock(Pothos.Block):
         Pothos.Block.__init__(self)
 
         if inputDType is not None:
+            if type(inputDType) is str:
+                inputDType = Utility.DType(inputDType)
+
             Utility.validateDType(inputDType, inputDTypeArgs)
         if outputDType is not None:
+            if type(outputDType) is str:
+                outputDType = Utility.DType(outputDType)
+
             Utility.validateDType(outputDType, outputDTypeArgs)
 
         self.inputDType = inputDType

@@ -79,6 +79,24 @@ def formatTypeText(typeText):
 def blockTypeToDictString(blockTypeYAML):
     return "dict({0})".format(", ".join(["support{0}=True".format(formatTypeText(typeText)) for typeText in blockTypeYAML]))
 
+def blockTypeToDTypeChooser(blockTypeYAML):
+    if "all" in blockTypeYAML:
+        yamlToProcess = ["int", "uint", "float", "complex"]
+    else:
+        yamlToProcess = blockTypeYAML
+
+    return ",".join(["{0}=1".format(typeStr) for typeStr in [t.replace("complex","cfloat") for t in yamlToProcess]])
+
+def blockTypeToDTypeDefault(blockTypeYAML):
+    dtypeChooser = blockTypeToDTypeChooser(blockTypeYAML)
+
+    if "float" in dtypeChooser:
+        defaultType = "float64"
+    else:
+        defaultType = dtypeChooser.split(",")[0].replace("complex", "complex_float") + "64"
+
+    return defaultType
+
 def processBlock(yaml, makoVars):
     if makoVars["class"] in ["NToOneBlock"]:
         makoVars["factoryParams"] = ["nchans"] + makoVars["factoryParams"]
@@ -91,12 +109,16 @@ def processBlock(yaml, makoVars):
     for key in ["blockType", "outputType"]:
         if key in yaml:
             makoVars["outputDTypeArgs"] = blockTypeToDictString(yaml[key])
+            makoVars["outputDTypeChooser"] = blockTypeToDTypeChooser(yaml[key])
+            makoVars["outputDTypeDefault"] = blockTypeToDTypeDefault(yaml[key])
             makoVars["classParams"] = ["outputDTypeArgs"] + makoVars["classParams"]
             makoVars["factoryVars"] += ["outputDTypeArgs"]
             break
     for key in ["blockType", "inputType"]:
         if key in yaml:
             makoVars["inputDTypeArgs"] = blockTypeToDictString(yaml[key])
+            makoVars["inputDTypeChooser"] = blockTypeToDTypeChooser(yaml[key])
+            makoVars["inputDTypeDefault"] = blockTypeToDTypeDefault(yaml[key])
             makoVars["classParams"] = ["inputDTypeArgs"] + makoVars["classParams"]
             makoVars["factoryVars"] += ["inputDTypeArgs"]
             break
@@ -112,12 +134,21 @@ def processSource(yaml, makoVars):
     for key in ["blockType", "outputType"]:
         if key in yaml:
             makoVars["outputDTypeArgs"] = blockTypeToDictString(yaml[key])
+            makoVars["outputDTypeChooser"] = blockTypeToDTypeChooser(yaml[key])
+            makoVars["outputDTypeDefault"] = blockTypeToDTypeDefault(yaml[key])
             makoVars["classParams"] = ["outputDTypeArgs"] + makoVars["classParams"]
             makoVars["factoryVars"] += ["outputDTypeArgs"]
             break
 
     makoVars["classParams"] = ["dtype"] + makoVars["classParams"]
     makoVars["factoryParams"] = ["dtype"] + makoVars["factoryParams"]
+
+# The added _ prevents Python from trying to use the Python type as the key.
+NumericWidgets = dict(
+    float_="DoubleSpinBox",
+    int_="SpinBox",
+    uint_="SpinBox",
+)
 
 def generatePythonEntryPoint(func,yaml):
     # Generate variables for processing.
@@ -136,6 +167,8 @@ def generatePythonEntryPoint(func,yaml):
         for arg in yaml["funcArgs"]:
             arg["title"] = arg["name"][0].upper() + arg["name"][1:]
             arg["privateVar"] = "__{0}".format(arg["name"])
+            if arg["dtype"]+"_" in NumericWidgets:
+                arg["widget"] = NumericWidgets[arg["dtype"]+"_"]
         makoVars["funcArgsList"] = ["self.{0}".format(arg["privateVar"]) for arg in yaml["funcArgs"]]
 
     # Some keys are just straight copies.
