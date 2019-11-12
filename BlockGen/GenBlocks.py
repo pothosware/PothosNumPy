@@ -13,12 +13,14 @@ OutputDir = os.path.abspath(sys.argv[1])
 Now = datetime.datetime.now()
 
 CppFactoryTemplate = None
+PothosDocTemplate = None
 PythonFactoryFunctionTemplate = None
 PythonSubclassTemplate = None
 BlockExecutionTestTemplate = None
 
 def populateTemplates():
     global CppFactoryTemplate
+    global PothosDocTemplate
     global PythonFactoryFunctionTemplate
     global PythonSubclassTemplate
     global BlockExecutionTestTemplate
@@ -26,6 +28,10 @@ def populateTemplates():
     cppFactoryFunctionTemplatePath = os.path.join(ScriptDirName, "Factory.mako.cpp")
     with open(cppFactoryFunctionTemplatePath) as f:
         CppFactoryTemplate = f.read()
+
+    pothosDocTemplatePath = os.path.join(ScriptDirName, "PothosDoc.mako.py")
+    with open(pothosDocTemplatePath) as f:
+        PothosDocTemplate = f.read()
 
     pythonFactoryFunctionTemplatePath = os.path.join(ScriptDirName, "PythonFactoryFunction.mako.py")
     with open(pythonFactoryFunctionTemplatePath) as f:
@@ -236,12 +242,16 @@ def generatePythonEntryPoint(func,yaml):
         makoVars["classParams"] += ["**kwargs"]
 
     try:
+        pothosDoc = Template(PothosDocTemplate).render(makoVars=makoVars)
+
         if isEntryPointSubclass:
-            return Template(PythonSubclassTemplate).render(makoVars=makoVars)
+            entryPoint = Template(PythonSubclassTemplate).render(makoVars=makoVars)
         else:
-            return Template(PythonFactoryFunctionTemplate).render(makoVars=makoVars)
+            entryPoint = Template(PythonFactoryFunctionTemplate).render(makoVars=makoVars)
     except:
         print(mako.exceptions.text_error_template().render())
+
+    return (pothosDoc + entryPoint)
 
 def generateCppOutput(expandedYAML):
     prefix = """// Copyright (c) 2019-{0} Nicholas Corgan
