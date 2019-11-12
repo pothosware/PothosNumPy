@@ -14,7 +14,6 @@ expm1:
 exp2:
         copy: exp
         name: Exp2
-        niceName: "2**x"
         description: "Calculate <b>2<sup>p</sup></b> for all <b>p</b> in the input array."
 
 log:
