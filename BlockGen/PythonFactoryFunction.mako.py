@@ -10,13 +10,13 @@
  *
  * |category ${makoVars["category"]}
  * |keywords ${makoVars["keywords"]}
- * |factory /numpy/${makoVars["func"]}(${",".join(makoVars["factoryParams"])})
+ * |factory ${makoVars.get("factoryPrefix", "/numpy")}/${makoVars["func"]}(${",".join(makoVars["factoryParams"])})
 %if "alias" in makoVars:
 %for alias in makoVars["alias"]:
  * |alias /numpy/${alias}
 %endfor
 %endif
-%for i,param in enumerate(makoVars["factoryParams"]):
+%for param in makoVars["factoryParams"]:
  *
     %if param == "dtype":
  * |param dtype(Data Type) The block data type.

@@ -93,7 +93,7 @@ def blockTypeToDTypeDefault(blockTypeYAML):
     if "float" in dtypeChooser:
         defaultType = "float64"
     else:
-        defaultType = dtypeChooser.split(",")[0].replace("complex", "complex_float") + "64"
+        defaultType = dtypeChooser.split(",")[0].replace("complex", "complex_float").split("=")[0] + "64"
 
     return defaultType
 
@@ -172,7 +172,7 @@ def generatePythonEntryPoint(func,yaml):
         makoVars["funcArgsList"] = ["self.{0}".format(arg["privateVar"]) for arg in yaml["funcArgs"]]
 
     # Some keys are just straight copies.
-    for key in ["alias", "niceName", "funcArgs"]:
+    for key in ["alias", "niceName", "funcArgs", "factoryPrefix"]:
         if key in yaml:
             makoVars[key] = yaml[key]
 
