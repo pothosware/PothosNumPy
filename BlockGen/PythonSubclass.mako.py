@@ -6,6 +6,10 @@ class ${makoVars["name"]}(${makoVars["class"]}):
         ${makoVars["class"]}.__init__(self, ${", ".join(makoVars["classParams"])})
 
 %for arg in makoVars["funcArgs"]:
+        self.registerProbe("${arg["name"]}", "${arg["name"]}Changed", "set${arg["title"]}")
+%endfor
+
+%for arg in makoVars["funcArgs"]:
         self.set${arg["title"]}(${arg["name"]})
 %endfor
 %for arg in makoVars["funcArgs"]:
@@ -46,6 +50,9 @@ class ${makoVars["name"]}(${makoVars["class"]}):
 
         self.${arg["privateVar"]} = ${arg["name"]}
         self.__refreshArgs()
+
+        # C++ equivalent: emitSignal("${arg["name"]}Changed", ${arg["name"]})
+        self.${arg["name"]}Changed(${arg["name"]})
 %endfor
 
     def __refreshArgs(self):

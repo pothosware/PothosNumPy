@@ -45,9 +45,15 @@
  * |widget ${arg["widget"]}(minimum=${arg.get("default", 0)})
             %endif
  * |default ${arg.get("default", 0)}
- * |preview enable
+ * |preview valid
         %endfor
     %endif
 %endfor
+%if "funcArgs" in makoVars:
+ *
+    %for arg in makoVars["funcArgs"]:
+ * |setter set${arg["title"]}(${arg["name"]})
+    %endfor
+%endif
 */
 """
