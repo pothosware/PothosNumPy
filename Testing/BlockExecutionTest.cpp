@@ -10,16 +10,44 @@
 
 #include <Poco/Thread.h>
 
+#include <algorithm>
 #include <complex>
 #include <cstdint>
 #include <string>
 #include <type_traits>
 #include <unordered_map>
 
+#include <iostream>
+
+//
+// Utility functions
+//
+
+static std::vector<Pothos::PortInfo> getNonSigSlotPortInfo(
+    const Pothos::Proxy& block,
+    const std::string& portInfoCall)
+{
+    const auto allPortInfo = block.call<std::vector<Pothos::PortInfo>>(portInfoCall);
+    if(allPortInfo.empty())
+    {
+        return allPortInfo;
+    }
+
+    std::vector<Pothos::PortInfo> filteredPortInfo;
+    filteredPortInfo.reserve(allPortInfo.size());
+
+    std::copy_if(
+        std::begin(allPortInfo),
+        std::end(allPortInfo),
+        std::back_inserter(filteredPortInfo),
+        [](const Pothos::PortInfo& portInfo){return !portInfo.isSigSlot;});
+
+    return filteredPortInfo;
+}
+
 //
 // Test function
 //
-
 
 #define TEST_BLOCK_EXECUTION_COMMON(T) \
     template <> \
@@ -28,7 +56,7 @@
         bool longTimeout) \
     { \
         std::unordered_map<std::string, Pothos::Proxy> feederSources; \
-        auto inputPortInfo = testBlock.call<std::vector<Pothos::PortInfo>>("inputPortInfo"); \
+        auto inputPortInfo = getNonSigSlotPortInfo(testBlock, "inputPortInfo"); \
         const bool isSource = inputPortInfo.empty(); \
      \
         for(const auto& portInfo: inputPortInfo) \
@@ -49,7 +77,7 @@
         } \
      \
         std::unordered_map<std::string, Pothos::Proxy> collectorSinks; \
-        for(const auto& portInfo: testBlock.call<std::vector<Pothos::PortInfo>>("outputPortInfo")) \
+        for(const auto& portInfo: getNonSigSlotPortInfo(testBlock, "outputPortInfo")) \
         { \
             collectorSinks.emplace( \
                 portInfo.name, \
