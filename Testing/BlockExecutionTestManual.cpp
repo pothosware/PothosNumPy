@@ -53,23 +53,95 @@ static void testBlockExecutionFunc(
     testBlockExecutionCommon<T>(testBlock);
 }
 
+template <typename T1, typename T2, typename T3>
+static void test3ParamBlockExecution(
+    const std::string& blockRegistryPath,
+    const T1& param1,
+    const T2& param2,
+    const T3& param3)
+{
+    static const Pothos::DType dtype(typeid(T1));
+
+    auto testBlock = Pothos::BlockRegistry::make(
+                         blockRegistryPath,
+                         dtype,
+                         param1,
+                         param2,
+                         param3,
+                         false /*repeat*/);
+    POTHOS_TEST_TRUE(!testBlock.template call<bool>("getRepeat"));
+
+    std::cout << blockRegistryPath << "(" << dtype.toString() << ", not repeating)" << std::endl;
+    testBlockExecutionCommon<T1>(testBlock);
+
+    testBlock.template call("setRepeat", true);
+    POTHOS_TEST_TRUE(testBlock.template call<bool>("getRepeat"));
+
+    std::cout << blockRegistryPath << "(" << dtype.toString() << ", repeating)" << std::endl;
+    testBlockExecutionCommon<T1>(testBlock);
+}
+
+template <typename T>
+static void testSpaceBlockExecution(
+    const std::string& blockRegistryPath,
+    const T& start,
+    const T& stop)
+{
+    static const Pothos::DType dtype(typeid(T));
+
+    static constexpr size_t numValues = std::is_floating_point<T>::value ? 25 : 10;
+    test3ParamBlockExecution(
+        blockRegistryPath,
+        start,
+        stop,
+        numValues);
+}
+
 //
 // Type-specific functions
 //
 
 template <typename T>
+static void testManualBlockExecutionScalarCommon()
+{
+    testSpaceBlockExecution<T>(
+        "/numpy/linspace",
+        T(1),
+        T(10));
+
+    constexpr T rangeStep = std::is_floating_point<T>::value ? 0.25 : 1;
+    test3ParamBlockExecution(
+        "/numpy/arange",
+        T(1),
+        T(10),
+        rangeStep);
+}
+
+template <typename T>
 static EnableIfInteger<T, void> _testManualBlockExecution()
 {
+    testManualBlockExecutionScalarCommon<T>();
 }
 
 template <typename T>
 static EnableIfUnsignedInt<T, void> _testManualBlockExecution()
 {
+    testManualBlockExecutionScalarCommon<T>();
 }
 
 template <typename T>
 static EnableIfFloat<T, void> _testManualBlockExecution()
 {
+    testManualBlockExecutionScalarCommon<T>();
+
+    testSpaceBlockExecution<T>(
+        "/numpy/logspace",
+        T(1.0),
+        T(3.0));
+    testSpaceBlockExecution<T>(
+        "/numpy/geomspace",
+        T(1.0),
+        T(3.0));
 }
 
 template <typename T>
