@@ -149,6 +149,10 @@ def processSource(yaml, makoVars):
     makoVars["classParams"] = ["dtype"] + makoVars["classParams"]
     makoVars["factoryParams"] = ["dtype"] + makoVars["factoryParams"]
 
+    if yaml["class"] in ["FixedSingleOutputSource"]:
+        makoVars["classParams"] += ["repeat"]
+        makoVars["factoryParams"] += ["repeat"]
+
 # The added _ prevents Python from trying to use the Python type as the key.
 NumericWidgets = dict(
     float_="DoubleSpinBox",

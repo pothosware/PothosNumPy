@@ -21,6 +21,7 @@ full:
 arange:
         name: ARange
         copy: ones
+        class: FixedSingleOutputSource
         subclass: True
         blockType: [int, uint, float]
         kwargs: [useDType=False, callPostBuffer=True, useShape=False]
@@ -40,7 +41,7 @@ When using a non-integer step, such as <b>0.1</b>, the results will often not be
 
 linspace:
         name: LinSpace
-        class: SingleOutputSource
+        class: FixedSingleOutputSource
         subclass: True
         categories: ["/NumPy/Sources"]
         blockType: [int, uint, float]

@@ -135,7 +135,7 @@ template <typename T>
 static EnableIf${typedefName}<T, void> testAutoBlockExecution()
 {
 %for blockName,blockInfo in blockYAML.items():
-    %if (not blockInfo.get("skipExecTest", False) and blockInfo.get("subclass", False)):
+    %if (not blockInfo.get("skipExecTest", False) and blockInfo.get("subclass", False) and blockInfo["class"] not in ["FixedSingleOutputSource"]):
         %if "blockType" in blockInfo:
             %if (typeName in blockInfo["blockType"]) or ("all" in blockInfo["blockType"]):
     testAutoBlockExecutionFunc${len(blockInfo["funcArgs"])}Param<T, ${", ".join([("T" if param["dtype"] == "blockType" else param["dtype"]) for param in blockInfo["funcArgs"]])}>(

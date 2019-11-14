@@ -41,3 +41,28 @@ class SingleOutputSource(BaseBlock):
         out0 = self.output(0).buffer()
         out0[:elems] = self.func(*funcArgs, **self.funcKWargs).astype(self.numpyOutputDType, copy=False)
         self.output(0).produce(elems)
+
+class FixedSingleOutputSource(SingleOutputSource):
+    def __init__(self, func, dtype, dtypeArgs, repeat, funcArgs, funcKWargs, *args, **kwargs):
+        SingleOutputSource.__init__(self, func, dtype, dtypeArgs, funcArgs, funcKWargs, *args, **kwargs)
+        self.__repeat = repeat
+        self.__workCalled = False
+
+        self.registerProbe("repeat", "repeatChanged", "setRepeat")
+
+    def getRepeat(self):
+        return self.__repeat
+
+    def setRepeat(self, repeat):
+        self.__repeat = repeat
+
+    def work(self):
+        if not (self.__workCalled and not self.__repeat):
+            if self.callPostBuffer:
+                self.workWithPostBuffer()
+                self.__workCalled = True
+            else:
+                # Don't count this as run until we actually output something.
+                if len(self.output(0).buffer()) > 0:
+                    self.workWithGivenOutputBuffer()
+                    self.__workCalled = True

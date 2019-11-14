@@ -38,6 +38,11 @@
  * |default 1
  * |widget SpinBox(minimum=1)
  * |preview disable
+    %elif param == "repeat":
+ * |param repeat(Repeat?)
+ * |default false
+ * |widget ToggleSwitch(on="True",off="False")
+ * |preview enable
     %else:
         %for arg in [funcArg for funcArg in makoVars["funcArgs"] if funcArg["name"] == param]:
  * |param ${arg["name"]}(${arg["title"]})
@@ -54,6 +59,9 @@
     %for arg in makoVars["funcArgs"]:
  * |setter set${arg["title"]}(${arg["name"]})
     %endfor
+%endif
+%if "repeat" in makoVars["factoryParams"]:
+ * |setter setRepeat(repeat)
 %endif
 */
 """
