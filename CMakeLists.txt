@@ -104,5 +104,6 @@ BUILD_PYTHON_MODULE(
     DOC_SOURCES
         ${autogenOutputs}
         Python/FFT.py
+        Python/Load.py
 )
 add_dependencies(NumPyBlocks autogen_files)

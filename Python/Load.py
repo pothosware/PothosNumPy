@@ -10,8 +10,37 @@ import Pothos
 import numpy
 import os
 
-class LoadNpyBlock(BaseBlock):
+# TODO: file repeating
+
+"""
+/*
+ * |PothosDoc Load .npy
+ *
+ * Corresponding NumPy function: numpy.load (with .npy extension)
+ *
+ * |category /NumPy/Sources
+ * |keywords load numpy binary file IO
+ * |factory /numpy/load_npy(filepath,dtype)
+ *
+ * |param filepath(File path)
+ * |widget FileEntry(mode=open)
+ * |default ""
+ * |preview disable
+ *
+ * |param dtype(Data Type)
+ * |widget DTypeChooser(int=1,uint=1,float=1,cfloat=1)
+ * |default "complex_float64"
+ * |preview enable
+ */
+"""
+class LoadNpy(BaseBlock):
     def __init__(self, filepath, dtype):
+        if not os.path.exists(filepath):
+            raise RuntimeError("The given file does not exist: {0}".format(filepath))
+
+        if type(dtype) is str:
+            dtype = Utility.DType(dtype)
+
         if "int64" in dtype.toString():
             logger = Utility.PythonLogger(self.__class__.__name__)
             logger.log(
@@ -45,15 +74,34 @@ class LoadNpyBlock(BaseBlock):
             return
 
         newPos = self.__pos + n
-        out0[:n] = self.__data[self.__pos:newPos]
+        out0[:n] = self.__data[self.__pos:newPos].astype(self.numpyOutputDType)
 
         self.__pos = newPos
         self.output(0).produce(n)
 
+"""
+/*
+ * |PothosDoc Load .npz
+ *
+ * Corresponding NumPy function: numpy.load (with .npz extension)
+ *
+ * |category /NumPy/Sources
+ * |keywords load numpy binary file IO
+ * |factory /numpy/load_npz(filepath)
+ *
+ * |param filepath(File path)
+ * |widget FileEntry(mode=open)
+ * |default ""
+ * |preview disable
+ */
+"""
 # Different enough that BaseBlock doesn't apply
-class LoadNpzBlock(Pothos.Block):
+class LoadNpz(Pothos.Block):
     def __init__(self, filepath):
         Pothos.Block.__init__(self)
+
+        if not os.path.exists(filepath):
+            raise RuntimeError("The given file does not exist: {0}".format(filepath))
 
         self.__filepath = filepath
         self.__data = dict()
@@ -87,14 +135,3 @@ class LoadNpzBlock(Pothos.Block):
 
             self.__pos[key] = newPos
             port.produce(n)
-
-# One entry point for both
-def Load(filepath, *args):
-    extension = os.path.splitext(filepath)[1]
-
-    if extension == ".npy":
-        return LoadNpyBlock(filepath, *args)
-    elif extension == ".npz":
-        return LoadNpzBlock(filepath, *args)
-    else:
-        raise RuntimeError("Invalid extension {0}. Valid extensions: .npy, .npz".format(extension))

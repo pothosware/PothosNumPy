@@ -15,6 +15,9 @@ class Save(BaseBlock):
         if os.path.splitext(filepath)[1] != ".npy":
             raise RuntimeError("Only .npy files are supported.")
 
+        if type(dtype) is str:
+            dtype = Utility.DType(dtype)
+
         if "int64" in dtype.toString():
             logger = Utility.PythonLogger(self.__class__.__name__)
             logger.log(

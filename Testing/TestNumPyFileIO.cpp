@@ -30,7 +30,6 @@ static std::string getTemporaryTestFile(const std::string& extension)
 {
     Poco::Path tempTestFile(Poco::Path::forDirectory(Poco::Path::temp()));
     tempTestFile.setBaseName(std::to_string(Poco::Timestamp().utcTime()) + extension);
-    Poco::TemporaryFile::registerForDeletion(tempTestFile.toString());
 
     return tempTestFile.toString();
 }
@@ -41,7 +40,6 @@ static std::string getTemporaryTestFile(
 {
     Poco::Path tempTestFile(Poco::Path::forDirectory(Poco::Path::temp()));
     tempTestFile.setBaseName(dtype.toString() + "_" + std::to_string(Poco::Timestamp().utcTime()) + extension);
-    Poco::TemporaryFile::registerForDeletion(tempTestFile.toString());
 
     return tempTestFile.toString();
 }
@@ -154,13 +152,13 @@ static void testNPYIO()
     // Read from the .NPY file and check the file contents.
     //
 
-    auto numpyLoad = Pothos::BlockRegistry::make(
-                         "/numpy/load",
-                         filepath,
-                         dtype);
+    auto numpyLoadNpy = Pothos::BlockRegistry::make(
+                             "/numpy/load_npy",
+                             filepath,
+                             dtype);
     POTHOS_TEST_EQUAL(
         filepath,
-        numpyLoad.call<std::string>("getFilepath"));
+        numpyLoadNpy.call<std::string>("getFilepath"));
 
     auto collectorSink = Pothos::BlockRegistry::make(
                              "/blocks/collector_sink",
@@ -170,7 +168,7 @@ static void testNPYIO()
     {
         Pothos::Topology topology;
         topology.connect(
-            numpyLoad, 0,
+            numpyLoadNpy, 0,
             collectorSink, 0);
 
         topology.commit();
@@ -178,6 +176,7 @@ static void testNPYIO()
         // When this block exits, the flowgraph will stop.
         Poco::Thread::sleep(10);
     }
+    POTHOS_TEST_TRUE(collectorSink.call<Pothos::BufferChunk>("getBuffer").elements() > 0);
 
     // Equality is not guaranteed with 64-bit integral types, so just
     // make sure it executes.
@@ -211,7 +210,7 @@ static void testNPZIO(bool compressed)
     std::cout << "Testing " << saveZBlockName << std::endl;
 
     //
-    // Write known values to the .NPY file.
+    // Write known values to the .NPZ file.
     //
 
     const std::string filepath = getTemporaryTestFile(".npz");
@@ -306,15 +305,15 @@ static void testNPZIO(bool compressed)
     // Read from the .NPZ file and check the file contents.
     //
 
-    auto numpyLoad = Pothos::BlockRegistry::make(
-                         "/numpy/load",
-                         filepath);
+    auto numpyLoadNpz = Pothos::BlockRegistry::make(
+                            "/numpy/load_npz",
+                            filepath);
     POTHOS_TEST_EQUAL(
         filepath,
-        numpyLoad.call<std::string>("getFilepath"));
+        numpyLoadNpz.call<std::string>("getFilepath"));
 
     // Make sure the block populated its output ports based on the file.
-    auto outputPortInfo = numpyLoad.call<std::vector<Pothos::PortInfo>>("outputPortInfo");
+    auto outputPortInfo = numpyLoadNpz.call<std::vector<Pothos::PortInfo>>("outputPortInfo");
     for(const std::string& dtypeString: dtypeStrings)
     {
         auto outputPortIter = std::find_if(
@@ -335,7 +334,7 @@ static void testNPZIO(bool compressed)
         for(const std::string& dtypeString: dtypeStrings)
         {
             topology.connect(
-                numpyLoad, portNames[dtypeString],
+                numpyLoadNpz, portNames[dtypeString],
                 collectorSinkMap[dtypeString], 0);
         }
 
