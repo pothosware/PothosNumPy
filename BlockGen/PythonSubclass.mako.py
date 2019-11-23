@@ -15,7 +15,11 @@ class ${makoVars["name"]}(${makoVars["class"]}):
 %for arg in makoVars.get("funcArgs",[]):
 
     def get${arg["title"]}(self):
+    %if (arg["dtype"] == "str") and arg.get("storeParamLowercase", False):
+        return self.${arg["privateVar"]}.upper()
+    %else:
         return self.${arg["privateVar"]}
+    %endif
 
     def set${arg["title"]}(self, ${arg["name"]}):
         # Input validation
@@ -25,8 +29,15 @@ class ${makoVars["name"]}(${makoVars["class"]}):
         %else:
         Utility.validateParameter(${arg["name"]}, self.numpyInputDType)
         %endif
+    %elif arg["dtype"] == "str":
+        if type(${arg["name"]}) is not str:
+            raise TypeError("${arg["name"]} must be a string")
     %else:
         Utility.validateParameter(${arg["name"]}, numpy.dtype("${arg["dtype"]}"))
+    %endif
+    %if "validValues" in arg:
+        if ${arg["name"]} not in ${arg["validValues"]}:
+            raise ValueError("Invalid value for ${arg["name"]}. Valid values: {0}".format(${arg["validValues"]}))
     %endif
     %if ">" in arg:
         if ${arg["name"]} <= ${arg[">"]}:
@@ -48,7 +59,11 @@ class ${makoVars["name"]}(${makoVars["class"]}):
         %endfor
     %endif
 
+    %if (arg["dtype"] == "str") and arg.get("storeParamLowercase", False):
+        self.${arg["privateVar"]} = ${arg["name"]}.lower()
+    %else:
         self.${arg["privateVar"]} = ${arg["name"]}
+    %endif
         self.__refreshArgs()
 
         # C++ equivalent: emitSignal("${arg["name"]}Changed", ${arg["name"]})

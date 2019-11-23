@@ -20,6 +20,7 @@
 #include <type_traits>
 #include <unordered_map>
 
+using str = std::string;
 using uint = unsigned int;
 
 template <typename T>
@@ -137,13 +138,18 @@ static EnableIf${typedefName}<T, void> testAutoBlockExecution()
 %for blockName,blockInfo in blockYAML.items():
     %if (not blockInfo.get("skipExecTest", False) and blockInfo.get("subclass", False) and blockInfo["class"] not in ["FixedSingleOutputSource"]):
         %if "blockType" in blockInfo:
-            %if ((typeName in blockInfo["blockType"]) or ("all" in blockInfo["blockType"])) and ("funcArgs" in blockInfo):
+            %if (typeName in blockInfo["blockType"]) or ("all" in blockInfo["blockType"]):
     testAutoBlockExecutionFunc${len(blockInfo["funcArgs"])}Param<T, ${", ".join([("T" if param["dtype"] == "blockType" else param["dtype"]) for param in blockInfo["funcArgs"]])}>(
         "/numpy/${blockName}"
                 %for funcArg in blockInfo["funcArgs"]:
         ,"${funcArg["name"][0].upper() + funcArg["name"][1:]}"
+                    %if ("testValue1" in funcArg) and ("testValue2" in funcArg):
         ,${funcArg["testValue1"]}
         ,${funcArg["testValue2"]}
+                    %else:
+        ,${funcArg["validValues"][0]}
+        ,${funcArg["validValues"][1]}
+                    %endif
         ,std::vector<${"T" if funcArg["dtype"] == "blockType" else funcArg["dtype"]}>{${", ".join([str(x) for x in funcArg.get(badParamsMap[typedefName], funcArg.get("badValues", []))])}}
                 %endfor
         );

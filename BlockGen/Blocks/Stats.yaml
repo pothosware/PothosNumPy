@@ -75,6 +75,8 @@ convolve:
         categories: ["/NumPy/Stats"]
         blockType: [float,complex]
         kwargs: [useDType=False,callPostBuffer=True]
+        funcArgs:
+                - {name: mode, dtype: str, validValues: ["FULL", "VALID", "SAME"], badValues: ["full", "valid", "same"], storeParamLowercase: True}
 
 correlate:
         copy: convolve

@@ -162,10 +162,11 @@ def processSource(yaml, makoVars):
         makoVars["factoryParams"] += ["repeat"]
 
 # The added _ prevents Python from trying to use the Python type as the key.
-NumericWidgets = dict(
+ParamWidgets = dict(
     float_="DoubleSpinBox",
     int_="SpinBox",
     uint_="SpinBox",
+    str_="ComboBox",
 )
 
 def generatePythonEntryPoint(func,yaml):
@@ -187,8 +188,8 @@ def generatePythonEntryPoint(func,yaml):
         for arg in yaml["funcArgs"]:
             arg["title"] = arg["name"][0].upper() + arg["name"][1:]
             arg["privateVar"] = "__{0}".format(arg["name"])
-            if arg["dtype"]+"_" in NumericWidgets:
-                arg["widget"] = NumericWidgets[arg["dtype"]+"_"]
+            if arg["dtype"]+"_" in ParamWidgets:
+                arg["widget"] = ParamWidgets[arg["dtype"]+"_"]
         makoVars["funcArgsList"] = ["self.{0}".format(arg["privateVar"]) for arg in yaml["funcArgs"]]
 
     # Some keys are just straight copies.
@@ -358,6 +359,21 @@ def generateBlockExecutionTest(expandedYAML):
 
     maxNumParams = max([len(expandedYAML[block].get("funcArgs", [])) for block in expandedYAML])
     assert(maxNumParams > 0)
+
+    # Put quotes around test string values.
+    for block in expandedYAML:
+        for arg in expandedYAML[block].get("funcArgs", []):
+            if arg["dtype"] == "str":
+                for key in ["testValue1", "testValue2"]:
+                    if key in arg:
+                        assert(type(arg[key]) is str)
+                        # For some reason, this format adds two quotes
+                        arg[key] = '"{0}"'.format(arg[key]).replace('""', '"')
+                for key in ["validValues", "badValues"]:
+                    if key in arg:
+                        assert(type(arg[key]) is list)
+                        # For some reason, this format adds two quotes
+                        arg[key] = ['"{0}"'.format(val).replace('""', '"') for val in arg[key]]
 
     try:
         output = Template(BlockExecutionTestTemplate).render(blockYAML=expandedYAML, Now=Now, sfinaeMap=sfinaeMap, maxNumParams=maxNumParams, badParamsMap=badParamsMap)

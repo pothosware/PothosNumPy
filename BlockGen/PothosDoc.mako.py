@@ -56,9 +56,24 @@
         %for arg in [funcArg for funcArg in makoVars.get("funcArgs",[]) if funcArg["name"] == param]:
  * |param ${arg["name"]}(${arg["title"]})
             %if "widget" in arg:
+                %if arg["widget"] == "ComboBox":
+ * |widget ${arg["widget"]}(editable=False)
+                %else:
  * |widget ${arg["widget"]}(minimum=${arg.get("default", 0)})
+                %endif
             %endif
+            %if arg["dtype"] == "str":
+                %if "validValues" in arg:
+ * |default "${arg["validValues"][0]}"
+                    %for val in arg["validValues"]:
+ * |option [${val.title()}] "${val}"
+                    %endfor
+                %else:
+ * |default ${arg.get("default", "")}
+                %endif
+            %else:
  * |default ${arg.get("default", 0)}
+            %endif
  * |preview valid
         %endfor
     %endif
