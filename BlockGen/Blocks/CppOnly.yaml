@@ -7,7 +7,6 @@ load_npy: {name: LoadNpy}
 load_npz: {name: LoadNpz}
 save: {name: Save, niceName: "Save to .npy"}
 savez: {name: SaveZ, niceName: "Save to .npz"}
-savez_compressed: {name: SaveZCompressed, niceName: "Save to .npz (compressed)"}
 
 fft/fft: {name: FFT}
 fft/ifft: {name: IFFT}

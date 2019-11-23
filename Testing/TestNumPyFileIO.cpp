@@ -206,15 +206,18 @@ static void testNPZIO(bool compressed)
     std::unordered_map<std::string, Pothos::Proxy> vectorSourceMap;
     std::unordered_map<std::string, Pothos::Proxy> collectorSinkMap;
 
-    const std::string saveZBlockName = compressed ? "/numpy/savez_compressed" : "/numpy/savez";
-    std::cout << "Testing " << saveZBlockName << std::endl;
+    const std::string blockName = "/numpy/savez";
+    std::cout << "Testing " << blockName << " (" << (compressed ? "compressed" : "uncompressed") << ")" << std::endl;
 
     //
     // Write known values to the .NPZ file.
     //
 
     const std::string filepath = getTemporaryTestFile(".npz");
-    auto numpySaveZ = Pothos::BlockRegistry::make(saveZBlockName, filepath);
+    auto numpySaveZ = Pothos::BlockRegistry::make(
+                          blockName,
+                          filepath,
+                          compressed);
     POTHOS_TEST_EQUAL(
         filepath,
         numpySaveZ.call<std::string>("getFilepath"));

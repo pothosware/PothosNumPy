@@ -61,8 +61,6 @@ class SaveZBlock(Pothos.Block):
                 self.__buffers[key] = numpy.concatenate([self.__buffers[key], buf.buffer()])
                 buf.consume(elems)
 
-def SaveZ(filepath, dtypes=None, keys=None):
-    return SaveZBlock(filepath, dtypes, keys, numpy.savez)
-
-def SaveZCompressed(filepath, dtypes=None, keys=None):
-    return SaveZBlock(filepath, dtypes, keys, numpy.savez_compressed)
+def SaveZ(filepath, compressed, dtypes=None, keys=None):
+    func = numpy.savez_compressed if compressed else numpy.savez
+    return SaveZBlock(filepath, dtypes, keys, func)
