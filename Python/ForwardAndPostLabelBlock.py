@@ -57,15 +57,6 @@ class ForwardAndPostLabelBlock(BaseBlock):
 # Subclasses
 #
 
-# Needed because of "initial" function parameter
-class AxisMinMaxBlock(ForwardAndPostLabelBlock):
-    def __init__(self, dtype, func, findIndexFunc, labelName):
-        dtypeArgs = dict(supportAll=True)
-        ForwardAndPostLabelBlock.__init__(self, func, findIndexFunc, labelName, dtype, dtype, dtypeArgs, dtypeArgs)
-
-        # TODO: make "initial" settable on the fly, validated
-        self.funcArgs = None
-
 # Needed because the array index associated with the label depends on the return
 # value as well as the buffer
 class MedianClass(ForwardAndPostLabelBlock):
@@ -83,16 +74,6 @@ class MedianClass(ForwardAndPostLabelBlock):
 # Factories exposed to C++
 #
 
-def AMax(dtype):
-    return AxisMinMaxBlock(dtype, numpy.amax, numpy.argmax, "MAX")
-
-def AMin(dtype):
-    return AxisMinMaxBlock(dtype, numpy.amin, numpy.argmin, "MIN")
-
-def Median(dtype):
-    dtypeArgs = dict(supportAll=True)
-    return MedianClass(dtype, numpy.median)
-
-def NaNMedian(dtype):
-    dtypeArgs = dict(supportAll=True)
-    return MedianClass(dtype, numpy.nanmedian)
+def Median(dtype, ignoreNaN):
+    func = numpy.nanmedian if ignoreNaN else numpy.median
+    return MedianClass(dtype, func)

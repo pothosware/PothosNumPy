@@ -2,7 +2,6 @@
 amax: {name: AMax, niceName: "Max"}
 amin: {name: AMin, niceName: "Min"}
 median: {name: Median}
-nanmedian: {name: NaNMedian, niceName: "Median (ignores NaN)"}
 load_npy: {name: LoadNpy}
 load_npz: {name: LoadNpz}
 save: {name: Save, niceName: "Save to .npy"}

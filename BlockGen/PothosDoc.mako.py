@@ -6,7 +6,11 @@
  * ${makoVars["description"]}
  *
 %endif
+%if "nanFunc" in makoVars:
+ * Corresponding NumPy functions: ${makoVars["pothosDocPrefix"]}.${makoVars["pothosDocFunc"]}, ${makoVars["pothosDocPrefix"]}.${makoVars["nanFunc"]}
+%else:
  * Corresponding NumPy function: ${makoVars["pothosDocPrefix"]}.${makoVars["pothosDocFunc"]}
+%endif
  *
  * |category ${makoVars["category"]}
  * |keywords ${makoVars["keywords"]}
@@ -40,6 +44,11 @@
  * |preview disable
     %elif param == "repeat":
  * |param repeat(Repeat?)
+ * |default false
+ * |widget ToggleSwitch(on="True",off="False")
+ * |preview enable
+    %elif param == "ignoreNaN":
+ * |param ignoreNaN(Ignore NaN?)
  * |default false
  * |widget ToggleSwitch(on="True",off="False")
  * |preview enable

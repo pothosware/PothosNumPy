@@ -192,7 +192,7 @@ def generatePythonEntryPoint(func,yaml):
         makoVars["funcArgsList"] = ["self.{0}".format(arg["privateVar"]) for arg in yaml["funcArgs"]]
 
     # Some keys are just straight copies.
-    for key in ["alias", "niceName", "funcArgs", "factoryPrefix"]:
+    for key in ["alias", "niceName", "funcArgs", "factoryPrefix", "nanFunc"]:
         if key in yaml:
             makoVars[key] = yaml[key]
 
@@ -246,7 +246,13 @@ def generatePythonEntryPoint(func,yaml):
         else:
             raise RuntimeError("Invalid block pattern.")
 
-    makoVars["classParams"] = ["{0}.{1}".format(makoVars["prefix"], func)] + makoVars["classParams"]
+    if "nanFunc" in makoVars:
+        funcAsParam = "({0}.{1} if ignoreNaN else {0}.{2})".format(makoVars["prefix"], makoVars["nanFunc"], func)
+        makoVars["factoryParams"] += ["ignoreNaN"]
+    else:
+        funcAsParam = "{0}.{1}".format(makoVars["prefix"], func)
+
+    makoVars["classParams"] = [funcAsParam] + makoVars["classParams"]
 
     makoVars["classParams"] += ["list()"] # TODO: don't pass funcArgs as param
     makoVars["classParams"] += ["funcKWargs" if "funcKWargs" in makoVars else "dict()"]
