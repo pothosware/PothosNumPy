@@ -3,9 +3,17 @@
 import datetime
 from mako.template import Template
 import mako.exceptions
+import numpy
 import os
 import sys
 import yaml
+
+if numpy.__version__ >= "1.17.0":
+    NumPyRandomString = "numpy.random.default_rng()"
+    NumPyRandomIntegersString = "integers"
+else:
+    NumPyRandomString = "numpy.random"
+    NumPyRandomIntegersString = "randint"
 
 ScriptDirName = os.path.dirname(__file__)
 BlocksDir = os.path.join(ScriptDirName, "Blocks")
@@ -167,8 +175,10 @@ def generatePythonEntryPoint(func,yaml):
     makoVars["class"] = yaml["class"]
     makoVars["category"] = " ".join(yaml["categories"])
     makoVars["func"] = func
+    makoVars["pothosDocFunc"] = makoVars["func"].replace("randint", "integers").replace("integers", NumPyRandomIntegersString)
     makoVars["keywords"] = func
     makoVars["prefix"] = yaml.get("prefix", "numpy")
+    makoVars["pothosDocPrefix"] = makoVars["prefix"].replace("Random.NumPyRandom", NumPyRandomString).replace("Random", NumPyRandomString)
     makoVars["factoryVars"] = []
 
     isEntryPointSubclass = yaml.get("subclass", False)

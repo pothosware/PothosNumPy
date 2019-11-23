@@ -6,7 +6,7 @@
  * ${makoVars["description"]}
  *
 %endif
- * Corresponding NumPy function: ${makoVars["prefix"]}.${makoVars["func"]}
+ * Corresponding NumPy function: ${makoVars["pothosDocPrefix"]}.${makoVars["pothosDocFunc"]}
  *
  * |category ${makoVars["category"]}
  * |keywords ${makoVars["keywords"]}
