@@ -53,7 +53,7 @@
  * |widget ToggleSwitch(on="True",off="False")
  * |preview enable
     %else:
-        %for arg in [funcArg for funcArg in makoVars["funcArgs"] if funcArg["name"] == param]:
+        %for arg in [funcArg for funcArg in makoVars.get("funcArgs",[]) if funcArg["name"] == param]:
  * |param ${arg["name"]}(${arg["title"]})
             %if "widget" in arg:
  * |widget ${arg["widget"]}(minimum=${arg.get("default", 0)})

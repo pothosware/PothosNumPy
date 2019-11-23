@@ -71,6 +71,7 @@ The input buffer is forwarded without copying, and the calculated value is poste
 convolve:
         name: Convolve
         class: TwoToOneBlock
+        subclass: True
         categories: ["/NumPy/Stats"]
         blockType: [float,complex]
         kwargs: [useDType=False,callPostBuffer=True]

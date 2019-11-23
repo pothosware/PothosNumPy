@@ -5,14 +5,14 @@ class ${makoVars["name"]}(${makoVars["class"]}):
 %endfor
         ${makoVars["class"]}.__init__(self, ${", ".join(makoVars["classParams"])})
 
-%for arg in makoVars["funcArgs"]:
+%for arg in makoVars.get("funcArgs",[]):
         self.registerProbe("${arg["name"]}", "${arg["name"]}Changed", "set${arg["title"]}")
 %endfor
 
-%for arg in makoVars["funcArgs"]:
+%for arg in makoVars.get("funcArgs",[]):
         self.set${arg["title"]}(${arg["name"]})
 %endfor
-%for arg in makoVars["funcArgs"]:
+%for arg in makoVars.get("funcArgs",[]):
 
     def get${arg["title"]}(self):
         return self.${arg["privateVar"]}
@@ -56,4 +56,4 @@ class ${makoVars["name"]}(${makoVars["class"]}):
 %endfor
 
     def __refreshArgs(self):
-        self.funcArgs = [${", ".join(makoVars["funcArgsList"])}]
+        self.funcArgs = [${", ".join(makoVars.get("funcArgsList",[]))}]
