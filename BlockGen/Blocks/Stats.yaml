@@ -67,3 +67,14 @@ count_nonzero:
         description: "Counts the number of non-zero values in the array.
 
 The input buffer is forwarded without copying, and the calculated value is posted under the label <b>\"NONZERO\"</b> at index 0."
+
+convolve:
+        name: Convolve
+        class: TwoToOneBlock
+        categories: ["/NumPy/Stats"]
+        blockType: [float,complex]
+        kwargs: [useDType=False,callPostBuffer=True]
+
+correlate:
+        copy: convolve
+        name: Correlate
