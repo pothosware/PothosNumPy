@@ -44,6 +44,7 @@ max:
         name: Max
         findIndexFunc: (numpy.nanargmax if ignoreNaN else numpy.argmax)
         label: "MAX"
+        alias: [amax]
         nanFunc: nanmax
         description: "Compute the maximum of all values in the given array.
 
@@ -54,6 +55,7 @@ min:
         name: Min
         findIndexFunc: (numpy.nanargmin if ignoreNaN else numpy.argmin)
         label: "MIN"
+        alias: [amin]
         nanFunc: nanmin
         description: "Compute the minimum of all values in the given array.
 

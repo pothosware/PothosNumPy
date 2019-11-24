@@ -1,6 +1,3 @@
-# TODO: figure out what here can be automated
-amax: {name: AMax, niceName: "Max"}
-amin: {name: AMin, niceName: "Min"}
 median: {name: Median}
 load_npy: {name: LoadNpy}
 load_npz: {name: LoadNpz}

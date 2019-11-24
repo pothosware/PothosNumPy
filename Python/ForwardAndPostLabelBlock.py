@@ -49,8 +49,8 @@ class ForwardAndPostLabelBlock(BaseBlock):
             index = 0
 
         self.input(0).consume(len(buf))
-        self.output(0).postLabel(Pothos.Label(self.labelName, numpyRet, index))
 
+        self.output(0).postLabel(Pothos.Label(self.labelName, numpyRet, index))
         self.output(0).postBuffer(buf)
 
 #
@@ -59,8 +59,9 @@ class ForwardAndPostLabelBlock(BaseBlock):
 
 # Needed because the array index associated with the label depends on the return
 # value as well as the buffer
-class MedianClass(ForwardAndPostLabelBlock):
-    def __init__(self, dtype, medianFunc):
+class Median(ForwardAndPostLabelBlock):
+    def __init__(self, dtype, ignoreNaN):
+        medianFunc = numpy.nanmedian if ignoreNaN else numpy.median
         dtypeArgs = dict(supportAll=True)
         ForwardAndPostLabelBlock.__init__(self, medianFunc, None, "MEDIAN", dtype, dtype, dtypeArgs, dtypeArgs)
 
@@ -68,12 +69,7 @@ class MedianClass(ForwardAndPostLabelBlock):
         # numpy.where returns a tuple of ndarrays
         arrIndex = numpy.where(buf == numpyRet)[0][0]
 
+        self.input(0).consume(len(buf))
+
         self.output(0).postLabel(self.labelName, numpyRet, arrIndex)
-
-#
-# Factories exposed to C++
-#
-
-def Median(dtype, ignoreNaN):
-    func = numpy.nanmedian if ignoreNaN else numpy.median
-    return MedianClass(dtype, func)
+        self.output(0).postBuffer(buf)
