@@ -41,17 +41,14 @@ class LoadNpy(BaseBlock):
         if type(dtype) is str:
             dtype = Utility.DType(dtype)
 
-        if "int64" in dtype.toString():
-            logger = Utility.PythonLogger(self.__class__.__name__)
-            logger.log(
-                str(self.__class__.__name__),
-                "This block supports type {0}, but input values are not guaranteed " \
-                "to be preserved due to limitations of type conversions between " \
-                "C++ and Python.".format(dtype.toString()),
-                "WARNING")
-
         dtypeArgs = dict(supportAll=True)
         BaseBlock.__init__(self, numpy.load, None, dtype, None, dtypeArgs, list(), dict())
+
+        if "int64" in dtype.toString():
+            self.logger.warning(
+                "This block supports type {0}, but input values are not guaranteed " \
+                "to be preserved due to limitations of type conversions between " \
+                "C++ and Python.".format(dtype.toString()))
 
         self.__filepath = filepath
         self.__data = None

@@ -15,11 +15,9 @@ class FFTClass(BaseBlock):
 
         # The FFT algorithm is fastest for powers of 2.
         if warnIfSuboptimal and not numpy.log2(numBins).is_integer():
-            logger = Utility.PythonLogger(str(func))
-            logger.log(
-                str(func),
-                "numBins was specified as {0}, which is not a power of 2. This will result in suboptimal performance.".format(numBins),
-                "WARNING")
+            self.logger.warning(
+                "numBins was specified as {0}, which is not a power of 2." \
+                "This will result in suboptimal performance.".format(numBins))
 
         self.numBins = numBins
 

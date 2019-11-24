@@ -5,6 +5,7 @@ from . import Utility
 
 import Pothos
 
+import logging
 import numpy
 import os
 
@@ -21,6 +22,10 @@ class SaveZBlock(Pothos.Block):
         if (dtypes != None) and (keys != None) and (len(dtypes) != len(keys)):
             raise ValueError("Input sizes for channel generation must match.")
 
+        # Logging (must do before addChannel, which logs warnings)
+        self.logger = logging.getLogger("PothosNumPy")
+        self.logger.addHandler(Pothos.LogHandler("/numpy/savez"))
+
         self.__filepath = filepath
         self.__func = func
         self.__buffers = dict()
@@ -33,13 +38,10 @@ class SaveZBlock(Pothos.Block):
     def addChannel(self, dtype, key):
         Utility.validateDType(dtype, dict(supportAll=True))
         if "int64" in dtype.toString():
-            logger = Utility.PythonLogger(self.__class__.__name__)
-            logger.log(
-                str(self.__class__.__name__),
+            self.logger.warning(
                 "This block supports type {0}, but input values are not guaranteed " \
                 "to be preserved due to limitations of type conversions between " \
-                "C++ and Python.".format(dtype.toString()),
-                "WARNING")
+                "C++ and Python.".format(dtype.toString()))
 
         self.__buffers[key] = numpy.array([], dtype=Pothos.Buffer.dtype_to_numpy(dtype))
         self.setupInput(key, dtype)
