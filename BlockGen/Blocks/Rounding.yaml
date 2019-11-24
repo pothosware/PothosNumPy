@@ -1,5 +1,3 @@
-# TODO?: around, round_
-
 rint:
         name: RInt
         niceName: Round
@@ -41,3 +39,15 @@ trunc:
         description: "Return the truncated value of the input, element-wise.
 
 The truncated value of the scalar <b>x</b> is the nearest integer <b>i</b> which is closer to zero than <b>x</b> is. In short, the fractional part of the signed number <b>x</b> is discarded."
+
+around:
+        copy: ceil
+        name: Round
+        subclass: True
+        alias: [round_]
+        kwargs: [useDType=False]
+        description: "Evenly round to the given number of decimals.
+
+For values exactly halfway between rounded decimal values, NumPy rounds to the nearest even value. Thus 1.5 and 2.5 round to 2.0, -0.5 and 0.5 round to 0.0, etc."
+        funcArgs:
+                - {name: decimals, dtype: uint, testValue1: 3, testValue2: 1}

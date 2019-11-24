@@ -100,4 +100,27 @@ partition:
         blockType: [all]
         kwargs: [useDType=False, callPostBuffer=True]
         funcArgs:
-                - {name: index, dtype: int, testValue1: 4, testValue2: 2, ">=": 0, badValues: [-1]}
+                - {name: index, dtype: uint, testValue1: 4, testValue2: 2}
+
+nan_to_num:
+        name: NanToNum
+        niceName: NaN to Num
+        class: OneToOneBlock
+        categories: ["/NumPy/Stream"]
+        blockType: [all]
+        kwargs: [useDType=False]
+
+#clip:
+#        name: Clip
+#        class: NToOneBlock
+#        subclass: True
+#        categories: ["/NumPy/Stream"]
+#        blockType: [all]
+#        kwargs: [useDType=False]
+#        funcArgs:
+#                - {name: min, dtype: blockType, testValue1: 1, testValue2: 5, badValues: [6],
+#                   addedValidation:
+#                   ["Utility.errorForLeftGERight(min, self.__max)"]}
+#                - {name: max, dtype: blockType, testValue1: 11, testValue2: 15, badValues: [0],
+#                   addedValidation:
+#                   ["Utility.errorForLeftGERight(self.__min, max)"]}
