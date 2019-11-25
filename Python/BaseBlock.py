@@ -41,6 +41,6 @@ class BaseBlock(Pothos.Block):
         if kwargs.get("useDType", True):
             self.funcKWargs["dtype"] = self.numpyInputDType if self.numpyInputDType is not None else self.numpyOutputDType
 
-        # Set up logging for this block (TODO: more unique naming)
+        # Set up logging for this block (TODO: take in block path as parameter, use for both logger and handler)
         self.logger = logging.getLogger("PothosNumPy")
         self.logger.addHandler(Pothos.LogHandler("PothosNumPy"))

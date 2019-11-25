@@ -23,8 +23,9 @@ class SaveZBlock(Pothos.Block):
             raise ValueError("Input sizes for channel generation must match.")
 
         # Logging (must do before addChannel, which logs warnings)
-        self.logger = logging.getLogger("PothosNumPy")
-        self.logger.addHandler(Pothos.LogHandler("/numpy/savez"))
+        self.blockName = "/numpy/savez"
+        self.logger = logging.getLogger(self.blockName)
+        self.logger.addHandler(Pothos.LogHandler(self.blockName))
 
         self.__filepath = filepath
         self.__func = func
