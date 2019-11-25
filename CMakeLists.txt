@@ -99,6 +99,7 @@ BUILD_PYTHON_MODULE(
         Testing/BlockExecutionTest.cpp
         Testing/BlockExecutionTestManual.cpp
         Testing/TestFFT.cpp
+        Testing/TestLabels.cpp
         Testing/TestNumPyFileIO.cpp
         Testing/TestRegisteredCalls.cpp
     DOC_SOURCES
