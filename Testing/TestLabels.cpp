@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <cmath>
 #include <numeric>
+#include <random>
 #include <vector>
 
 //
@@ -21,22 +22,27 @@
 template <typename T>
 static T max(const std::vector<T>& inputs, size_t* pPosition)
 {
-    auto maxElement = std::max_element(inputs.begin(), inputs.end());
-    *pPosition = (maxElement - inputs.begin());
-    return *maxElement;
+    auto maxElementIter = std::max_element(inputs.begin(), inputs.end());
+    POTHOS_TEST_TRUE(inputs.end() != maxElementIter);
+
+    *pPosition = std::distance(inputs.begin(), maxElementIter);
+    return *maxElementIter;
 }
 
 template <typename T>
 static T min(const std::vector<T>& inputs, size_t* pPosition)
 {
-    auto minElement = std::min_element(inputs.begin(), inputs.end());
-    *pPosition = (minElement - inputs.begin());
-    return *minElement;
+    auto minElementIter = std::min_element(inputs.begin(), inputs.end());
+    POTHOS_TEST_TRUE(inputs.end() != minElementIter);
+
+    *pPosition = std::distance(inputs.begin(), minElementIter);
+    return *minElementIter;
 }
 
 template <typename T>
 static T ptp(const std::vector<T>& inputs)
 {
+    // Unused
     size_t _1, _2;
 
     return max(inputs, &_1) - min(inputs, &_2);
@@ -105,7 +111,7 @@ static size_t countNonZeros(const std::vector<T>& inputs)
 // Make sure that blocks that post labels post the labels we expect.
 //
 
-static std::string getTestPlanJSON(const std::vector<double>& inputs)
+static std::vector<Pothos::Label> getExpectedLabels(const std::vector<double>& inputs)
 {
     size_t expectedMaxPosition = 0;
     size_t expectedMinPosition = 0;
@@ -120,50 +126,26 @@ static std::string getTestPlanJSON(const std::vector<double>& inputs)
     const auto expectedVariance = variance(inputs);
     const auto expectedCountNonZeros = countNonZeros(inputs);
 
-    auto topLevelJSON = nlohmann::json();
-    auto& expectedLabelsJSON = topLevelJSON["expectedLabels"];
-    expectedLabelsJSON = nlohmann::json::array();
-
-    const std::vector<Pothos::Label> expectedLabels =
-    {
-        {"MAX", expectedMax, expectedMaxPosition},
-        {"MIN", expectedMin, expectedMinPosition},
-        {"PTP", expectedPTP, 0},
-        {"MEAN", expectedMean, 0},
-        {"STD", expectedStdDev, 0},
-        {"VAR", expectedVariance, 0},
-        {"NONZERO", expectedCountNonZeros, 0}
-    };
-    std::transform(
-        expectedLabels.begin(),
-        expectedLabels.end(),
-        std::back_inserter(expectedLabelsJSON),
-        [](const Pothos::Label& label)
-        {
-            nlohmann::json json;
-            json["index"] = label.index;
-            json["id"] = label.id;
-
-            if(label.id == "NONZERO")
-            {
-                json["data"] = label.data.extract<size_t>();
-            }
-            else
-            {
-                json["data"] = label.data.extract<double>();
-            }
-
-            return json;
-        });
-
-    return topLevelJSON.dump();
+    return std::vector<Pothos::Label>
+    ({
+        Pothos::Label("MAX", expectedMax, expectedMaxPosition),
+        Pothos::Label("MIN", expectedMin, expectedMinPosition),
+        Pothos::Label("PTP", expectedPTP, 0),
+        Pothos::Label("MEAN", expectedMean, 0),
+        Pothos::Label("STD", expectedStdDev, 0),
+        Pothos::Label("VAR", expectedVariance, 0),
+        Pothos::Label("NONZERO", expectedCountNonZeros, 0)
+    });
 }
 
 POTHOS_TEST_BLOCK("/numpy/tests", test_labels)
 {
+    std::random_device rd;
+    std::mt19937 g(rd());
+
     std::vector<double> inputs = linspace<double>(-10, 10, 50);
     inputs.emplace_back(0.0); // To test PTP
-    std::random_shuffle(inputs.begin(), inputs.end());
+    std::shuffle(inputs.begin(), inputs.end(), g);
 
     const auto dtype = Pothos::DType("float64");
 
@@ -215,5 +197,34 @@ POTHOS_TEST_BLOCK("/numpy/tests", test_labels)
         POTHOS_TEST_TRUE(topology->waitInactive(0.01, 0.0));
     }
 
-    collectorSink.call("verifyTestPlan", getTestPlanJSON(inputs));
+    auto expectedLabels = getExpectedLabels(inputs);
+    const auto& collectorSinkLabels = collectorSink.call<std::vector<Pothos::Label>>("getLabels");
+    POTHOS_TEST_EQUAL(expectedLabels.size(), collectorSinkLabels.size());
+
+    for(const auto& expectedLabel: expectedLabels)
+    {
+        auto collectorSinkLabelIter = std::find_if(
+            collectorSinkLabels.begin(),
+            collectorSinkLabels.end(),
+            [&expectedLabel](const Pothos::Label& collectorSinkLabel)
+            {
+                return (expectedLabel.id == collectorSinkLabel.id);
+            });
+        std::cout << "Testing label " << expectedLabel.id << std::endl;
+        POTHOS_TEST_TRUE(collectorSinkLabels.end() != collectorSinkLabelIter);
+
+        POTHOS_TEST_EQUAL(expectedLabel.index, collectorSinkLabelIter->index);
+        if(expectedLabel.id == "NONZERO")
+        {
+            testEqual(
+                expectedLabel.data.extract<size_t>(),
+                collectorSinkLabelIter->data.extract<size_t>());
+        }
+        else
+        {
+            testEqual(
+                expectedLabel.data.extract<double>(),
+                collectorSinkLabelIter->data.extract<double>());
+        }
+    }
 }

@@ -71,5 +71,5 @@ class Median(ForwardAndPostLabelBlock):
 
         self.input(0).consume(len(buf))
 
-        self.output(0).postLabel(self.labelName, numpyRet, arrIndex)
+        self.output(0).postLabel(Pothos.Label(self.labelName, numpyRet, arrIndex))
         self.output(0).postBuffer(buf)
