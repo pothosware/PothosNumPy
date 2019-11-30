@@ -63,9 +63,16 @@ static T median(const std::vector<T>& inputs, size_t* pPosition)
     std::vector<T> sortedInputs(inputs);
     std::sort(sortedInputs.begin(), sortedInputs.end());
 
-    *pPosition = size_t(std::floor(inputs[inputs.size()/2]));
+    auto sortedIndex = size_t(std::floor(inputs.size()/2));
+    auto unsortedIter = std::find(
+                            inputs.begin(),
+                            inputs.end(),
+                            sortedInputs[sortedIndex]);
+    POTHOS_TEST_TRUE(unsortedIter != inputs.end());
 
-    return sortedInputs[*pPosition];
+    *pPosition = std::distance(inputs.begin(), unsortedIter);
+
+    return sortedInputs[sortedIndex];
 }
 
 template <typename T>
@@ -203,23 +210,26 @@ POTHOS_TEST_BLOCK("/numpy/tests", test_labels)
 
         std::cout << "Testing label " << expectedLabel.id << std::endl;
 
+        std::cout << " * ID..." << std::endl;
         POTHOS_TEST_EQUAL(
             expectedLabel.id,
             blockLabel.id);
+        std::cout << " * Index..." << std::endl;
         testEqual(
             expectedLabel.index,
             blockLabel.index);
-            if(expectedLabel.id == "NONZERO")
-            {
-                testEqual(
-                    expectedLabel.data.convert<size_t>(),
-                    blockLabel.data.convert<size_t>());
-            }
-            else
-            {
-                testEqual(
-                    expectedLabel.data.convert<double>(),
-                    blockLabel.data.convert<double>());
-            }
+        std::cout << " * Data..." << std::endl;
+        if(expectedLabel.id == "NONZERO")
+        {
+            testEqual(
+                expectedLabel.data.convert<size_t>(),
+                blockLabel.data.convert<size_t>());
+        }
+        else
+        {
+            testEqual(
+                expectedLabel.data.convert<double>(),
+                blockLabel.data.convert<double>());
+        }
     }
 }

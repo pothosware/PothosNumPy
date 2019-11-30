@@ -63,7 +63,8 @@ class Median(ForwardAndPostLabelBlock):
     def __init__(self, dtype, ignoreNaN):
         medianFunc = numpy.nanmedian if ignoreNaN else numpy.median
         dtypeArgs = dict(supportAll=True)
-        ForwardAndPostLabelBlock.__init__(self, medianFunc, None, "MEDIAN", dtype, dtype, dtypeArgs, dtypeArgs)
+        kwargs = dict(useDType=False)
+        ForwardAndPostLabelBlock.__init__(self, medianFunc, dtype, dtype, dtypeArgs, dtypeArgs, None, "MEDIAN", list(), dict(), **kwargs)
 
     def processAndPostBuffer(self, numpyRet, buf):
         # numpy.where returns a tuple of ndarrays
