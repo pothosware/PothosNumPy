@@ -71,31 +71,21 @@ static T median(const std::vector<T>& inputs, size_t* pPosition)
 template <typename T>
 static T stddev(const std::vector<T>& inputs)
 {
-    const T inputMean = mean(inputs);
-    const size_t size = inputs.size();
-
-    const T oneDivSizeMinusOne = 1.0 / static_cast<T>(size-1);
-
-    std::vector<T> diffs;
-    diffs.reserve(size);
-    std::transform(
-        inputs.begin(),
-        inputs.end(),
-        std::back_inserter(diffs),
-        [&inputMean, &size](T input)
-        {
-            return std::pow((input - inputMean), T(2));
-        });
-
-    const T addedDiffs = std::accumulate(diffs.begin(), diffs.end(), T(0));
-
-    return std::sqrt(oneDivSizeMinusOne * addedDiffs);
+    // Borderline cheating, but we can't reliably account for the floating-point
+    // conversions when generating a test value.
+    auto env = Pothos::ProxyEnvironment::make("python");
+    auto numpy = env->findProxy("numpy");
+    return numpy.call<T>("std", inputs);
 }
 
 template <typename T>
 static T variance(const std::vector<T>& inputs)
 {
-    return std::pow(stddev(inputs), T(2));
+    // Borderline cheating, but we can't reliably account for the floating-point
+    // conversions when generating a test value.
+    auto env = Pothos::ProxyEnvironment::make("python");
+    auto numpy = env->findProxy("numpy");
+    return numpy.call<T>("var", inputs);
 }
 
 template <typename T>
@@ -115,13 +105,13 @@ static std::vector<Pothos::Label> getExpectedLabels(const std::vector<double>& i
 {
     size_t expectedMaxPosition = 0;
     size_t expectedMinPosition = 0;
-    //size_t expectedMedianPosition = 0;
+    size_t expectedMedianPosition = 0;
 
     const auto expectedMax = max(inputs, &expectedMaxPosition);
     const auto expectedMin = min(inputs, &expectedMinPosition);
     const auto expectedPTP = ptp(inputs);
     const auto expectedMean = mean(inputs);
-    //const auto expectedMedian = median(inputs, &expectedMedianPosition);
+    const auto expectedMedian = median(inputs, &expectedMedianPosition);
     const auto expectedStdDev = stddev(inputs);
     const auto expectedVariance = variance(inputs);
     const auto expectedCountNonZeros = countNonZeros(inputs);
@@ -130,10 +120,11 @@ static std::vector<Pothos::Label> getExpectedLabels(const std::vector<double>& i
     ({
         Pothos::Label("MAX", expectedMax, expectedMaxPosition),
         Pothos::Label("MIN", expectedMin, expectedMinPosition),
-        Pothos::Label("PTP", expectedPTP, 0),
         Pothos::Label("MEAN", expectedMean, 0),
+        Pothos::Label("MEDIAN", expectedMedian, expectedMedianPosition),
         Pothos::Label("STD", expectedStdDev, 0),
         Pothos::Label("VAR", expectedVariance, 0),
+        Pothos::Label("PTP", expectedPTP, 0),
         Pothos::Label("NONZERO", expectedCountNonZeros, 0)
     });
 }
@@ -161,35 +152,37 @@ POTHOS_TEST_BLOCK("/numpy/tests", test_labels)
         Pothos::BlockRegistry::make("/numpy/max", dtype, false),
         Pothos::BlockRegistry::make("/numpy/min", dtype, false),
         Pothos::BlockRegistry::make("/numpy/mean", dtype, false),
-        // Pothos::BlockRegistry::make("numpy/median", dtype, false),
+        Pothos::BlockRegistry::make("/numpy/median", dtype, false),
         Pothos::BlockRegistry::make("/numpy/std", dtype, false),
         Pothos::BlockRegistry::make("/numpy/var", dtype, false),
         Pothos::BlockRegistry::make("/numpy/ptp", dtype),
         Pothos::BlockRegistry::make("/numpy/count_nonzero", dtype)
     };
+    const size_t numBlocks = numpyBlocks.size();
 
-    auto collectorSink = Pothos::BlockRegistry::make(
-                             "/blocks/collector_sink",
-                             dtype);
+    std::vector<Pothos::Proxy> collectorSinks;
+    for(size_t blockIndex = 0; blockIndex < numBlocks; ++blockIndex)
+    {
+        collectorSinks.emplace_back(Pothos::BlockRegistry::make(
+                                        "/blocks/collector_sink",
+                                        dtype));
+    }
 
     // Execute the topology.
     {
         auto topology = Pothos::Topology::make();
 
-        for(const auto& block: numpyBlocks)
+        for(size_t blockIndex = 0; blockIndex < numBlocks; ++blockIndex)
         {
             topology->connect(
                 vectorSource,
                 0,
-                block,
+                numpyBlocks[blockIndex],
                 0);
-        }
-        for(const auto& block: numpyBlocks)
-        {
             topology->connect(
-                block,
+                numpyBlocks[blockIndex],
                 0,
-                collectorSink,
+                collectorSinks[blockIndex],
                 0);
         }
 
@@ -198,39 +191,35 @@ POTHOS_TEST_BLOCK("/numpy/tests", test_labels)
     }
 
     auto expectedLabels = getExpectedLabels(inputs);
-    const auto& collectorSinkLabels = collectorSink.call<std::vector<Pothos::Label>>("getLabels");
-    POTHOS_TEST_EQUAL(expectedLabels.size(), collectorSinkLabels.size());
+    POTHOS_TEST_EQUAL(expectedLabels.size(), numBlocks);
 
-    // TODO: use separate collector sinks to test indices
-    for(const auto& expectedLabel: expectedLabels)
+    for(size_t labelIndex = 0; labelIndex < numBlocks; ++labelIndex)
     {
-        auto collectorSinkLabelIter = std::find_if(
-            collectorSinkLabels.begin(),
-            collectorSinkLabels.end(),
-            [&expectedLabel](const Pothos::Label& collectorSinkLabel)
-            {
-                return (expectedLabel.id == collectorSinkLabel.id);
-            });
-        std::cout << "Testing label " << expectedLabel.id << std::endl;
-        POTHOS_TEST_TRUE(collectorSinkLabels.end() != collectorSinkLabelIter);
+        const auto& expectedLabel = expectedLabels[labelIndex];
 
-        /*testEqual(
+        auto blockLabels = collectorSinks[labelIndex].call<std::vector<Pothos::Label>>("getLabels");
+        POTHOS_TEST_EQUAL(1, blockLabels.size());
+        const auto& blockLabel = blockLabels[0];
+
+        std::cout << "Testing label " << expectedLabel.id << std::endl;
+
+        POTHOS_TEST_EQUAL(
+            expectedLabel.id,
+            blockLabel.id);
+        testEqual(
             expectedLabel.index,
-            collectorSinkLabelIter->index);*/
-        if(expectedLabel.id == "NONZERO")
-        {
-            testEqual(
-                expectedLabel.data.convert<size_t>(),
-                collectorSinkLabelIter->data.convert<size_t>());
-        }
-        else
-        {
-            // Allow greater variance due to floating-point precision issues
-            // over many operations, plus conversion from Python.
-            POTHOS_TEST_CLOSE(
-                expectedLabel.data.convert<double>(),
-                collectorSinkLabelIter->data.convert<double>(),
-                ((expectedLabel.id == "VAR") || (expectedLabel.id == "STD")) ? 1.0 : 1e-6);
-        }
+            blockLabel.index);
+            if(expectedLabel.id == "NONZERO")
+            {
+                testEqual(
+                    expectedLabel.data.convert<size_t>(),
+                    blockLabel.data.convert<size_t>());
+            }
+            else
+            {
+                testEqual(
+                    expectedLabel.data.convert<double>(),
+                    blockLabel.data.convert<double>());
+            }
     }
 }
