@@ -204,12 +204,17 @@ POTHOS_TEST_BLOCK("/numpy/tests", test_labels)
     {
         const auto& expectedLabel = expectedLabels[labelIndex];
 
+        auto blockBuffer = collectorSinks[labelIndex].call<Pothos::BufferChunk>("getBuffer");
         auto blockLabels = collectorSinks[labelIndex].call<std::vector<Pothos::Label>>("getLabels");
         POTHOS_TEST_EQUAL(1, blockLabels.size());
         const auto& blockLabel = blockLabels[0];
 
         std::cout << "Testing label " << expectedLabel.id << std::endl;
 
+        std::cout << " * Buffer..." << std::endl;
+        testBufferChunk<double>(
+            blockBuffer,
+            inputs);
         std::cout << " * ID..." << std::endl;
         POTHOS_TEST_EQUAL(
             expectedLabel.id,
