@@ -8,13 +8,13 @@ import Pothos
 import numpy
 
 class ForwardAndPostLabelBlock(BaseBlock):
-    def __init__(self, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, findIndexFunc, labelName, funcArgs, funcKWargs, *args, **kwargs):
+    def __init__(self, blockPath, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, findIndexFunc, labelName, funcArgs, funcKWargs, *args, **kwargs):
         if inputDType is None:
             raise ValueError("For non-source blocks, inputDType cannot be None.")
         if outputDType is None:
             raise ValueError("For non-sink blocks, outputDType cannot be None.")
 
-        BaseBlock.__init__(self, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, funcArgs, funcKWargs, *args, **kwargs)
+        BaseBlock.__init__(self, blockPath, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, funcArgs, funcKWargs, *args, **kwargs)
 
         self.setupInput(0, self.inputDType)
 
@@ -64,7 +64,7 @@ class Median(ForwardAndPostLabelBlock):
         medianFunc = numpy.nanmedian if ignoreNaN else numpy.median
         dtypeArgs = dict(supportAll=True)
         kwargs = dict(useDType=False)
-        ForwardAndPostLabelBlock.__init__(self, medianFunc, dtype, dtype, dtypeArgs, dtypeArgs, None, "MEDIAN", list(), dict(), **kwargs)
+        ForwardAndPostLabelBlock.__init__(self, "/numpy/median", medianFunc, dtype, dtype, dtypeArgs, dtypeArgs, None, "MEDIAN", list(), dict(), **kwargs)
 
     def processAndPostBuffer(self, numpyRet, buf):
         # numpy.where returns a tuple of ndarrays

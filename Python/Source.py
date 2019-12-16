@@ -9,11 +9,11 @@ import Pothos
 import numpy
 
 class SingleOutputSource(BaseBlock):
-    def __init__(self, func, dtype, dtypeArgs, funcArgs, funcKWargs, *args, **kwargs):
+    def __init__(self, blockPath, func, dtype, dtypeArgs, funcArgs, funcKWargs, *args, **kwargs):
         if dtype is None:
             raise ValueError("Null dtype")
 
-        BaseBlock.__init__(self, func, None, dtype, None, dtypeArgs, funcArgs, funcKWargs, *args, **kwargs)
+        BaseBlock.__init__(self, blockPath, func, None, dtype, None, dtypeArgs, funcArgs, funcKWargs, *args, **kwargs)
         self.setupOutput(0, self.outputDType)
 
         self.useShape = kwargs.get("useShape", True)
@@ -43,8 +43,8 @@ class SingleOutputSource(BaseBlock):
         self.output(0).produce(elems)
 
 class FixedSingleOutputSource(SingleOutputSource):
-    def __init__(self, func, dtype, dtypeArgs, repeat, funcArgs, funcKWargs, *args, **kwargs):
-        SingleOutputSource.__init__(self, func, dtype, dtypeArgs, funcArgs, funcKWargs, *args, **kwargs)
+    def __init__(self, blockPath, func, dtype, dtypeArgs, repeat, funcArgs, funcKWargs, *args, **kwargs):
+        SingleOutputSource.__init__(self, blockPath, func, dtype, dtypeArgs, funcArgs, funcKWargs, *args, **kwargs)
         self.__repeat = repeat
         self.__workCalled = False
 

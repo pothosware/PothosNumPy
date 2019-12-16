@@ -19,7 +19,7 @@ class Save(BaseBlock):
             dtype = Utility.DType(dtype)
 
         dtypeArgs = dict(supportAll=True)
-        BaseBlock.__init__(self, numpy.save, dtype, None, dtypeArgs, None, list(), dict())
+        BaseBlock.__init__(self, "/numpy/save", numpy.save, dtype, None, dtypeArgs, None, list(), dict())
 
         if "int64" in dtype.toString():
             self.logger.warning(

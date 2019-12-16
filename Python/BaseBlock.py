@@ -9,7 +9,7 @@ import logging
 import numpy
 
 class BaseBlock(Pothos.Block):
-    def __init__(self, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, funcArgs, funcKWargs, *args, **kwargs):
+    def __init__(self, blockPath, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, funcArgs, funcKWargs, *args, **kwargs):
         Pothos.Block.__init__(self)
 
         if inputDType is not None:
@@ -41,6 +41,6 @@ class BaseBlock(Pothos.Block):
         if kwargs.get("useDType", True):
             self.funcKWargs["dtype"] = self.numpyInputDType if self.numpyInputDType is not None else self.numpyOutputDType
 
-        # Set up logging for this block (TODO: take in block path as parameter, use for both logger and handler)
-        self.logger = logging.getLogger("PothosNumPy")
-        self.logger.addHandler(Pothos.LogHandler("PothosNumPy"))
+        # Set up logging for this block
+        self.logger = logging.getLogger(blockPath)
+        self.logger.addHandler(Pothos.LogHandler(blockPath))

@@ -8,13 +8,13 @@ import Pothos
 import numpy
 
 class TwoToOneBlock(BaseBlock):
-    def __init__(self, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, funcArgs, funcKWargs, *args, **kwargs):
+    def __init__(self, blockPath, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, funcArgs, funcKWargs, *args, **kwargs):
         if inputDType is None:
             raise ValueError("For non-source blocks, inputDType cannot be None.")
         if outputDType is None:
             raise ValueError("For non-sink blocks, outputDType cannot be None.")
 
-        BaseBlock.__init__(self, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, funcArgs, funcKWargs, *args, **kwargs)
+        BaseBlock.__init__(self, blockPath, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, funcArgs, funcKWargs, *args, **kwargs)
 
         self.setupInput(0, self.inputDType)
         self.setupInput(1, self.inputDType)

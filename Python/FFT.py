@@ -10,8 +10,8 @@ import numpy
 import numpy.fft
 
 class FFTClass(BaseBlock):
-    def __init__(self, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, numBins, warnIfSuboptimal=False):
-        BaseBlock.__init__(self, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, list(), dict())
+    def __init__(self, blockPath, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, numBins, warnIfSuboptimal=False):
+        BaseBlock.__init__(self, blockPath, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, list(), dict())
 
         # The FFT algorithm is fastest for powers of 2.
         if warnIfSuboptimal and not numpy.log2(numBins).is_integer():
@@ -57,6 +57,7 @@ def FFT(dtype, numBins):
     dtypeArgs = dict(supportComplex=True)
 
     return FFTClass(
+               "/numpy/fft/fft",
                numpy.fft.fft,
                dtype,
                dtype,
@@ -78,6 +79,7 @@ def IFFT(dtype, numBins):
     dtypeArgs = dict(supportComplex=True)
 
     return FFTClass(
+               "/numpy/fft/ifft",
                numpy.fft.ifft,
                dtype,
                dtype,
@@ -102,6 +104,7 @@ def RFFT(dtype, numBins):
 
     # Since we've already validated, skip validation in the base block.
     return FFTClass(
+               "/numpy/fft/rfft",
                numpy.fft.rfft,
                dtype,
                complexDType,
@@ -126,6 +129,7 @@ def IRFFT(dtype, numBins):
 
     # Since we've already validated, skip validation in the base block.
     return FFTClass(
+               "/numpy/fft/irfft",
                numpy.fft.irfft,
                complexDType,
                dtype,
@@ -149,6 +153,7 @@ def HFFT(dtype, numBins):
 
     # Since we've already validated, skip validation in the base block.
     return FFTClass(
+               "/numpy/fft/hfft",
                numpy.fft.hfft,
                dtype,
                dtype,
@@ -173,6 +178,7 @@ def IHFFT(dtype, numBins):
 
     # Since we've already validated, skip validation in the base block.
     return FFTClass(
+               "/numpy/fft/ihfft",
                numpy.fft.ihfft,
                dtype,
                complexDType,
