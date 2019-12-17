@@ -154,11 +154,16 @@ static void testNPYIO()
 
     auto numpyLoadNpy = Pothos::BlockRegistry::make(
                              "/numpy/load_npy",
-                             filepath,
-                             dtype);
+                             filepath);
     POTHOS_TEST_EQUAL(
         filepath,
         numpyLoadNpy.call<std::string>("getFilepath"));
+
+    // Note: we need to get the Python class's internal port because the Python
+    // class's dtype() function returns the NumPy dtype.
+    POTHOS_TEST_EQUAL(
+        dtype.name(),
+        numpyLoadNpy.call("output", 0).get("_port").call("dtype").call<std::string>("name"));
 
     auto collectorSink = Pothos::BlockRegistry::make(
                              "/blocks/collector_sink",
@@ -187,6 +192,53 @@ static void testNPYIO()
             randomInputs,
             getEpsilon<T>());
     }
+}
+
+template <typename T>
+static void testLoadNPZ(
+    const std::string& filepath,
+    const std::string& key,
+    const std::vector<T>& values)
+{
+    const Pothos::DType dtype(typeid(T));
+
+    auto numpyLoadNpz = Pothos::BlockRegistry::make(
+                            "/numpy/load_npz",
+                            filepath,
+                            key);
+    POTHOS_TEST_EQUAL(
+        filepath,
+        numpyLoadNpz.call<std::string>("getFilepath"));
+
+    // Note: we need to get the Python class's internal port because the Python
+    // class's dtype() function returns the NumPy dtype.
+    POTHOS_TEST_EQUAL(
+        dtype.name(),
+        numpyLoadNpz.call("output", 0).get("_port").call("dtype").call<std::string>("name"));
+
+
+    auto collectorSink = Pothos::BlockRegistry::make(
+                             "/blocks/collector_sink",
+                             dtype);
+
+    // Execute the topology.
+    {
+        Pothos::Topology topology;
+
+        topology.connect(
+            numpyLoadNpz, 0,
+            collectorSink, 0);
+
+        topology.commit();
+
+        // When this block exits, the flowgraph will stop.
+        Poco::Thread::sleep(10);
+    }
+
+    testBufferChunk<T>(
+        collectorSink.call<Pothos::BufferChunk>("getBuffer"),
+        values,
+        getEpsilon<T>());
 }
 
 static void testNPZIO(bool compressed)
@@ -307,86 +359,16 @@ static void testNPZIO(bool compressed)
     //
     // Read from the .NPZ file and check the file contents.
     //
-
-    auto numpyLoadNpz = Pothos::BlockRegistry::make(
-                            "/numpy/load_npz",
-                            filepath);
-    POTHOS_TEST_EQUAL(
-        filepath,
-        numpyLoadNpz.call<std::string>("getFilepath"));
-
-    // Make sure the block populated its output ports based on the file.
-    auto outputPortInfo = numpyLoadNpz.call<std::vector<Pothos::PortInfo>>("outputPortInfo");
-    for(const std::string& dtypeString: dtypeStrings)
-    {
-        auto outputPortIter = std::find_if(
-            outputPortInfo.begin(),
-            outputPortInfo.end(),
-            [&](const Pothos::PortInfo& portInfo)
-            {
-                return (portInfo.name == portNames[dtypeString]);
-            });
-        POTHOS_TEST_TRUE(outputPortInfo.end() != outputPortIter);
-        POTHOS_TEST_TRUE(outputPortIter->dtype == dtypeMap[dtypeString]);
-    }
-
-    // Execute the topology.
-    {
-        Pothos::Topology topology;
-
-        for(const std::string& dtypeString: dtypeStrings)
-        {
-            topology.connect(
-                numpyLoadNpz, portNames[dtypeString],
-                collectorSinkMap[dtypeString], 0);
-        }
-
-        topology.commit();
-
-        // When this block exits, the flowgraph will stop.
-        Poco::Thread::sleep(10);
-    }
-
-    testBufferChunk<std::int8_t>(
-        collectorSinkMap["int8"].call("getBuffer"),
-        int8Input,
-        getEpsilon<std::int8_t>());
-    testBufferChunk<std::int16_t>(
-        collectorSinkMap["int16"].call("getBuffer"),
-        int16Input,
-        getEpsilon<std::int16_t>());
-    testBufferChunk<std::int32_t>(
-        collectorSinkMap["int32"].call("getBuffer"),
-        int32Input,
-        getEpsilon<std::int32_t>());
-    testBufferChunk<std::uint8_t>(
-        collectorSinkMap["uint8"].call("getBuffer"),
-        uint8Input,
-        getEpsilon<std::uint8_t>());
-    testBufferChunk<std::uint16_t>(
-        collectorSinkMap["uint16"].call("getBuffer"),
-        uint16Input,
-        getEpsilon<std::uint16_t>());
-    testBufferChunk<std::uint32_t>(
-        collectorSinkMap["uint32"].call("getBuffer"),
-        uint32Input,
-        getEpsilon<std::uint32_t>());
-    testBufferChunk<float>(
-        collectorSinkMap["float32"].call("getBuffer"),
-        floatInput,
-        getEpsilon<float>());
-    testBufferChunk<double>(
-        collectorSinkMap["float64"].call("getBuffer"),
-        doubleInput,
-        getEpsilon<double>());
-    testBufferChunk<std::complex<float>>(
-        collectorSinkMap["complex_float32"].call("getBuffer"),
-        complexFloatInput,
-        getEpsilon<std::complex<float>>());
-    testBufferChunk<std::complex<double>>(
-        collectorSinkMap["complex_float64"].call("getBuffer"),
-        complexDoubleInput,
-        getEpsilon<std::complex<double>>());
+    testLoadNPZ<std::int8_t>(filepath, "port_int8", int8Input);
+    testLoadNPZ<std::int16_t>(filepath, "port_int16", int16Input);
+    testLoadNPZ<std::int32_t>(filepath, "port_int32", int32Input);
+    testLoadNPZ<std::uint8_t>(filepath, "port_uint8", uint8Input);
+    testLoadNPZ<std::uint16_t>(filepath, "port_uint16", uint16Input);
+    testLoadNPZ<std::uint32_t>(filepath, "port_uint32", uint32Input);
+    testLoadNPZ<float>(filepath, "port_float32", floatInput);
+    testLoadNPZ<double>(filepath, "port_float64", doubleInput);
+    testLoadNPZ<std::complex<float>>(filepath, "port_complex_float32", complexFloatInput);
+    testLoadNPZ<std::complex<double>>(filepath, "port_complex_float64", complexDoubleInput);
 }
 
 //
