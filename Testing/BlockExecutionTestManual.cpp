@@ -50,7 +50,7 @@ static void testBlockExecutionFunc(
                         dtype);
     }
 
-    testBlockExecutionCommon<T>(testBlock);
+    testBlockExecutionCommon(testBlock);
 }
 
 template <typename T1, typename T2, typename T3>
@@ -72,13 +72,13 @@ static void test3ParamBlockExecution(
     POTHOS_TEST_TRUE(!testBlock.template call<bool>("getRepeat"));
 
     std::cout << blockRegistryPath << "(" << dtype.toString() << ", not repeating)" << std::endl;
-    testBlockExecutionCommon<T1>(testBlock);
+    testBlockExecutionCommon(testBlock);
 
     testBlock.template call("setRepeat", true);
     POTHOS_TEST_TRUE(testBlock.template call<bool>("getRepeat"));
 
     std::cout << blockRegistryPath << "(" << dtype.toString() << ", repeating)" << std::endl;
-    testBlockExecutionCommon<T1>(testBlock);
+    testBlockExecutionCommon(testBlock);
 }
 
 template <typename T>

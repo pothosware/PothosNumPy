@@ -183,6 +183,10 @@ static std::vector<T> getIntTestParams(T a, T step, size_t N)
     return ret;
 }
 
+void testBufferChunk(
+    const Pothos::BufferChunk& expectedBufferChunk,
+    const Pothos::BufferChunk& actualBufferChunk);
+
 template <typename T>
 static EnableIfFloat<T, void> testBufferChunk(
     const Pothos::BufferChunk& bufferChunk,

@@ -54,7 +54,7 @@ static void testAutoBlockExecutionFunc(
     // Allow a longer timeout for random blocks.
     const bool longTimeout = (std::string::npos != blockRegistryPath.find("random"));
 
-    testBlockExecutionCommon<T>(testBlock, longTimeout);
+    testBlockExecutionCommon(testBlock, longTimeout);
 }
 
 %for numParams in range(1,maxNumParams+1):
@@ -92,7 +92,7 @@ static void testAutoBlockExecutionFunc${numParams}Param(
     testEqual(param${paramNum}Value1, testBlock.template call<Param${paramNum}Type>(getter${paramNum}));
 %endfor
 
-    testBlockExecutionCommon<BlockType>(testBlock);
+    testBlockExecutionCommon(testBlock);
 
 %for setParamNum in range(numParams):
     {

@@ -102,6 +102,7 @@ BUILD_PYTHON_MODULE(
         Testing/TestLabels.cpp
         Testing/TestNumPyFileIO.cpp
         Testing/TestRegisteredCalls.cpp
+        Testing/TestUtility.cpp
     DOC_SOURCES
         ${autogenOutputs}
         Python/FFT.py
