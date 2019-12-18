@@ -98,29 +98,55 @@ static inline EnableIfComplex<T, T> getEpsilon()
     return T{getEpsilon<U>(), getEpsilon<U>()};
 }
 
+static Pothos::BufferChunk getRandomInputs(
+    const std::string& type,
+    size_t numElements)
+{
+    #define IfTypeGetRandomInputs(typeStr, ctype) \
+        if(type == typeStr) \
+            return stdVectorToBufferChunk<ctype>( \
+                Pothos::DType(typeStr), \
+                getRandomInputs<ctype>(numElements));
+
+    IfTypeGetRandomInputs("int8", std::int8_t)
+    IfTypeGetRandomInputs("int16", std::int16_t)
+    IfTypeGetRandomInputs("int32", std::int32_t)
+    IfTypeGetRandomInputs("int64", std::int64_t)
+    IfTypeGetRandomInputs("uint8", std::uint8_t)
+    IfTypeGetRandomInputs("uint16", std::uint16_t)
+    IfTypeGetRandomInputs("uint32", std::uint32_t)
+    IfTypeGetRandomInputs("uint64", std::uint64_t)
+    IfTypeGetRandomInputs("float32", float)
+    IfTypeGetRandomInputs("float64", double)
+    IfTypeGetRandomInputs("complex_float32", std::complex<float>)
+    IfTypeGetRandomInputs("complex_float64", std::complex<double>)
+
+    // Should never get here
+    return Pothos::BufferChunk();
+}
+
 //
 // Common test code
 //
 
-template <typename T>
-static void testNPYIO()
+static void testNPYIO(const std::string& type)
 {
     static constexpr size_t numElements = 256;
 
-    const Pothos::DType dtype(typeid(T));
+    const Pothos::DType dtype(type);
     std::cout << "Testing " << dtype.toString() << std::endl;
 
     const std::string filepath = getTemporaryTestFile(dtype, ".npy");
-    const auto randomInputs = getRandomInputs<T>(numElements);
+    const auto randomInputs = getRandomInputs(type, numElements);
 
     //
     // Write known values to the .NPY file.
     //
 
-    auto vectorSource = Pothos::BlockRegistry::make(
-                            "/blocks/vector_source",
+    auto feederSource = Pothos::BlockRegistry::make(
+                            "/blocks/feeder_source",
                             dtype);
-    vectorSource.call("setElements", randomInputs);
+    feederSource.call("feedBuffer", randomInputs);
 
     auto numpySave = Pothos::BlockRegistry::make(
                          "/numpy/save",
@@ -134,7 +160,7 @@ static void testNPYIO()
     {
         Pothos::Topology topology;
         topology.connect(
-            vectorSource, 0,
+            feederSource, 0,
             numpySave, 0);
 
         topology.commit();
@@ -146,7 +172,7 @@ static void testNPYIO()
     POTHOS_TEST_TRUE(Poco::File(filepath).exists());
     POTHOS_TEST_TRUE(
         Poco::File(filepath).getSize() >=
-        (numElements * sizeof(T)));
+        (numElements * dtype.elemSize()));
 
     //
     // Read from the .NPY file and check the file contents.
@@ -185,13 +211,57 @@ static void testNPYIO()
 
     // Equality is not guaranteed with 64-bit integral types, so just
     // make sure it executes.
-    if(!std::is_same<T, std::int64_t>::value && !std::is_same<T, std::uint64_t>::value)
+    if(std::string::npos == type.find("int64"))
     {
-        testBufferChunk<T>(
+        testBufferChunk(
             collectorSink.call("getBuffer"),
-            randomInputs,
-            getEpsilon<T>());
+            randomInputs);
     }
+}
+
+static void testLoadNPZ(
+    const std::string& filepath,
+    const std::string& key,
+    const Pothos::BufferChunk& values)
+{
+    const auto& dtype = values.dtype;
+
+    auto numpyLoadNpz = Pothos::BlockRegistry::make(
+                            "/numpy/load_npz",
+                            filepath,
+                            key);
+    POTHOS_TEST_EQUAL(
+        filepath,
+        numpyLoadNpz.call<std::string>("getFilepath"));
+
+    // Note: we need to get the Python class's internal port because the Python
+    // class's dtype() function returns the NumPy dtype.
+    POTHOS_TEST_EQUAL(
+        dtype.name(),
+        numpyLoadNpz.call("output", 0).get("_port").call("dtype").call<std::string>("name"));
+
+
+    auto collectorSink = Pothos::BlockRegistry::make(
+                             "/blocks/collector_sink",
+                             dtype);
+
+    // Execute the topology.
+    {
+        Pothos::Topology topology;
+
+        topology.connect(
+            numpyLoadNpz, 0,
+            collectorSink, 0);
+
+        topology.commit();
+
+        // When this block exits, the flowgraph will stop.
+        Poco::Thread::sleep(10);
+    }
+
+    testBufferChunk(
+        collectorSink.call<Pothos::BufferChunk>("getBuffer"),
+        values);
 }
 
 template <typename T>
@@ -255,7 +325,7 @@ static void testNPZIO(bool compressed)
 
     std::unordered_map<std::string, Pothos::DType> dtypeMap;
     std::unordered_map<std::string, std::string> portNames;
-    std::unordered_map<std::string, Pothos::Proxy> vectorSourceMap;
+    std::unordered_map<std::string, Pothos::Proxy> feederSourceMap;
     std::unordered_map<std::string, Pothos::Proxy> collectorSinkMap;
 
     const std::string blockName = "/numpy/savez";
@@ -274,16 +344,18 @@ static void testNPZIO(bool compressed)
         filepath,
         numpySaveZ.call<std::string>("getFilepath"));
 
-    auto int8Input = getRandomInputs<std::int8_t>(numElements);
-    auto int16Input = getRandomInputs<std::int16_t>(numElements);
-    auto int32Input = getRandomInputs<std::int32_t>(numElements);
-    auto uint8Input = getRandomInputs<std::uint8_t>(numElements);
-    auto uint16Input = getRandomInputs<std::uint16_t>(numElements);
-    auto uint32Input = getRandomInputs<std::uint32_t>(numElements);
-    auto floatInput = getRandomInputs<float>(numElements);
-    auto doubleInput = getRandomInputs<double>(numElements);
-    auto complexFloatInput = getRandomInputs<std::complex<float>>(numElements);
-    auto complexDoubleInput = getRandomInputs<std::complex<double>>(numElements);
+    auto int8Input = getRandomInputs("int8", numElements);
+    auto int16Input = getRandomInputs("int16", numElements);
+    auto int32Input = getRandomInputs("int32", numElements);
+    auto int64Input = getRandomInputs("int64", numElements);
+    auto uint8Input = getRandomInputs("uint8", numElements);
+    auto uint16Input = getRandomInputs("uint16", numElements);
+    auto uint32Input = getRandomInputs("uint32", numElements);
+    auto uint64Input = getRandomInputs("uint64", numElements);
+    auto floatInput = getRandomInputs("float32", numElements);
+    auto doubleInput = getRandomInputs("float64", numElements);
+    auto complexFloatInput = getRandomInputs("complex_float32", numElements);
+    auto complexDoubleInput = getRandomInputs("complex_float64", numElements);
 
     for(const std::string& dtypeString: dtypeStrings)
     {
@@ -293,10 +365,10 @@ static void testNPZIO(bool compressed)
         portNames.emplace(
             dtypeString,
             "port_"+dtypeString);
-        vectorSourceMap.emplace(
+        feederSourceMap.emplace(
             dtypeString,
             Pothos::BlockRegistry::make(
-                "/blocks/vector_source",
+                "/blocks/feeder_source",
                 dtypeMap[dtypeString]));
         collectorSinkMap.emplace(
             dtypeString,
@@ -310,16 +382,18 @@ static void testNPZIO(bool compressed)
             portNames[dtypeString]);
     }
 
-    vectorSourceMap["int8"].call("setElements", int8Input);
-    vectorSourceMap["int16"].call("setElements", int16Input);
-    vectorSourceMap["int32"].call("setElements", int32Input);
-    vectorSourceMap["uint8"].call("setElements", uint8Input);
-    vectorSourceMap["uint16"].call("setElements", uint16Input);
-    vectorSourceMap["uint32"].call("setElements", uint32Input);
-    vectorSourceMap["float32"].call("setElements", floatInput);
-    vectorSourceMap["float64"].call("setElements", doubleInput);
-    vectorSourceMap["complex_float32"].call("setElements", complexFloatInput);
-    vectorSourceMap["complex_float64"].call("setElements", complexDoubleInput);
+    feederSourceMap["int8"].call("feedBuffer", int8Input);
+    feederSourceMap["int16"].call("feedBuffer", int16Input);
+    feederSourceMap["int32"].call("feedBuffer", int32Input);
+    feederSourceMap["int64"].call("feedBuffer", int64Input);
+    feederSourceMap["uint8"].call("feedBuffer", uint8Input);
+    feederSourceMap["uint16"].call("feedBuffer", uint16Input);
+    feederSourceMap["uint32"].call("feedBuffer", uint32Input);
+    feederSourceMap["uint64"].call("feedBuffer", uint64Input);
+    feederSourceMap["float32"].call("feedBuffer", floatInput);
+    feederSourceMap["float64"].call("feedBuffer", doubleInput);
+    feederSourceMap["complex_float32"].call("feedBuffer", complexFloatInput);
+    feederSourceMap["complex_float64"].call("feedBuffer", complexDoubleInput);
 
     // Execute the topology.
     {
@@ -328,7 +402,7 @@ static void testNPZIO(bool compressed)
         for(const std::string& dtypeString: dtypeStrings)
         {
             topology.connect(
-                vectorSourceMap[dtypeString], 0,
+                feederSourceMap[dtypeString], 0,
                 numpySaveZ, portNames[dtypeString]);
         }
 
@@ -359,16 +433,18 @@ static void testNPZIO(bool compressed)
     //
     // Read from the .NPZ file and check the file contents.
     //
-    testLoadNPZ<std::int8_t>(filepath, "port_int8", int8Input);
-    testLoadNPZ<std::int16_t>(filepath, "port_int16", int16Input);
-    testLoadNPZ<std::int32_t>(filepath, "port_int32", int32Input);
-    testLoadNPZ<std::uint8_t>(filepath, "port_uint8", uint8Input);
-    testLoadNPZ<std::uint16_t>(filepath, "port_uint16", uint16Input);
-    testLoadNPZ<std::uint32_t>(filepath, "port_uint32", uint32Input);
-    testLoadNPZ<float>(filepath, "port_float32", floatInput);
-    testLoadNPZ<double>(filepath, "port_float64", doubleInput);
-    testLoadNPZ<std::complex<float>>(filepath, "port_complex_float32", complexFloatInput);
-    testLoadNPZ<std::complex<double>>(filepath, "port_complex_float64", complexDoubleInput);
+    testLoadNPZ(filepath, "port_int8", int8Input);
+    testLoadNPZ(filepath, "port_int16", int16Input);
+    testLoadNPZ(filepath, "port_int32", int32Input);
+    testLoadNPZ(filepath, "port_int64", int64Input);
+    testLoadNPZ(filepath, "port_uint8", uint8Input);
+    testLoadNPZ(filepath, "port_uint16", uint16Input);
+    testLoadNPZ(filepath, "port_uint32", uint32Input);
+    testLoadNPZ(filepath, "port_uint64", uint64Input);
+    testLoadNPZ(filepath, "port_float32", floatInput);
+    testLoadNPZ(filepath, "port_float64", doubleInput);
+    testLoadNPZ(filepath, "port_complex_float32", complexFloatInput);
+    testLoadNPZ(filepath, "port_complex_float64", complexDoubleInput);
 }
 
 //
@@ -379,18 +455,18 @@ POTHOS_TEST_BLOCK("/numpy/tests", test_npy_io)
 {
     std::srand(std::time(0ULL));
 
-    testNPYIO<std::int8_t>();
-    testNPYIO<std::int16_t>();
-    testNPYIO<std::int32_t>();
-    testNPYIO<std::int64_t>();
-    testNPYIO<std::uint8_t>();
-    testNPYIO<std::uint16_t>();
-    testNPYIO<std::uint32_t>();
-    testNPYIO<std::uint64_t>();
-    testNPYIO<float>();
-    testNPYIO<double>();
-    testNPYIO<std::complex<float>>();
-    testNPYIO<std::complex<double>>();
+    testNPYIO("int8");
+    testNPYIO("int16");
+    testNPYIO("int32");
+    testNPYIO("int64");
+    testNPYIO("uint8");
+    testNPYIO("uint16");
+    testNPYIO("uint32");
+    testNPYIO("uint64");
+    testNPYIO("float32");
+    testNPYIO("float64");
+    testNPYIO("complex_float32");
+    testNPYIO("complex_float64");
 }
 
 POTHOS_TEST_BLOCK("/numpy/tests", test_npz_io)
