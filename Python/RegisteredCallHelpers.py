@@ -48,11 +48,11 @@ def getNumPyConfigInfoJSONString():
     return json.dumps(topLevel)
 
 def getNumPyIntInfoFromPothosDType(pothosDType):
-    Utility.validateDType(pothosDType, dict(supportAll=True))
+    Utility.validateDType(pothosDType, dict(supportInt=True, supportUInt=True))
 
     return numpy.iinfo(Pothos.Buffer.dtype_to_numpy(pothosDType))
 
 def getNumPyFloatInfoFromPothosDType(pothosDType):
-    Utility.validateDType(pothosDType, dict(supportAll=True))
+    Utility.validateDType(pothosDType, dict(supportFloat=True, supportComplex=True))
 
     return numpy.finfo(Pothos.Buffer.dtype_to_numpy(pothosDType))

@@ -20,7 +20,7 @@ def validateDType(dtype, dtypeArgs):
     if dtypeArgs.get("supportAll", False):
         return
 
-    UNSUPPORTED_TEMPLATE = "This block does not support {0} types."
+    UNSUPPORTED_TEMPLATE = "{0} types are not supported."
     unsupportedType = None
 
     if dtype.isSigned() and not dtypeArgs.get("supportInt", False):
