@@ -10,6 +10,7 @@ random/permutation:
 
 random/integers:
         name: Integers
+        niceName: Random Integers
         class: SingleOutputSource
         subclass: True
         categories: ["/NumPy/Random"]
@@ -28,6 +29,7 @@ random/integers:
 
 random/beta:
         name: Beta
+        niceName: Beta Distribution
         class: SingleOutputSource
         subclass: True
         categories: ["/NumPy/Random"]
@@ -44,6 +46,7 @@ The Beta distribution is a special case of the Dirichlet distribution, and is re
 
 random/binomial:
         name: Binomial
+        niceName: Binomial Distribution
         copy: random/beta
         description: "Draw samples from a binomial distribution.
 
@@ -54,6 +57,7 @@ Samples are drawn from a binomial distribution with specified parameters, <b>n</
 
 random/chisquare:
         name: ChiSquare
+        niceName: Chi-Square Distribution
         copy: random/beta
         description: "Draw samples from a chi-square distribution.
 
@@ -63,6 +67,7 @@ When <b>df</b> independent random variables, each with standard normal distribut
 
 random/exponential:
         name: Exponential
+        niceName: Exponential Distribution
         copy: random/beta
         description: "Draw samples from an exponential distribution.
 
@@ -75,6 +80,7 @@ The exponential distribution is a continuous analogue of the geometric distribut
 
 random/f:
         name: F
+        niceName: F Distribution
         copy: random/beta
         description: "Draw samples from an F distribution.
 
@@ -87,6 +93,7 @@ The random variate of the F distribution (also known as the Fisher distribution)
 
 random/gamma:
         name: Gamma
+        niceName: Gamma Distribution
         copy: random/beta
         kwargs: [useDType=False, useShape=False, sizeParam=True] # Shape parameter means something different here
         description: "Draw samples from a Gamma distribution.
@@ -98,6 +105,7 @@ Samples are drawn from a Gamma distribution with specified parameters, <b>shape<
 
 random/geometric:
         name: Geometric
+        niceName: Geometric Distribution
         copy: random/beta
         description: "Draw samples from the geometric distribution.
 
@@ -107,6 +115,7 @@ Bernoulli trials are experiments with one of two outcomes: success or failure (a
 
 random/gumbel:
         name: Gumbel
+        niceName: Gumbel Distribution
         copy: random/beta
         description: "Draw samples from a Gumbel distribution.
 
@@ -119,6 +128,7 @@ The Gumbel (or Smallest Extreme Value (SEV) or the Smallest Extreme Value Type I
 
 random/laplace:
         name: Laplace
+        niceName: Laplace Distribution
         copy: random/beta
         description: "Draw samples from the Laplace or double exponential distribution with specified location (or mean) and scale (decay).
 
@@ -129,6 +139,7 @@ The Laplace distribution is similar to the Gaussian/normal distribution, but is 
 
 random/logistic:
         name: Logistic
+        niceName: Logistic Distribution
         copy: random/beta
         description: "Draw samples from a logistic distribution.
 
@@ -139,6 +150,7 @@ The Logistic distribution is used in Extreme Value problems where it can act as 
 
 random/lognormal:
         name: LogNormal
+        niceName: Log-Normal Distribution
         copy: random/beta
         description: "Draw samples from a log-normal distribution with specified mean, standard deviation, and array shape. Note that the mean and standard deviation are not the values for the distribution itself, but of the underlying normal distribution it is derived from.
 
@@ -149,6 +161,7 @@ A variable <b>x</b> has a log-normal distribution if <b>log(x)</b> is normally d
 
 random/logseries:
         name: LogSeries
+        niceName: Logarithmic Series Distribution
         copy: random/beta
         description: "Draw samples from a logarithmic series distribution.
 
@@ -161,6 +174,7 @@ Samples are drawn from a log series distribution with specified shape parameter,
 
 random/negative_binomial:
         name: NegativeBinomial
+        niceName: Negative Binomial Distribution
         copy: random/beta
         description: "Draw samples from a negative binomial distribution.
 
@@ -172,6 +186,7 @@ Samples are drawn from a negative binomial distribution with specified parameter
 # TODO: figure out version-specific boundaries
 random/noncentral_chisquare:
         name: NonCentralChisquare
+        niceName: Noncentral Chi-Square Distribution
         copy: random/beta
         description: "Draw samples from a noncentral chi-square distribution.
 
@@ -183,6 +198,7 @@ The noncentral chi-square distribution is a generalization of the chi-square dis
 # TODO: figure out version-specific boundaries
 random/noncentral_f:
         name: NonCentralF
+        niceName: Noncentral F Distribution
         copy: random/beta
         description: "Draw samples from the noncentral F distribution.
 
@@ -194,6 +210,7 @@ Samples are drawn from an F distribution with specified parameters, <b>dfnum</b>
 
 random/normal:
         name: Normal
+        niceName: Normal Distribution
         copy: random/beta
         description: "Draw random samples from a normal (Gaussian) distribution.
 
@@ -208,6 +225,7 @@ The normal distributions occurs often in nature. For example, it describes the c
 
 random/pareto:
         name: Pareto
+        niceName: Pareto II Distribution
         copy: random/beta
         description: "Draw samples from a Pareto II or Lomax distribution with specified shape.
 
@@ -220,6 +238,7 @@ The Pareto distribution must be greater than zero, and is unbounded above. It is
 # TODO: enforce mu not being within 10 sigma of int64 max?
 random/poisson:
         name: Poisson
+        niceName: Poisson Distribution
         copy: random/beta
         description: "Draw samples from a Poisson distribution.
 
@@ -229,6 +248,7 @@ The Poisson distribution is the limit of the binomial distribution for large <b>
 
 random/power:
         name: Power
+        niceName: Power Distribution
         copy: random/beta
         description: "Draws samples in <b>[0, 1]</b> from a power distribution with positive exponent <b>a - 1</b>.
 
@@ -238,6 +258,7 @@ Also known as the power function distribution."
 
 random/rayleigh:
         name: Rayleigh
+        niceName: Rayleigh Distribution
         copy: random/beta
         description: "Draw samples from a Rayleigh distribution.
 
@@ -247,6 +268,7 @@ The Chi and Weibull distributions are generalizations of the Rayleigh."
 
 random/standard_cauchy:
         name: StandardCauchy
+        niceName: Standard Cauchy Distribution
         copy: random/beta
         subclass: False
         description: "Draw samples from a standard Cauchy distribution with <b>mode = 0</b>.
@@ -265,6 +287,7 @@ When studying hypothesis tests that assume normality, seeing how the tests perfo
 
 random/standard_t:
         name: StandardT
+        niceName: Standard T Distribution
         copy: random/beta
         description: "Draw samples from a standard Student's <b>t</b> distribution with <b>df</b> degrees of freedom.
 
@@ -277,6 +300,7 @@ A special case of the hyperbolic distribution. As <b>df</b> gets large, the resu
 
 random/vonmises:
         name: VonMises
+        niceName: von Mises Distribution
         copy: random/beta
         description: "Draw samples from a von Mises distribution.
 
@@ -289,6 +313,7 @@ The von Mises distribution (also known as the circular normal distribution) is a
 
 random/wald:
         name: Wald
+        niceName: Wald Distribution
         copy: random/beta
         description: "Draw samples from a Wald, or inverse Gaussian, distribution.
 
@@ -299,6 +324,7 @@ As the scale approaches infinity, the distribution becomes more like a Gaussian.
 
 random/weibull:
         name: Weibull
+        niceName: Weibull Distribution
         copy: random/beta
         description: "Draw samples from a Weibull distribution.
 
@@ -310,6 +336,7 @@ The Weibull (or Type III asymptotic extreme value distribution for smallest valu
 
 random/zipf:
         name: Zipf
+        niceName: Zipf Distribution
         copy: random/beta
         description: "Draw samples from a Zipf distribution.
 
