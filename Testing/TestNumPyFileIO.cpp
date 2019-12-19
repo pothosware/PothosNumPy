@@ -219,6 +219,61 @@ static void testNPYIO(const std::string& type)
     }
 }
 
+static void testSaveNPZ(
+    const std::string& filepath,
+    const std::string& key,
+    bool compressed,
+    bool append,
+    const Pothos::BufferChunk& values)
+{
+    const auto& dtype = values.dtype;
+
+    auto numpySaveNpz = Pothos::BlockRegistry::make(
+                            "/numpy/savez",
+                            filepath,
+                            key,
+                            dtype,
+                            compressed,
+                            append);
+    POTHOS_TEST_EQUAL(
+        filepath,
+        numpySaveNpz.call<std::string>("getFilepath"));
+    POTHOS_TEST_EQUAL(
+        key,
+        numpySaveNpz.call<std::string>("getKey"));
+    POTHOS_TEST_EQUAL(
+        compressed,
+        numpySaveNpz.call<bool>("getCompressed"));
+    POTHOS_TEST_EQUAL(
+        append,
+        numpySaveNpz.call<bool>("getAppend"));
+
+    // Note: we need to get the Python class's internal port because the Python
+    // class's dtype() function returns the NumPy dtype.
+    POTHOS_TEST_EQUAL(
+        dtype.name(),
+        numpySaveNpz.call("input", 0).get("_port").call("dtype").call<std::string>("name"));
+
+    auto feederSource = Pothos::BlockRegistry::make(
+                            "/blocks/feeder_source",
+                            dtype);
+    feederSource.call("feedBuffer", values);
+
+    // Execute the topology.
+    {
+        Pothos::Topology topology;
+
+        topology.connect(
+            feederSource, 0,
+            numpySaveNpz, 0);
+
+        topology.commit();
+
+        // When this block exits, the flowgraph will stop.
+        Poco::Thread::sleep(10);
+    }
+}
+
 static void testLoadNPZ(
     const std::string& filepath,
     const std::string& key,
@@ -233,13 +288,15 @@ static void testLoadNPZ(
     POTHOS_TEST_EQUAL(
         filepath,
         numpyLoadNpz.call<std::string>("getFilepath"));
+    POTHOS_TEST_EQUAL(
+        key,
+        numpyLoadNpz.call<std::string>("getKey"));
 
     // Note: we need to get the Python class's internal port because the Python
     // class's dtype() function returns the NumPy dtype.
     POTHOS_TEST_EQUAL(
         dtype.name(),
         numpyLoadNpz.call("output", 0).get("_port").call("dtype").call<std::string>("name"));
-
 
     auto collectorSink = Pothos::BlockRegistry::make(
                              "/blocks/collector_sink",
@@ -264,85 +321,13 @@ static void testLoadNPZ(
         values);
 }
 
-template <typename T>
-static void testLoadNPZ(
-    const std::string& filepath,
-    const std::string& key,
-    const std::vector<T>& values)
-{
-    const Pothos::DType dtype(typeid(T));
-
-    auto numpyLoadNpz = Pothos::BlockRegistry::make(
-                            "/numpy/load_npz",
-                            filepath,
-                            key);
-    POTHOS_TEST_EQUAL(
-        filepath,
-        numpyLoadNpz.call<std::string>("getFilepath"));
-
-    // Note: we need to get the Python class's internal port because the Python
-    // class's dtype() function returns the NumPy dtype.
-    POTHOS_TEST_EQUAL(
-        dtype.name(),
-        numpyLoadNpz.call("output", 0).get("_port").call("dtype").call<std::string>("name"));
-
-
-    auto collectorSink = Pothos::BlockRegistry::make(
-                             "/blocks/collector_sink",
-                             dtype);
-
-    // Execute the topology.
-    {
-        Pothos::Topology topology;
-
-        topology.connect(
-            numpyLoadNpz, 0,
-            collectorSink, 0);
-
-        topology.commit();
-
-        // When this block exits, the flowgraph will stop.
-        Poco::Thread::sleep(10);
-    }
-
-    testBufferChunk<T>(
-        collectorSink.call<Pothos::BufferChunk>("getBuffer"),
-        values,
-        getEpsilon<T>());
-}
-
 static void testNPZIO(bool compressed)
 {
     static constexpr size_t numElements = 256;
 
-    static const std::vector<std::string> dtypeStrings =
-    {
-        "int8", "int16", "int32", "int64",
-        "uint8", "uint16", "uint32", "uint64",
-        "float32", "float64",
-        "complex_float32", "complex_float64"
-    };
-
-    std::unordered_map<std::string, Pothos::DType> dtypeMap;
-    std::unordered_map<std::string, std::string> portNames;
-    std::unordered_map<std::string, Pothos::Proxy> feederSourceMap;
-    std::unordered_map<std::string, Pothos::Proxy> collectorSinkMap;
-
     const std::string blockName = "/numpy/savez";
     std::cout << "Testing " << blockName << " (" << (compressed ? "compressed" : "uncompressed") << ")" << std::endl;
-
-    //
-    // Write known values to the .NPZ file.
-    //
-
     const std::string filepath = getTemporaryTestFile(".npz");
-    auto numpySaveZ = Pothos::BlockRegistry::make(
-                          blockName,
-                          filepath,
-                          compressed);
-    POTHOS_TEST_EQUAL(
-        filepath,
-        numpySaveZ.call<std::string>("getFilepath"));
 
     auto int8Input = getRandomInputs("int8", numElements);
     auto int16Input = getRandomInputs("int16", numElements);
@@ -357,60 +342,21 @@ static void testNPZIO(bool compressed)
     auto complexFloatInput = getRandomInputs("complex_float32", numElements);
     auto complexDoubleInput = getRandomInputs("complex_float64", numElements);
 
-    for(const std::string& dtypeString: dtypeStrings)
-    {
-        dtypeMap.emplace(
-            dtypeString,
-            Pothos::DType(dtypeString));
-        portNames.emplace(
-            dtypeString,
-            "port_"+dtypeString);
-        feederSourceMap.emplace(
-            dtypeString,
-            Pothos::BlockRegistry::make(
-                "/blocks/feeder_source",
-                dtypeMap[dtypeString]));
-        collectorSinkMap.emplace(
-            dtypeString,
-            Pothos::BlockRegistry::make(
-                "/blocks/collector_sink",
-                dtypeMap[dtypeString]));
-
-        numpySaveZ.call(
-            "addChannel",
-            dtypeMap[dtypeString],
-            portNames[dtypeString]);
-    }
-
-    feederSourceMap["int8"].call("feedBuffer", int8Input);
-    feederSourceMap["int16"].call("feedBuffer", int16Input);
-    feederSourceMap["int32"].call("feedBuffer", int32Input);
-    feederSourceMap["int64"].call("feedBuffer", int64Input);
-    feederSourceMap["uint8"].call("feedBuffer", uint8Input);
-    feederSourceMap["uint16"].call("feedBuffer", uint16Input);
-    feederSourceMap["uint32"].call("feedBuffer", uint32Input);
-    feederSourceMap["uint64"].call("feedBuffer", uint64Input);
-    feederSourceMap["float32"].call("feedBuffer", floatInput);
-    feederSourceMap["float64"].call("feedBuffer", doubleInput);
-    feederSourceMap["complex_float32"].call("feedBuffer", complexFloatInput);
-    feederSourceMap["complex_float64"].call("feedBuffer", complexDoubleInput);
-
-    // Execute the topology.
-    {
-        Pothos::Topology topology;
-
-        for(const std::string& dtypeString: dtypeStrings)
-        {
-            topology.connect(
-                feederSourceMap[dtypeString], 0,
-                numpySaveZ, portNames[dtypeString]);
-        }
-
-        topology.commit();
-
-        // When this block exits, the flowgraph will stop.
-        Poco::Thread::sleep(10);
-    }
+    //
+    // Save generated files to the .NPZ file.
+    //
+    testSaveNPZ(filepath, "port_int8", compressed, false /*append*/, int8Input);
+    testSaveNPZ(filepath, "port_int16", compressed, false /*append*/, int16Input);
+    testSaveNPZ(filepath, "port_int32", compressed, false /*append*/, int32Input);
+    testSaveNPZ(filepath, "port_int64", compressed, false /*append*/, int64Input);
+    testSaveNPZ(filepath, "port_uint8", compressed, false /*append*/, uint8Input);
+    testSaveNPZ(filepath, "port_uint16", compressed, false /*append*/, uint16Input);
+    testSaveNPZ(filepath, "port_uint32", compressed, false /*append*/, uint32Input);
+    testSaveNPZ(filepath, "port_uint64", compressed, false /*append*/, uint64Input);
+    testSaveNPZ(filepath, "port_float32", compressed, false /*append*/, floatInput);
+    testSaveNPZ(filepath, "port_float64", compressed, false /*append*/, doubleInput);
+    testSaveNPZ(filepath, "port_complex_float32", compressed, false /*append*/, complexFloatInput);
+    testSaveNPZ(filepath, "port_complex_float64", compressed, false /*append*/, complexDoubleInput);
 
     POTHOS_TEST_TRUE(Poco::File(filepath).exists());
 

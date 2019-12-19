@@ -106,3 +106,8 @@ class LoadNpz(LoadBaseBlock):
 
         self.data = npzContents[key]
         self.setupOutputFromDataDType()
+
+        self.__key = key
+
+    def getKey(self):
+        return self.__key
