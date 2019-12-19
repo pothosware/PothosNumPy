@@ -86,7 +86,6 @@ BUILD_PYTHON_MODULE(
         Python/Random.py
         Python/RegisteredCallHelpers.py
         Python/Save.py
-        Python/SaveZ.py
         Python/Source.py
         Python/TwoToOneBlock.py
         Python/Utility.py
@@ -108,6 +107,5 @@ BUILD_PYTHON_MODULE(
         Python/FFT.py
         Python/Load.py
         Python/Save.py
-        Python/SaveZ.py
 )
 add_dependencies(NumPyBlocks autogen_files)

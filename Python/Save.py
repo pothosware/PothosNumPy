@@ -17,7 +17,7 @@ import os
  *
  * Corresponding NumPy function: numpy.save
  *
- * |category /NumPy/Sinks
+ * |category /NumPy/File IO
  * |keywords save numpy binary file IO
  * |factory /numpy/save_npy(filepath,dtype)
  *
@@ -41,7 +41,7 @@ class SaveNpy(BaseBlock):
             dtype = Utility.DType(dtype)
 
         dtypeArgs = dict(supportAll=True)
-        BaseBlock.__init__(self, "/numpy/save", numpy.save, dtype, None, dtypeArgs, None, list(), dict())
+        BaseBlock.__init__(self, "/numpy/save_npy", numpy.save, dtype, None, dtypeArgs, None, list(), dict())
 
         if "int64" in dtype.toString():
             self.logger.warning(
@@ -74,3 +74,107 @@ class SaveNpy(BaseBlock):
 
         self.__buffer = numpy.concatenate([self.__buffer, in0])
         self.input(0).consume(n)
+
+"""
+/*
+ * |PothosDoc Save .npz
+ *
+ * Corresponding NumPy functions: numpy.savez, numpy.savez_compressed
+ *
+ * |category /NumPy/File IO
+ * |keywords save numpy binary file IO
+ * |factory /numpy/save_npz(filepath,key,dtype,compressed,append)
+ *
+ * |param filepath(File path)
+ * |widget FileEntry(mode=save)
+ * |default ""
+ * |preview enable
+ *
+ * |param key(Key)
+ * |widget StringEntry()
+ * |preview enable
+ *
+ * |param dtype(Data Type) The block data type.
+ * |widget DTypeChooser(int=1,uint=1,float=1,cfloat=1)
+ * |default "float64"
+ * |preview enable
+ *
+ * |param compressed(Compressed?)
+ * |default false
+ * |widget ToggleSwitch(on="True",off="False")
+ * |preview enable
+ *
+ * |param append(Append?)
+ * |default false
+ * |widget ToggleSwitch(on="True",off="False")
+ * |preview enable
+ */
+"""
+class SaveZBlock(BaseBlock):
+    def __init__(self, func, dtype, filepath, key, compressed, append):
+        if os.path.splitext(filepath)[1] != ".npz":
+            raise RuntimeError("Only .npz files are supported.")
+
+        if type(dtype) is str:
+            dtype = Utility.DType(dtype)
+
+        if type(key) is not str:
+            raise ValueError("Key must be a string. Got {0}".format(type(key)))
+
+        dtypeArgs = dict(supportAll=True)
+        BaseBlock.__init__(self, "/numpy/save_npz", func, dtype, None, dtypeArgs, None, list(), dict())
+
+        self.__buffers = dict()
+        if os.path.exists(filepath):
+            self.__buffers = dict(numpy.load(filepath))
+
+        self.__filepath = filepath
+        self.__key = key
+        self.__compressed = compressed
+        self.__append = append
+        self.__buffer = numpy.array([], dtype=self.numpyInputDType)
+        self.__allKeys = list(self.__buffers.keys())
+
+        self.setupInput("0", dtype)
+
+    def deactivate(self):
+        # The .npz file format is intended to take a single array write,
+        # so to do this, we'll just accumulate what the previous block has
+        # provided and write at the end of the topology.
+        if len(self.__buffer) > 0:
+            if (self.__key in self.__buffers) and self.__append:
+                self.__buffers[self.__key] = numpy.concatenate([self.__buffers[self.__key], self.__buffer])
+            else:
+                self.__buffers[self.__key] = self.__buffer
+
+            self.func(self.__filepath, **self.__buffers)
+            os.sync()
+
+    def getFilepath(self):
+        return self.__filepath
+
+    def getKey(self):
+        return self.__key
+
+    def getCompressed(self):
+        return self.__compressed
+
+    def getAppend(self):
+        return self.__append
+
+    def getAllKeys(self):
+        return self.__allKeys
+
+    def work(self):
+        in0 = self.input(0).buffer()
+        n = len(in0)
+
+        if 0 == n:
+            return
+
+        self.__buffer = numpy.concatenate([self.__buffer, in0])
+        self.input(0).consume(n)
+
+def SaveNpz(filepath, key, dtype, compressed, append):
+    func = numpy.savez_compressed if compressed else numpy.savez
+    return SaveZBlock(func, dtype, filepath, key, compressed, append)

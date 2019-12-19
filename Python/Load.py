@@ -56,7 +56,7 @@ class LoadBaseBlock(BaseBlock):
  *
  * Corresponding NumPy function: numpy.load (with .npy extension)
  *
- * |category /NumPy/Sources
+ * |category /NumPy/File IO
  * |keywords load numpy binary file IO
  * |factory /numpy/load_npy(filepath)
  *
@@ -80,7 +80,7 @@ class LoadNpy(LoadBaseBlock):
  *
  * Corresponding NumPy function: numpy.load (with .npz extension)
  *
- * |category /NumPy/Sources
+ * |category /NumPy/File IO
  * |keywords load numpy binary file IO
  * |factory /numpy/load_npz(filepath,key)
  *
