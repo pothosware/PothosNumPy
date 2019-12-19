@@ -101,6 +101,8 @@ class LoadNpz(LoadBaseBlock):
 
         # Note: "with numpy.load... as" only works in NumPy 1.15 and up
         npzContents = numpy.load(filepath, "r")
+        self.__allKeys = list(dict(npzContents).keys())
+
         if key not in npzContents:
             raise KeyError('Could not find key "{0}".'.format(key))
 
@@ -111,3 +113,6 @@ class LoadNpz(LoadBaseBlock):
 
     def getKey(self):
         return self.__key
+
+    def getAllKeys(self):
+        return self.__allKeys

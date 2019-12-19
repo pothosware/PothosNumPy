@@ -248,6 +248,12 @@ static void testSaveNPZ(
         append,
         numpySaveNpz.call<bool>("getAppend"));
 
+    if(append)
+    {
+        const auto allKeys = numpySaveNpz.call<std::vector<std::string>>("getAllKeys");
+        POTHOS_TEST_TRUE(allKeys.end() != std::find(allKeys.begin(), allKeys.end(), key));
+    }
+
     // Note: we need to get the Python class's internal port because the Python
     // class's dtype() function returns the NumPy dtype.
     POTHOS_TEST_EQUAL(
@@ -325,72 +331,126 @@ static void testNPZIO(bool compressed)
 {
     static constexpr size_t numElements = 256;
 
+    static constexpr size_t minSize = (numElements * sizeof(std::int8_t))
+                                    + (numElements * sizeof(std::int16_t))
+                                    + (numElements * sizeof(std::int32_t))
+                                    + (numElements * sizeof(std::uint8_t))
+                                    + (numElements * sizeof(std::uint16_t))
+                                    + (numElements * sizeof(std::uint32_t))
+                                    + (numElements * sizeof(float))
+                                    + (numElements * sizeof(double))
+                                    + (numElements * sizeof(std::complex<float>))
+                                    + (numElements * sizeof(std::complex<double>));
+
     const std::string blockName = "/numpy/savez";
     std::cout << "Testing " << blockName << " (" << (compressed ? "compressed" : "uncompressed") << ")" << std::endl;
     const std::string filepath = getTemporaryTestFile(".npz");
 
-    auto int8Input = getRandomInputs("int8", numElements);
-    auto int16Input = getRandomInputs("int16", numElements);
-    auto int32Input = getRandomInputs("int32", numElements);
-    auto int64Input = getRandomInputs("int64", numElements);
-    auto uint8Input = getRandomInputs("uint8", numElements);
-    auto uint16Input = getRandomInputs("uint16", numElements);
-    auto uint32Input = getRandomInputs("uint32", numElements);
-    auto uint64Input = getRandomInputs("uint64", numElements);
-    auto floatInput = getRandomInputs("float32", numElements);
-    auto doubleInput = getRandomInputs("float64", numElements);
-    auto complexFloatInput = getRandomInputs("complex_float32", numElements);
-    auto complexDoubleInput = getRandomInputs("complex_float64", numElements);
+    std::unordered_map<std::string, Pothos::BufferChunk> testInputs;
 
     //
-    // Save generated files to the .NPZ file.
+    // Generate our inputs.
     //
-    testSaveNPZ(filepath, "port_int8", compressed, false /*append*/, int8Input);
-    testSaveNPZ(filepath, "port_int16", compressed, false /*append*/, int16Input);
-    testSaveNPZ(filepath, "port_int32", compressed, false /*append*/, int32Input);
-    testSaveNPZ(filepath, "port_int64", compressed, false /*append*/, int64Input);
-    testSaveNPZ(filepath, "port_uint8", compressed, false /*append*/, uint8Input);
-    testSaveNPZ(filepath, "port_uint16", compressed, false /*append*/, uint16Input);
-    testSaveNPZ(filepath, "port_uint32", compressed, false /*append*/, uint32Input);
-    testSaveNPZ(filepath, "port_uint64", compressed, false /*append*/, uint64Input);
-    testSaveNPZ(filepath, "port_float32", compressed, false /*append*/, floatInput);
-    testSaveNPZ(filepath, "port_float64", compressed, false /*append*/, doubleInput);
-    testSaveNPZ(filepath, "port_complex_float32", compressed, false /*append*/, complexFloatInput);
-    testSaveNPZ(filepath, "port_complex_float64", compressed, false /*append*/, complexDoubleInput);
-
-    POTHOS_TEST_TRUE(Poco::File(filepath).exists());
-
-    // Since every channel should have written
-    if(!compressed)
+    const std::vector<std::string> typeNames =
     {
-        static constexpr size_t minSize = (numElements * sizeof(std::int8_t))
-                                        + (numElements * sizeof(std::int16_t))
-                                        + (numElements * sizeof(std::int32_t))
-                                        + (numElements * sizeof(std::uint8_t))
-                                        + (numElements * sizeof(std::uint16_t))
-                                        + (numElements * sizeof(std::uint32_t))
-                                        + (numElements * sizeof(float))
-                                        + (numElements * sizeof(double))
-                                        + (numElements * sizeof(std::complex<float>))
-                                        + (numElements * sizeof(std::complex<double>));
-        POTHOS_TEST_TRUE(Poco::File(filepath).getSize() >= minSize);
+        "int8", "int16", "int32", "int64",
+        "uint8", "uint16", "uint32", "uint64",
+        "float32", "float64", "complex_float32", "complex_float64"
+    };
+    for(const std::string& type: typeNames)
+    {
+        testInputs.emplace(
+            type,
+            getRandomInputs(type, numElements));
+    }
+
+    for(size_t i = 0; i < 2; ++i)
+    {
+        //
+        // Save generated files to the .NPZ file.
+        //
+        for(const auto& mapPair: testInputs)
+        {
+            const auto& typeName = mapPair.first;
+            const auto& inputs = mapPair.second;
+
+            const std::string key = "port_" + typeName;
+
+            testSaveNPZ(
+                filepath,
+                key,
+                compressed,
+                false /*append*/,
+                inputs);
+        }
+
+        POTHOS_TEST_TRUE(Poco::File(filepath).exists());
+
+        // Since every channel should have written
+        if(!compressed)
+        {
+            POTHOS_TEST_TRUE(Poco::File(filepath).getSize() >= minSize);
+        }
+
+        //
+        // Read from the .NPZ file and check the file contents. Since we're not
+        // appending, this should always equal the same values.
+        //
+        for(const auto& mapPair: testInputs)
+        {
+            const auto& typeName = mapPair.first;
+            const auto& inputs = mapPair.second;
+
+            const std::string key = "port_" + typeName;
+
+            testLoadNPZ(
+                filepath,
+                key,
+                inputs);
+        }
     }
 
     //
-    // Read from the .NPZ file and check the file contents.
+    // Do all this again, but this time, append the values.
     //
-    testLoadNPZ(filepath, "port_int8", int8Input);
-    testLoadNPZ(filepath, "port_int16", int16Input);
-    testLoadNPZ(filepath, "port_int32", int32Input);
-    testLoadNPZ(filepath, "port_int64", int64Input);
-    testLoadNPZ(filepath, "port_uint8", uint8Input);
-    testLoadNPZ(filepath, "port_uint16", uint16Input);
-    testLoadNPZ(filepath, "port_uint32", uint32Input);
-    testLoadNPZ(filepath, "port_uint64", uint64Input);
-    testLoadNPZ(filepath, "port_float32", floatInput);
-    testLoadNPZ(filepath, "port_float64", doubleInput);
-    testLoadNPZ(filepath, "port_complex_float32", complexFloatInput);
-    testLoadNPZ(filepath, "port_complex_float64", complexDoubleInput);
+    for(const auto& mapPair: testInputs)
+    {
+        const auto& typeName = mapPair.first;
+        const auto& inputs = mapPair.second;
+
+        const std::string key = "port_" + typeName;
+
+        testSaveNPZ(
+            filepath,
+            key,
+            compressed,
+            true /*append*/,
+            inputs);
+    }
+
+    // Since every channel should have written again
+    if(!compressed)
+    {
+        POTHOS_TEST_TRUE(Poco::File(filepath).getSize() >= (minSize*2));
+    }
+
+    //
+    // Read from the .NPZ file and check the file contents. Since we've appended,
+    // check for appended inputs.
+    //
+    for(const auto& mapPair: testInputs)
+    {
+        const auto& typeName = mapPair.first;
+        const std::string key = "port_" + typeName;
+
+        auto inputs = mapPair.second;
+        inputs.append(inputs);
+
+        testLoadNPZ(
+            filepath,
+            key,
+            inputs);
+    }
 }
 
 //

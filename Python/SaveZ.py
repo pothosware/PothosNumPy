@@ -33,6 +33,7 @@ class SaveZBlock(BaseBlock):
         self.__compressed = compressed
         self.__append = append
         self.__buffer = numpy.array([], dtype=self.numpyInputDType)
+        self.__allKeys = list(self.__buffers.keys())
 
         self.setupInput("0", dtype)
 
@@ -60,6 +61,9 @@ class SaveZBlock(BaseBlock):
 
     def getAppend(self):
         return self.__append
+
+    def getAllKeys(self):
+        return self.__allKeys
 
     def work(self):
         in0 = self.input(0).buffer()
