@@ -30,6 +30,7 @@ static std::string getTemporaryTestFile(const std::string& extension)
 {
     Poco::Path tempTestFile(Poco::Path::forDirectory(Poco::Path::temp()));
     tempTestFile.setBaseName(std::to_string(Poco::Timestamp().utcTime()) + extension);
+    Poco::TemporaryFile::registerForDeletion(tempTestFile.toString());
 
     return tempTestFile.toString();
 }
@@ -40,6 +41,7 @@ static std::string getTemporaryTestFile(
 {
     Poco::Path tempTestFile(Poco::Path::forDirectory(Poco::Path::temp()));
     tempTestFile.setBaseName(dtype.toString() + "_" + std::to_string(Poco::Timestamp().utcTime()) + extension);
+    Poco::TemporaryFile::registerForDeletion(tempTestFile.toString());
 
     return tempTestFile.toString();
 }
@@ -342,7 +344,7 @@ static void testNPZIO(bool compressed)
                                     + (numElements * sizeof(std::complex<float>))
                                     + (numElements * sizeof(std::complex<double>));
 
-    const std::string blockName = "/numpy/savez";
+    const std::string blockName = "/numpy/save_npz";
     std::cout << "Testing " << blockName << " (" << (compressed ? "compressed" : "uncompressed") << ")" << std::endl;
     const std::string filepath = getTemporaryTestFile(".npz");
 
