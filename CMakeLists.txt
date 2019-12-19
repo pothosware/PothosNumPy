@@ -107,5 +107,7 @@ BUILD_PYTHON_MODULE(
         ${autogenOutputs}
         Python/FFT.py
         Python/Load.py
+        Python/Save.py
+        Python/SaveZ.py
 )
 add_dependencies(NumPyBlocks autogen_files)

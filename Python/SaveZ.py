@@ -10,6 +10,41 @@ import Pothos
 import numpy
 import os
 
+"""
+/*
+ * |PothosDoc Save .npz
+ *
+ * Corresponding NumPy functions: numpy.savez, numpy.savez_compressed
+ *
+ * |category /NumPy/Sinks
+ * |keywords save numpy binary file IO
+ * |factory /numpy/save_npz(filepath,key,dtype,compressed,append)
+ *
+ * |param filepath(File path)
+ * |widget FileEntry(mode=save)
+ * |default ""
+ * |preview enable
+ *
+ * |param key(Key)
+ * |widget StringEntry()
+ * |preview enable
+ *
+ * |param dtype(Data Type) The block data type.
+ * |widget DTypeChooser(int=1,uint=1,float=1,cfloat=1)
+ * |default "float64"
+ * |preview enable
+ *
+ * |param compressed(Compressed?)
+ * |default false
+ * |widget ToggleSwitch(on="True",off="False")
+ * |preview enable
+ *
+ * |param append(Append?)
+ * |default false
+ * |widget ToggleSwitch(on="True",off="False")
+ * |preview enable
+ */
+"""
 class SaveZBlock(BaseBlock):
     def __init__(self, func, dtype, filepath, key, compressed, append):
         if os.path.splitext(filepath)[1] != ".npz":
@@ -75,6 +110,6 @@ class SaveZBlock(BaseBlock):
         self.__buffer = numpy.concatenate([self.__buffer, in0])
         self.input(0).consume(n)
 
-def SaveZ(filepath, key, dtype, compressed, append):
+def SaveNpz(filepath, key, dtype, compressed, append):
     func = numpy.savez_compressed if compressed else numpy.savez
     return SaveZBlock(func, dtype, filepath, key, compressed, append)

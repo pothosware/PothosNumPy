@@ -10,8 +10,30 @@ import Pothos
 import numpy
 import os
 
-class Save(BaseBlock):
-    def __init__(self, dtype, filepath):
+# TODO: add appending
+"""
+/*
+ * |PothosDoc Save .npy
+ *
+ * Corresponding NumPy function: numpy.save
+ *
+ * |category /NumPy/Sinks
+ * |keywords save numpy binary file IO
+ * |factory /numpy/save_npy(filepath,dtype)
+ *
+ * |param filepath(File path)
+ * |widget FileEntry(mode=save)
+ * |default ""
+ * |preview enable
+ *
+ * |param dtype(Data Type) The block data type.
+ * |widget DTypeChooser(int=1,uint=1,float=1,cfloat=1)
+ * |default "float64"
+ * |preview enable
+ */
+"""
+class SaveNpy(BaseBlock):
+    def __init__(self, filepath, dtype):
         if os.path.splitext(filepath)[1] != ".npy":
             raise RuntimeError("Only .npy files are supported.")
 

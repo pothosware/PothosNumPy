@@ -149,9 +149,9 @@ static void testNPYIO(const std::string& type)
     feederSource.call("feedBuffer", randomInputs);
 
     auto numpySave = Pothos::BlockRegistry::make(
-                         "/numpy/save",
-                         dtype,
-                         filepath);
+                         "/numpy/save_npy",
+                         filepath,
+                         dtype);
     POTHOS_TEST_EQUAL(
         filepath,
         numpySave.call<std::string>("getFilepath"));
@@ -229,7 +229,7 @@ static void testSaveNPZ(
     const auto& dtype = values.dtype;
 
     auto numpySaveNpz = Pothos::BlockRegistry::make(
-                            "/numpy/savez",
+                            "/numpy/save_npz",
                             filepath,
                             key,
                             dtype,
