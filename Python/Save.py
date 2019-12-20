@@ -75,6 +75,7 @@ class SaveNpy(BaseBlock):
         self.__buffer = numpy.concatenate([self.__buffer, in0])
         self.input(0).consume(n)
 
+# TODO: overlay
 """
 /*
  * |PothosDoc Save .npz
