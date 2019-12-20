@@ -28,7 +28,7 @@
  * |default "${makoVars["outputDTypeDefault"]}"
  * |preview enable
     %elif param == "inputDType":
- * |param outputDType(Data Type) The input data type.
+ * |param inputDType(Data Type) The input data type.
  * |widget DTypeChooser(${makoVars["inputDTypeChooser"]})
  * |default "${makoVars["inputDTypeDefault"]}"
  * |preview enable

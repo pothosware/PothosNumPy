@@ -104,7 +104,9 @@ def blockTypeToDTypeChooser(blockTypeYAML):
 def blockTypeToDTypeDefault(blockTypeYAML):
     dtypeChooser = blockTypeToDTypeChooser(blockTypeYAML)
 
-    if "float" in dtypeChooser:
+    if dtypeChooser == "cfloat=1":
+        defaultType = "complex_float64"
+    elif "float" in dtypeChooser:
         defaultType = "float64"
     else:
         defaultType = dtypeChooser.split(",")[0].replace("complex", "complex_float").split("=")[0] + "64"
