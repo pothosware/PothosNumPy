@@ -20,6 +20,7 @@ imag:
 
 conjugate:
         name: Conjugate
+        niceName: Complex Conjugate
         categories: ["/NumPy/Complex"]
         class: OneToOneBlock
         blockType: [complex]

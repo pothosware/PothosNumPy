@@ -92,6 +92,7 @@ class SaveNpy(BaseBlock):
  *
  * |param key(Key)
  * |widget StringEntry()
+ * |default "key"
  * |preview enable
  *
  * |param dtype(Data Type) The block data type.

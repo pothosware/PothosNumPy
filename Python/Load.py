@@ -91,6 +91,7 @@ class LoadNpy(LoadBaseBlock):
  *
  * |param key(Key)
  * |widget StringEntry()
+ * |default "key"
  * |preview enable
  */
 """

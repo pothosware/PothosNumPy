@@ -198,7 +198,7 @@ The noncentral chi-square distribution is a generalization of the chi-square dis
 # TODO: figure out version-specific boundaries
 random/noncentral_f:
         name: NonCentralF
-        niceName: Noncentral F Distribution
+        niceName: Noncentral F-Distribution
         copy: random/beta
         description: "Draw samples from the noncentral F distribution.
 

@@ -39,8 +39,8 @@
  * |preview enable
     %elif param == "nchans":
  * |param nchans(Num Channels)
- * |default 1
- * |widget SpinBox(minimum=1)
+ * |default 2
+ * |widget SpinBox(minimum=2)
  * |preview disable
     %elif param == "repeat":
  * |param repeat(Repeat?)
