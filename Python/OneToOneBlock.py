@@ -36,8 +36,9 @@ class OneToOneBlock(BaseBlock):
         in0 = self.input(0).buffer()
         out = self.func(in0, *self.funcArgs, **self.funcKWargs).astype(self.numpyOutputDType, copy=False)
 
-        self.input(0).consume(elems)
-        self.output(0).postBuffer(out)
+        if (out is not None) and (len(out) > 0):
+            self.input(0).consume(elems)
+            self.output(0).postBuffer(out)
 
     def workWithGivenOutputBuffer(self):
         elems = self.workInfo().minAllInElements
@@ -47,8 +48,11 @@ class OneToOneBlock(BaseBlock):
         in0 = self.input(0).buffer()
         out0 = self.output(0).buffer()
         N = min(len(in0), len(out0))
+        out = None
 
-        out0[:N] = self.func(in0, *self.funcArgs, **self.funcKWargs).astype(self.numpyOutputDType, copy=False)
+        out = self.func(in0, *self.funcArgs, **self.funcKWargs).astype(self.numpyOutputDType, copy=False)
 
-        self.input(0).consume(elems)
-        self.output(0).produce(elems)
+        if (out is not None) and (len(out) > 0):
+            out0[:N] = out
+            self.input(0).consume(elems)
+            self.output(0).produce(elems)

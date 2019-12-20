@@ -36,18 +36,19 @@ class TwoToOneBlock(BaseBlock):
 
         in0 = self.input(0).buffer()
         in1 = self.input(1).buffer()
-        out = None
 
         N = min(len(in0), len(in1))
+        out = None
 
         if self.useDType:
             out = self.func(in0[:N], in1[:N], *self.funcArgs, dtype=self.numpyInputDType)
         else:
             out = self.func(in0[:N], in1[:N], *self.funcArgs).astype(self.numpyOutputDType)
 
-        self.input(0).consume(elems)
-        self.input(1).consume(elems)
-        self.output(0).postBuffer(out)
+        if (out is not None) and (len(out) > 0):
+            self.input(0).consume(elems)
+            self.input(1).consume(elems)
+            self.output(0).postBuffer(out)
 
     def workWithGivenOutputBuffer(self):
         elems = self.workInfo().minAllElements
@@ -59,12 +60,16 @@ class TwoToOneBlock(BaseBlock):
         out0 = self.output(0).buffer()
 
         N = min(len(in0), len(in1), len(out0))
+        out = None
 
         if self.useDType:
-            out0[:N] = self.func(in0[:N], in1[:N], *self.funcArgs, dtype=self.numpyInputDType)
+            out = self.func(in0[:N], in1[:N], *self.funcArgs, dtype=self.numpyInputDType)
         else:
-            out0[:N] = self.func(in0[:N], in1[:N], *self.funcArgs)
+            out = self.func(in0[:N], in1[:N], *self.funcArgs)
 
-        self.input(0).consume(elems)
-        self.input(1).consume(elems)
-        self.output(0).produce(elems)
+        if (out is not None) and (len(out) > 0):
+            out0[:N] = out
+
+            self.input(0).consume(elems)
+            self.input(1).consume(elems)
+            self.output(0).produce(elems)

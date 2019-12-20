@@ -54,6 +54,7 @@ class NToOneBlock(BaseBlock):
         # This creates a 2D ndarray containing the array subsets we're interested
         # in. This points to the input buffers themselves without copying memory.
         allArrs = numpy.array([buf.buffer()[:elems].view() for buf in self.inputs()], dtype=self.numpyInputDType)
+        out = None
 
         # TODO: what happens if a function doesn't take in *args or **kwargs?
         if self.callReduce:
@@ -61,9 +62,10 @@ class NToOneBlock(BaseBlock):
         else:
             out = self.func(allArrs, *self.funcArgs, **self.funcKWargs)
 
-        for port in self.inputs():
-            port.consume(elems)
-        self.output(0).postBuffer(out)
+        if (out is not None) and (len(out) > 0):
+            for port in self.inputs():
+                port.consume(elems)
+            self.output(0).postBuffer(out)
 
     def workWithGivenOutputBuffer(self):
         elems = self.workInfo().minAllElements
@@ -74,13 +76,17 @@ class NToOneBlock(BaseBlock):
         # in. This points to the input buffers themselves without copying memory.
         allArrs = numpy.array([buf.buffer()[:elems].view() for buf in self.inputs()], dtype=self.numpyInputDType)
         out0 = self.output(0).buffer()
+        out = None
 
         # TODO: what happens if a function doesn't take in *args or **kwargs?
         if self.callReduce:
-            out0[:elems] = functools.reduce(self.func, allArrs, *self.funcArgs)
+            out = functools.reduce(self.func, allArrs, *self.funcArgs)
         else:
-            out0[:elems] = self.func(allArrs, *self.funcArgs, **self.funcKWargs)
+            out = self.func(allArrs, *self.funcArgs, **self.funcKWargs)
 
-        for port in self.inputs():
-            port.consume(elems)
-        self.output(0).produce(elems)
+        if (out is not None) and (len(out) > 0):
+            for port in self.inputs():
+                port.consume(elems)
+
+            out0[:elems] = out
+            self.output(0).produce(elems)
