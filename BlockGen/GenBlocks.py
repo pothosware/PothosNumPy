@@ -197,12 +197,12 @@ def generatePythonEntryPoint(func,yaml):
                     if ">=" in arg:
                         arg["widgetArgs"] += ["minimum={0}".format(arg[">="])]
                     elif ">" in arg:
-                        diff = 1 if (arg["widget"] == "SpinBox") else 0.1
+                        diff = 1 if (arg["widget"] == "SpinBox") else 0.01
                         arg["widgetArgs"] += ["minimum={0}".format(arg[">"]+diff)]
                     if "<=" in arg:
                         arg["widgetArgs"] += ["maximum={0}".format(arg["<="])]
                     elif "<" in arg:
-                        diff = 1 if (arg["widget"] == "SpinBox") else 0.1
+                        diff = 1 if (arg["widget"] == "SpinBox") else 0.01
                         arg["widgetArgs"] += ["maximum={0}".format(arg[">"]+diff)]
                 arg["widgetArgs"] = ",".join(arg["widgetArgs"])
         makoVars["funcArgsList"] = ["self.{0}".format(arg["privateVar"]) for arg in yaml["funcArgs"]]
