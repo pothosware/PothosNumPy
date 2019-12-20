@@ -74,7 +74,7 @@
             %else:
  * |default ${arg.get("default", 0)}
             %endif
- * |preview valid
+ * |preview enable
         %endfor
     %endif
 %endfor

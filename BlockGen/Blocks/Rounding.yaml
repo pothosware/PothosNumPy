@@ -42,7 +42,8 @@ The truncated value of the scalar <b>x</b> is the nearest integer <b>i</b> which
 
 around:
         copy: ceil
-        name: Round
+        name: ARound
+        niceName: Decimal Round
         subclass: True
         alias: [round_]
         kwargs: [useDType=False]
@@ -50,4 +51,4 @@ around:
 
 For values exactly halfway between rounded decimal values, NumPy rounds to the nearest even value. Thus 1.5 and 2.5 round to 2.0, -0.5 and 0.5 round to 0.0, etc."
         funcArgs:
-                - {name: decimals, dtype: uint, testValue1: 3, testValue2: 1}
+                - {name: decimals, dtype: uint, default: 3, testValue1: 3, testValue2: 1}
