@@ -66,6 +66,46 @@ class WindowBlock(OneToOneBlock):
         in0 = in0 * window
         self.output(0).postBuffer(in0)
 
-# Factory
+"""
+/*
+ * |PothosDoc Window
+ *
+ * Corresponding NumPy functions:
+ * <ol>
+ * <li>numpy.bartlett</li>
+ * <li>numpy.blackman</li>
+ * <li>numpy.hamming</li>
+ * <li>numpy.hanning</li>
+ * <li>numpy.kaiser</li>
+ * </ol>
+ *
+ * |category /NumPy/Filter
+ * |keywords numpy filter window bartlett blackman hamming hanning kaiser
+ * |factory /numpy/window(dtype,windowType)
+ *
+ * |param dtype(Data Type) The block data type.
+ * |widget DTypeChooser(float=1,cfloat=1)
+ * |default "float64"
+ * |preview enable
+ *
+ * |param windowType(Window Type)
+ * |widget ComboBox(editable=False)
+ * |default "BARTLETT"
+ * |option [Bartlett] "BARTLETT"
+ * |option [Blackman] "BLACKMAN"
+ * |option [Hamming] "HAMMING"
+ * |option [Hanning] "HANNING"
+ * |option [Kaiser] "KAISER"
+ * |preview enable
+ *
+ * |param beta(Beta)
+ * |widget DoubleSpinBox()
+ * |default 0.0
+ * |preview when(enum=windowType, "KAISER")
+ *
+ * |setter setWindowType(windowType)
+ * |setter setKaiserBeta(beta)
+ */
+"""
 def Window(dtype, windowType):
     return WindowBlock(dtype, windowType)
