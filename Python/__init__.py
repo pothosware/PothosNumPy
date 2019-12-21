@@ -8,3 +8,4 @@ from .Random import *
 from .RegisteredCallHelpers import *
 from .Save import *
 from .Utility import *
+from .Window import *

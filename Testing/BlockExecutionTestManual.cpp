@@ -97,6 +97,49 @@ static void testSpaceBlockExecution(
         numValues);
 }
 
+template <typename T>
+static void testWindow()
+{
+    const Pothos::DType dtype(typeid(T));
+    const std::string blockRegistryPath = "/numpy/window";
+
+    static const double DefaultKaiserBeta = 0.0;
+    static const double TestKaiserBeta = 8.6; // Similar to Blackman
+
+    static const std::vector<std::string> Windows =
+    {
+        "BARTLETT",
+        "BLACKMAN",
+        "HAMMING",
+        "HANNING",
+        "KAISER"
+    };
+    for(const auto& window: Windows)
+    {
+        std::cout << blockRegistryPath << "(" << dtype.toString() << "," << window << ")" << std::endl;
+        auto windowBlock = Pothos::BlockRegistry::make(
+                               blockRegistryPath,
+                               dtype,
+                               window);
+        testEqual(
+            window,
+            windowBlock.call<std::string>("getWindowType"));
+        testEqual(
+            DefaultKaiserBeta,
+            windowBlock.call<double>("getKaiserBeta"));
+
+        if(window == "KAISER")
+        {
+            windowBlock.call("setKaiserBeta", TestKaiserBeta);
+            testEqual(
+                TestKaiserBeta,
+                windowBlock.call<double>("getKaiserBeta"));
+        }
+
+        testBlockExecutionCommon(windowBlock);
+    }
+}
+
 //
 // Type-specific functions
 //
@@ -142,11 +185,13 @@ static EnableIfFloat<T, void> _testManualBlockExecution()
         "/numpy/geomspace",
         T(1.0),
         T(3.0));
+    testWindow<T>();
 }
 
 template <typename T>
 static EnableIfComplex<T, void> _testManualBlockExecution()
 {
+    testWindow<T>();
 }
 
 //

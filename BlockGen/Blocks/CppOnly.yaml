@@ -10,3 +10,5 @@ fft/rfft: {name: RFFT}
 fft/irfft: {name: IRFFT}
 fft/hfft: {name: HFFT}
 fft/ihfft: {name: IHFFT}
+
+window: {name: Window}

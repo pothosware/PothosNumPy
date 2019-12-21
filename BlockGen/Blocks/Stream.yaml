@@ -4,6 +4,7 @@ unique:
         categories: ["/NumPy/Stream"]
         blockType: [all]
         kwargs: [useDType=False, callPostBuffer=True]
+        description: "Returns the sorted unique elements of an array."
 
 copysign:
         name: CopySign
@@ -12,27 +13,32 @@ copysign:
         categories: ["/NumPy/Stream"]
         blockType: [int, float]
         kwargs: [useDType=False]
+        description: "Change the sign of port 0 to that of port 1, element-wise."
 
 positive:
         name: Positive
         class: OneToOneBlock
         categories: ["/NumPy/Stream"]
         blockType: [int, float, complex]
+        description: "Numeric positive, element-wise."
 
 trim_zeros:
         copy: unique
         name: TrimZeros
         niceName: Trim Zeros
+        description: "Trim the leading and/or trailing zeros from a 1-D array or sequence."
 
 negative:
         copy: positive
         name: Negative
+        description: "Numeric negative, element-wise."
 
 ravel:
         copy: unique
         name: Ravel
         class: NToOneBlock
         kwargs: [useDType=False, callReduce=False, callPostBuffer=True]
+        description: "Return a contiguous flattened array."
 
 intersect1d:
         copy: unique
@@ -40,6 +46,7 @@ intersect1d:
         niceName: Set Intersection
         class: TwoToOneBlock
         skipExecTest: True
+        description: "Find the intersection of two arrays."
 
 setdiff1d:
         copy: unique
@@ -47,6 +54,7 @@ setdiff1d:
         niceName: Set Difference
         class: TwoToOneBlock
         skipExecTest: True
+        description: "Find the set difference of two arrays."
 
 setxor1d:
         copy: unique
@@ -54,6 +62,7 @@ setxor1d:
         niceName: Set XOR
         class: TwoToOneBlock
         skipExecTest: True
+        description: "Find the set exclusive-or of two arrays."
 
 union1d:
         copy: unique
@@ -61,17 +70,20 @@ union1d:
         niceName: Set Union
         class: TwoToOneBlock
         skipExecTest: True
+        description: "Find the union of two arrays."
 
 sort:
         copy: unique
         name: Sort
         alias: [msort]
+        description: "Copy a sorted copy of the array."
 
 sort_complex:
         copy: unique
         name: SortComplex
         niceName: "Sort Complex"
         blockType: [complex]
+        description: "Sort a complex array using the real part first, then the imaginary part."
 
 flip:
         name: Flip
@@ -81,6 +93,7 @@ flip:
         kwargs: [useDType=False, callPostBuffer=True]
         funcKWargs:
                 - {name: axis, isPublic: False, value: -1}
+        description: "Reverse the order of elements in an array."
 
 roll:
         name: Roll
@@ -91,6 +104,9 @@ roll:
         kwargs: [useDType=False, callPostBuffer=True]
         funcArgs:
                 - {name: shift, dtype: int, testValue1: 10, testValue2: 2}
+        description: "Roll array elements.
+
+Elements that roll beyond the last position are re-introduced at the first."
 
 partition:
         name: Partition
@@ -101,6 +117,9 @@ partition:
         kwargs: [useDType=False, callPostBuffer=True]
         funcArgs:
                 - {name: index, dtype: uint, testValue1: 4, testValue2: 2}
+        description: "Return a partitioned copy of the array.
+
+Creates a copy of the array with its elements rearranged in such a way that the value of the element in position <b>index</b> is in the position it would be in a sorted array. All elements smaller than element <b>index</b> are moved before this element and all equal or greater are moved behind it. The ordering of the elements in the two partitions is undefined."
 
 nan_to_num:
         name: NanToNum
@@ -109,6 +128,7 @@ nan_to_num:
         categories: ["/NumPy/Stream"]
         blockType: [all]
         kwargs: [useDType=False]
+        description: "Replace NaN with zero and infinity with large finite numbers."
 
 #clip:
 #        name: Clip

@@ -31,13 +31,13 @@ Values are generated within the half-open interval <b>[start, stop)</b> (in othe
 
 When using a non-integer step, such as <b>0.1</b>, the results will often not be consistent. It is better to use <b>/blocks/numpy/linspace</b> for these cases."
         funcArgs:
-                - {name: start, dtype: blockType, testValue1: 10, testValue2: 20,
+                - {name: start, dtype: blockType, default: 1, testValue1: 10, testValue2: 20,
                    addedValidation:
                    ["Utility.errorForUnevenIntegralSpace(self.func, start, self.__stop, self.__step, self.numpyOutputDType)"]}
-                - {name: stop, dtype: blockType, testValue1: 20, testValue2: 10,
+                - {name: stop, dtype: blockType, default: 10, testValue1: 20, testValue2: 10,
                    addedValidation:
                    ["Utility.errorForUnevenIntegralSpace(self.func, self.__start, stop, self.__step, self.numpyOutputDType)"]}
-                - {name: step, dtype: blockType, testValue1: 1, testValue2: 2}
+                - {name: step, dtype: blockType, default: 1, testValue1: 1, testValue2: 2}
 
 linspace:
         name: LinSpace
@@ -50,13 +50,13 @@ linspace:
 
 Returns <b>numValues</b> evenly spaced samples, calculated over the interval <b>[start, stop]</b>. For integral dtypes, this block will throw an exception if the given parameters result in non-integral values."
         funcArgs:
-                - {name: start, dtype: blockType, testValue1: 10, testValue2: 2, badIntValues: [9], badUIntValues: [9],
+                - {name: start, dtype: blockType, default: 1, testValue1: 10, testValue2: 2, badIntValues: [9], badUIntValues: [9],
                    addedValidation:
                    ["Utility.errorForUnevenIntegralSpace(self.func, start, self.__stop, self.__numValues, self.numpyOutputDType)"]}
-                - {name: stop, dtype: blockType, testValue1: 4, testValue2: 10, badIntValues: [11], badUIntValues: [11],
+                - {name: stop, dtype: blockType, default: 10, testValue1: 4, testValue2: 10, badIntValues: [11], badUIntValues: [11],
                    addedValidation:
                    ["Utility.errorForUnevenIntegralSpace(self.func, self.__start, stop, self.__numValues, self.numpyOutputDType)"]}
-                - {name: numValues, dtype: uint, testValue1: 3, testValue2: 4, ">": 0, badIntValues: [0, 5], badUIntValues: [0, 5],
+                - {name: numValues, dtype: uint, default: 10, testValue1: 3, testValue2: 4, ">": 0, badIntValues: [0, 5], badUIntValues: [0, 5],
                    addedValidation:
                    ["Utility.errorForUnevenIntegralSpace(self.func, self.__start, self.__stop, numValues, self.numpyOutputDType)"]}
 
@@ -78,6 +78,6 @@ geomspace:
 
 This is similar to <b>/blocks/numpy/logspace</b>, but with endpoints specified directly. Each output sample is a constant multiple of the previous."
         funcArgs:
-                - {name: start, dtype: blockType, testValue1: 10, testValue2: 2}
-                - {name: stop, dtype: blockType, testValue1: 4, testValue2: 10}
-                - {name: numValues, dtype: uint, testValue1: 3, testValue2: 4, ">": 0, badValues: [0]}
+                - {name: start, dtype: blockType, default: 1, testValue1: 10, testValue2: 2}
+                - {name: stop, dtype: blockType, default: 1000, testValue1: 4, testValue2: 10}
+                - {name: numValues, dtype: uint, default: 4, testValue1: 3, testValue2: 4, ">": 0, badValues: [0]}

@@ -89,6 +89,7 @@ BUILD_PYTHON_MODULE(
         Python/Source.py
         Python/TwoToOneBlock.py
         Python/Utility.py
+        Python/Window.py
         ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/BlockEntryPoints.py
     CPP_SOURCES
         ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/Factory.cpp
