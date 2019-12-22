@@ -330,6 +330,21 @@ static inline EnableIfComplex<T, T> getEpsilon()
     return T{getEpsilon<U>(), getEpsilon<U>()};
 }
 
+// The FFT blocks take in the *input* port's DType and determine the output
+// port's type based on that. We need to make sure this works as expected.
+template <typename T>
+static void testOutputPortType(const Pothos::Proxy& block)
+{
+    static const Pothos::DType dtype(typeid(T));
+
+    const auto outputPortDType = block.call("output", 0)
+                                      .get("_port")
+                                      .call<Pothos::DType>("dtype");
+    POTHOS_TEST_EQUAL(
+        dtype.name(),
+        outputPortDType.name());
+}
+
 //
 // Test code
 //
@@ -368,6 +383,9 @@ static void testFFT()
     auto invCollector = Pothos::BlockRegistry::make(
                             "/blocks/collector_sink",
                             complexDType);
+
+    testOutputPortType<Complex>(fwdFFTBlock);
+    testOutputPortType<Complex>(invFFTBlock);
 
     // Load the feeder
     feeder.call(
@@ -437,6 +455,9 @@ static void testRFFT()
                             "/blocks/collector_sink",
                             dtype);
 
+    testOutputPortType<Complex>(fwdFFTBlock);
+    testOutputPortType<T>(invFFTBlock);
+
     // Load the feeder
     feeder.call(
         "feedBuffer",
@@ -476,12 +497,14 @@ static void testHFFT()
     const std::string fwdBlockRegistryPath = "/numpy/fft/hfft";
     const std::string invBlockRegistryPath = "/numpy/fft/ihfft";
 
+    using Complex = std::complex<T>;
+
     const auto testParams = getHFFTTestParams<T>();
     POTHOS_TEST_TRUE(!testParams.inputs.empty());
     POTHOS_TEST_TRUE(!testParams.outputs.empty());
 
     Pothos::DType dtype(typeid(T));
-    Pothos::DType complexDType(typeid(std::complex<T>));
+    Pothos::DType complexDType(typeid(Complex));
     std::cout << "Testing " << dtype.toString() << " to "
                             << dtype.toString() << " to "
                             << complexDType.toString() << std::endl;
@@ -503,6 +526,9 @@ static void testHFFT()
     auto invCollector = Pothos::BlockRegistry::make(
                             "/blocks/collector_sink",
                             complexDType);
+
+    testOutputPortType<T>(fwdFFTBlock);
+    testOutputPortType<Complex>(invFFTBlock);
 
     // Load the feeder
     feeder.call(
