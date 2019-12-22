@@ -29,14 +29,10 @@ class BaseBlock(Pothos.Block):
 
     def initDTypes(self, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs):
         if inputDType is not None:
-            if type(inputDType) is str:
-                inputDType = Utility.DType(inputDType)
-
+            inputDType = Utility.toDType(inputDType)
             Utility.validateDType(inputDType, inputDTypeArgs)
         if outputDType is not None:
-            if type(outputDType) is str:
-                outputDType = Utility.DType(outputDType)
-
+            outputDType = Utility.toDType(outputDType)
             Utility.validateDType(outputDType, outputDTypeArgs)
 
         self.inputDType = inputDType

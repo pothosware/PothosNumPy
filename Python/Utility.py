@@ -5,6 +5,20 @@ import Pothos
 
 import numpy
 
+def DType(*args):
+    env = Pothos.ProxyEnvironment("managed")
+    reg = env.findProxy("Pothos/DType")
+    return reg(*args)
+
+# Strings can be passed in for the DType parameters.
+def toDType(dtypeInput):
+    if type(dtypeInput) is str:
+        return DType(dtypeInput)
+    elif type(dtypeInput) is Pothos.Proxy:
+        return dtypeInput
+    else:
+        raise TypeError("Invalid input: {0}".format(type(dtypeInput)))
+
 # Pothos supports all complex types, but NumPy does not support
 # complex integral types, so we must catch this on block instantiation.
 # Also confirm that the given DType is 1-dimensional, as that is all
@@ -34,6 +48,24 @@ def validateDType(dtype, dtypeArgs):
 
     if unsupportedType is not None:
         raise TypeError(UNSUPPORTED_TEMPLATE.format(unsupportedType))
+
+def dtypeToComplex(dtype, errorIfAlreadyComplex=False):
+    if dtype.isComplex():
+        if errorIfAlreadyComplex:
+            raise TypeError("The given DType ({0}) is already complex.".format(dtype.name()))
+        else:
+            return dtype
+
+    return DType("complex_"+dtype.name())
+
+def dtypeToScalar(dtype, errorIfAlreadyScalar=False):
+    if not dtype.isComplex():
+        if errorIfAlreadyScalar:
+            raise TypeError("The given DType ({0}) is already scalar.".format(dtype.name()))
+        else:
+            return dtype
+
+    return DType(dtype.name().replace("complex_",""))
 
 def validateComplexParamRange(param, blockDType):
     VALUE_ERROR_TEMPLATE = "{0} part of given value {1} is outside the valid {2} range [{3}, {4}]."
@@ -96,11 +128,6 @@ def validateParameter(param, blockDType):
         validateComplexParamRange(param, blockDType)
     else:
         validateScalarParamRange(param, blockDType)
-
-def DType(*args):
-    env = Pothos.ProxyEnvironment("managed")
-    reg = env.findProxy("Pothos/DType")
-    return reg(*args)
 
 def errorForUnevenIntegralSpace(func, start, stop, numValues, numpyDType):
     if (type(start) is int) and (type(stop) is int) and (type(numValues) is int):

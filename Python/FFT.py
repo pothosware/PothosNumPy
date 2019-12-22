@@ -54,15 +54,15 @@ Corresponding NumPy function: numpy.fft.fft
 |factory /numpy/fft/fft(dtype,numBins)
 */"""
 def FFT(dtype, numBins):
-    dtypeArgs = dict(supportComplex=True)
+    dtype = Utility.toDType(dtype)
 
     return FFTClass(
                "/numpy/fft/fft",
                numpy.fft.fft,
                dtype,
-               dtype,
-               dtypeArgs,
-               dtypeArgs,
+               Utility.dtypeToComplex(dtype),
+               dict(supportFloat=True, supportComplex=True),
+               dict(supportComplex=True),
                numBins,
                warnIfSuboptimal=True)
 
@@ -76,15 +76,15 @@ Corresponding NumPy function: numpy.fft.ifft
 |factory /numpy/fft/ifft(dtype,numBins)
 */"""
 def IFFT(dtype, numBins):
-    dtypeArgs = dict(supportComplex=True)
+    dtype = Utility.toDType(dtype)
 
     return FFTClass(
                "/numpy/fft/ifft",
                numpy.fft.ifft,
                dtype,
-               dtype,
-               dtypeArgs,
-               dtypeArgs,
+               Utility.dtypeToComplex(dtype),
+               dict(supportFloat=True, supportComplex=True),
+               dict(supportComplex=True),
                numBins)
 
 """/*
@@ -97,19 +97,15 @@ Corresponding NumPy function: numpy.fft.rfft
 |factory /numpy/fft/rfft(dtype,numBins)
 */"""
 def RFFT(dtype, numBins):
-    # Validate here so we get a clearer error message than DType complaining about
-    # complex_complex_X.
-    Utility.validateDType(dtype, dict(supportFloat=True))
-    complexDType = Utility.DType("complex_"+dtype.toString())
+    dtype = Utility.toDType(dtype)
 
-    # Since we've already validated, skip validation in the base block.
     return FFTClass(
                "/numpy/fft/rfft",
                numpy.fft.rfft,
                dtype,
-               complexDType,
-               dict(supportAll=True),
-               dict(supportAll=True),
+               Utility.dtypeToComplex(dtype),
+               dict(supportFloat=True),
+               dict(supportComplex=True),
                numBins)
 
 """/*
@@ -122,19 +118,15 @@ Corresponding NumPy function: numpy.fft.irfft
 |factory /numpy/fft/irfft(dtype,numBins)
 */"""
 def IRFFT(dtype, numBins):
-    # Validate here so we get a clearer error message than DType complaining about
-    # complex_complex_X.
-    Utility.validateDType(dtype, dict(supportFloat=True))
-    complexDType = Utility.DType("complex_"+dtype.toString())
+    dtype = Utility.toDType(dtype)
 
-    # Since we've already validated, skip validation in the base block.
     return FFTClass(
                "/numpy/fft/irfft",
                numpy.fft.irfft,
-               complexDType,
                dtype,
-               dict(supportAll=True),
-               dict(supportAll=True),
+               Utility.dtypeToScalar(dtype),
+               dict(supportFloat=True, supportComplex=True),
+               dict(supportFloat=True),
                numBins)
 
 """/*
@@ -147,18 +139,15 @@ Corresponding NumPy function: numpy.fft.hfft
 |factory /numpy/ffthfft(dtype,numBins)
 */"""
 def HFFT(dtype, numBins):
-    # Validate here so we get a clearer error message than DType complaining about
-    # complex_complex_X.
-    Utility.validateDType(dtype, dict(supportFloat=True))
+    dtype = Utility.toDType(dtype)
 
-    # Since we've already validated, skip validation in the base block.
     return FFTClass(
                "/numpy/fft/hfft",
                numpy.fft.hfft,
                dtype,
-               dtype,
-               dict(supportAll=True),
-               dict(supportAll=True),
+               Utility.dtypeToScalar(dtype),
+               dict(supportFloat=True, supportComplex=True),
+               dict(supportFloat=True),
                numBins)
 
 """/*
@@ -171,17 +160,13 @@ Corresponding NumPy function: numpy.fft.ihfft
 |factory /numpy/fft/ihfft(dtype,numBins)
 */"""
 def IHFFT(dtype, numBins):
-    # Validate here so we get a clearer error message than DType complaining about
-    # complex_complex_X.
-    Utility.validateDType(dtype, dict(supportFloat=True, supportComplex=True))
-    complexDType = dtype if "complex" in dtype.toString() else Utility.DType("complex_"+dtype.toString())
+    dtype = Utility.toDType(dtype)
 
-    # Since we've already validated, skip validation in the base block.
     return FFTClass(
                "/numpy/fft/ihfft",
                numpy.fft.ihfft,
                dtype,
-               complexDType,
-               dict(supportAll=True),
-               dict(supportAll=True),
+               Utility.dtypeToComplex(dtype),
+               dict(supportFloat=True),
+               dict(supportComplex=True),
                numBins)

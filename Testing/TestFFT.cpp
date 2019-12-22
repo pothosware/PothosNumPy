@@ -421,14 +421,14 @@ static void testRFFT()
 
     auto feeder = Pothos::BlockRegistry::make(
                       "/blocks/feeder_source",
-                      dtype);
+                      complexDType);
     auto fwdFFTBlock = Pothos::BlockRegistry::make(
                            fwdBlockRegistryPath,
                            dtype,
                            testParams.inputs.size());
     auto invFFTBlock = Pothos::BlockRegistry::make(
                            invBlockRegistryPath,
-                           dtype,
+                           complexDType,
                            testParams.outputs.size());
     auto fwdCollector = Pothos::BlockRegistry::make(
                             "/blocks/collector_sink",

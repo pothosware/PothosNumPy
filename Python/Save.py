@@ -37,8 +37,7 @@ class SaveNpy(BaseBlock):
         if os.path.splitext(filepath)[1] != ".npy":
             raise RuntimeError("Only .npy files are supported.")
 
-        if type(dtype) is str:
-            dtype = Utility.DType(dtype)
+        dtype = Utility.toDType(dtype)
 
         dtypeArgs = dict(supportAll=True)
         BaseBlock.__init__(self, "/numpy/save_npy", numpy.save, dtype, None, dtypeArgs, None, list(), dict())
@@ -117,8 +116,7 @@ class SaveZBlock(BaseBlock):
         if os.path.splitext(filepath)[1] != ".npz":
             raise RuntimeError("Only .npz files are supported.")
 
-        if type(dtype) is str:
-            dtype = Utility.DType(dtype)
+        dtype = Utility.toDType(dtype)
 
         if type(key) is not str:
             raise ValueError("Key must be a string. Got {0}".format(type(key)))
