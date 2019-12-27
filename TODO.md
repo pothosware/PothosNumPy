@@ -11,5 +11,4 @@ All blocks in at least one test
 * /numpy/random/standard_normal
 * /numpy/random/triangular
 * /numpy/random/uniform
-* /numpy/random/
-* /numpy/random/
+* /numpy/sources/logspace

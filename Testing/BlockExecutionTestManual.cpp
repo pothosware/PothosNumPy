@@ -177,10 +177,10 @@ static EnableIfFloat<T, void> _testManualBlockExecution()
 {
     testManualBlockExecutionScalarCommon<T>();
 
-    testSpaceBlockExecution<T>(
+    /*testSpaceBlockExecution<T>(
         "/numpy/logspace",
         T(1.0),
-        T(3.0));
+        T(3.0));*/
     testSpaceBlockExecution<T>(
         "/numpy/geomspace",
         T(1.0),

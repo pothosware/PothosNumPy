@@ -10,7 +10,7 @@ import Pothos
 import numpy
 import os
 
-# TODO: add appending
+# TODO: implement "append" option
 """
 /*
  * |PothosDoc Save .npy
@@ -19,7 +19,7 @@ import os
  *
  * |category /NumPy/File IO
  * |keywords save numpy binary file IO
- * |factory /numpy/save_npy(filepath,dtype)
+ * |factory /numpy/save_npy(filepath,dtype,append)
  *
  * |param filepath(File path)
  * |widget FileEntry(mode=save)
@@ -30,10 +30,15 @@ import os
  * |widget DTypeChooser(int=1,uint=1,float=1,cfloat=1)
  * |default "float64"
  * |preview disable
+ *
+ * |param append(Append?)
+ * |default false
+ * |widget ToggleSwitch(on="True",off="False")
+ * |preview enable
  */
 """
 class SaveNpy(BaseBlock):
-    def __init__(self, filepath, dtype):
+    def __init__(self, filepath, dtype, append):
         if os.path.splitext(filepath)[1] != ".npy":
             raise RuntimeError("Only .npy files are supported.")
 
@@ -63,6 +68,13 @@ class SaveNpy(BaseBlock):
 
     def getFilepath(self):
         return self.__filepath
+
+    def getAppend(self):
+        self.logger.info("The \"append\" option is currently unimplemented.")
+        return False
+
+    def setAppend(self, append):
+        self.logger.info("The \"append\" option is currently unimplemented.")
 
     def work(self):
         in0 = self.input(0).buffer()
@@ -161,6 +173,9 @@ class SaveZBlock(BaseBlock):
 
     def getAppend(self):
         return self.__append
+
+    def setAppend(self, append):
+        self.__append = append
 
     def getAllKeys(self):
         return self.__allKeys

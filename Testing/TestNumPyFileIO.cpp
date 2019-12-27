@@ -153,10 +153,12 @@ static void testNPYIO(const std::string& type)
     auto numpySave = Pothos::BlockRegistry::make(
                          "/numpy/save_npy",
                          filepath,
-                         dtype);
+                         dtype,
+                         false /*append*/);
     POTHOS_TEST_EQUAL(
         filepath,
         numpySave.call<std::string>("getFilepath"));
+    POTHOS_TEST_TRUE(!numpySave.call<bool>("getAppend"));
 
     // Execute the topology.
     {
