@@ -182,16 +182,21 @@ static void testNPYIO(const std::string& type)
 
     auto numpyLoadNpy = Pothos::BlockRegistry::make(
                              "/numpy/load_npy",
-                             filepath);
+                             filepath,
+                             false /*repeat*/);
     POTHOS_TEST_EQUAL(
         filepath,
         numpyLoadNpy.call<std::string>("getFilepath"));
+    POTHOS_TEST_TRUE(!numpyLoadNpy.call<bool>("getRepeat"));
 
     // Note: we need to get the Python class's internal port because the Python
     // class's dtype() function returns the NumPy dtype.
     POTHOS_TEST_EQUAL(
         dtype.name(),
-        numpyLoadNpy.call("output", 0).get("_port").call("dtype").call<std::string>("name"));
+        numpyLoadNpy.call("output", 0)
+                    .get("_port")
+                    .call("dtype")
+                    .call<std::string>("name"));
 
     auto collectorSink = Pothos::BlockRegistry::make(
                              "/blocks/collector_sink",
@@ -260,7 +265,10 @@ static void testSaveNPZ(
     // class's dtype() function returns the NumPy dtype.
     POTHOS_TEST_EQUAL(
         dtype.name(),
-        numpySaveNpz.call("input", 0).get("_port").call("dtype").call<std::string>("name"));
+        numpySaveNpz.call("input", 0)
+                    .get("_port")
+                    .call("dtype")
+                    .call<std::string>("name"));
 
     auto feederSource = Pothos::BlockRegistry::make(
                             "/blocks/feeder_source",
@@ -292,19 +300,24 @@ static void testLoadNPZ(
     auto numpyLoadNpz = Pothos::BlockRegistry::make(
                             "/numpy/load_npz",
                             filepath,
-                            key);
+                            key,
+                            false /*repeat*/);
     POTHOS_TEST_EQUAL(
         filepath,
         numpyLoadNpz.call<std::string>("getFilepath"));
     POTHOS_TEST_EQUAL(
         key,
         numpyLoadNpz.call<std::string>("getKey"));
+    POTHOS_TEST_TRUE(!numpyLoadNpz.call<bool>("getRepeat"));
 
     // Note: we need to get the Python class's internal port because the Python
     // class's dtype() function returns the NumPy dtype.
     POTHOS_TEST_EQUAL(
         dtype.name(),
-        numpyLoadNpz.call("output", 0).get("_port").call("dtype").call<std::string>("name"));
+        numpyLoadNpz.call("output", 0)
+                    .get("_port")
+                    .call("dtype")
+                    .call<std::string>("name"));
 
     auto collectorSink = Pothos::BlockRegistry::make(
                              "/blocks/collector_sink",
