@@ -124,8 +124,6 @@ The Gumbel (or Smallest Extreme Value (SEV) or the Smallest Extreme Value Type I
                 - {name: location, dtype: float, default: 0, testValue1: -5.0, testValue2: 5.0}
                 - {name: scale, dtype: float, default: 0.1, testValue1: 0.5, testValue2: 1.5, ">=": 0.0, badValues: [-0.01]}
 
-# TODO: hypergeometric, manual
-
 random/laplace:
         name: Laplace
         niceName: Laplace Distribution
@@ -168,9 +166,6 @@ random/logseries:
 Samples are drawn from a log series distribution with specified shape parameter, <b>0 < p < 1</b>."
         funcArgs:
                 - {name: P, dtype: float, default: 0.5, testValue1: 0.25, testValue2: 0.75, ">": 0.0, "<": 1.0, badValues: [0.0, 1.0]}
-
-# TODO: multinomial, manual
-# TODO: multivariate_normal? Is there a good way to do this?
 
 random/negative_binomial:
         name: NegativeBinomial
@@ -280,11 +275,6 @@ The Cauchy distribution arises in the solution to the driven harmonic oscillator
 When studying hypothesis tests that assume normality, seeing how the tests perform on data from a Cauchy distribution is a good indicator of their sensitivity to a heavy-tailed distribution, since the Cauchy looks very much like a Gaussian distribution, but with heavier tails."
         funcArgs: []
 
-# Do these need to be manual? Depends on where we automatically put the DType parameter
-# TODO: standard_exponential, manual
-#       standard_gamma
-#       standard_normal
-
 random/standard_t:
         name: StandardT
         niceName: Student's t-Distribution
@@ -294,9 +284,6 @@ random/standard_t:
 A special case of the hyperbolic distribution. As <b>df</b> gets large, the result resembles that of the standard normal distribution (<b>/blocks/numpy/random/standard_normal</b>)."
         funcArgs:
                 - {name: degreesOfFreedom, dtype: float, default: 1.0, testValue1: 0.5, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
-
-# TODO: triangular, manual
-#       uniform
 
 random/vonmises:
         name: VonMises
