@@ -26,17 +26,17 @@
  * |param dtype(Data Type) The block data type.
  * |widget DTypeChooser(${makoVars["outputDTypeChooser"]})
  * |default "${makoVars["outputDTypeDefault"]}"
- * |preview enable
+ * |preview disable
     %elif param == "inputDType":
  * |param inputDType(Data Type) The input data type.
  * |widget DTypeChooser(${makoVars["inputDTypeChooser"]})
  * |default "${makoVars["inputDTypeDefault"]}"
- * |preview enable
+ * |preview disable
     %elif param == "outputDType":
  * |param outputDType(Data Type) The output data type.
  * |widget DTypeChooser(${makoVars["outputDTypeChooser"]})
  * |default "${makoVars["outputDTypeDefault"]}"
- * |preview enable
+ * |preview disable
     %elif param == "nchans":
  * |param nchans(Num Channels)
  * |default 2

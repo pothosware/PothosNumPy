@@ -86,7 +86,7 @@ class WindowBlock(OneToOneBlock):
  * |param dtype(Data Type) The block data type.
  * |widget DTypeChooser(float=1,cfloat=1)
  * |default "float64"
- * |preview enable
+ * |preview disable
  *
  * |param windowType(Window Type)
  * |widget ComboBox(editable=False)

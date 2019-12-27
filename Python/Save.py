@@ -29,7 +29,7 @@ import os
  * |param dtype(Data Type) The block data type.
  * |widget DTypeChooser(int=1,uint=1,float=1,cfloat=1)
  * |default "float64"
- * |preview enable
+ * |preview disable
  */
 """
 class SaveNpy(BaseBlock):
@@ -98,7 +98,7 @@ class SaveNpy(BaseBlock):
  * |param dtype(Data Type) The block data type.
  * |widget DTypeChooser(int=1,uint=1,float=1,cfloat=1)
  * |default "float64"
- * |preview enable
+ * |preview disable
  *
  * |param compressed(Compressed?)
  * |default false

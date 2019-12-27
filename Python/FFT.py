@@ -65,7 +65,7 @@ class FFTClass(BaseBlock):
  * |param dtype(Input Data Type) The block data type.
  * |widget DTypeChooser(float=1,cfloat=1)
  * |default "complex_float64"
- * |preview enable
+ * |preview disable
  *
  * |param numBins(Num FFT Bins)
  * |default 1024
@@ -120,7 +120,7 @@ def FFT(dtype, numBins):
  * |param dtype(Input Data Type) The block data type.
  * |widget DTypeChooser(float=1,cfloat=1)
  * |default "complex_float64"
- * |preview enable
+ * |preview disable
  *
  * |param numBins(Num FFT Bins)
  * |default 1024
@@ -181,7 +181,7 @@ def IFFT(dtype, numBins):
  * |param dtype(Input Data Type) The block data type.
  * |widget DTypeChooser(float=1)
  * |default "float64"
- * |preview enable
+ * |preview disable
  *
  * |param numBins(Num FFT Bins)
  * |default 1024
@@ -229,7 +229,7 @@ def RFFT(dtype, numBins):
  * |param dtype(Input Data Type) The block data type.
  * |widget DTypeChooser(float=1,cfloat=1)
  * |default "complex_float64"
- * |preview enable
+ * |preview disable
  *
  * |param numBins(Num FFT Bins)
  * |default 1024
@@ -269,7 +269,7 @@ def IRFFT(dtype, numBins):
  * |param dtype(Input Data Type) The block data type.
  * |widget DTypeChooser(float=1,cfloat=1)
  * |default "complex_float64"
- * |preview enable
+ * |preview disable
  *
  * |param numBins(Num FFT Bins)
  * |default 1024
@@ -309,7 +309,7 @@ def HFFT(dtype, numBins):
  * |param dtype(Input Data Type) The block data type.
  * |widget DTypeChooser(float=1)
  * |default "float64"
- * |preview enable
+ * |preview disable
  *
  * |param numBins(Num FFT Bins)
  * |default 1024
