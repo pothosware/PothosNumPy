@@ -375,21 +375,20 @@ def generateBlockExecutionTest(expandedYAML):
     )
 
     maxNumParams = max([len(expandedYAML[block].get("funcArgs", [])) for block in expandedYAML])
-    assert(maxNumParams > 0)
-
-    # Put quotes around test string values.
-    for block in expandedYAML:
-        for arg in expandedYAML[block].get("funcArgs", []):
-            if arg["dtype"] == "str":
-                for key in ["testValue1", "testValue2"]:
-                    if key in arg:
-                        assert(type(arg[key]) is str)
-                        # For some reason, this format adds two quotes
-                        arg[key] = '"{0}"'.format(arg[key]).replace('""', '"')
-                for key in ["validValues", "badValues"]:
-                    if key in arg:
-                        assert(type(arg[key]) is list)
-                        # For some reason, this format adds two quotes
+    if maxNumParams > 0:
+        # Put quotes around test string values.
+        for block in expandedYAML:
+            for arg in expandedYAML[block].get("funcArgs", []):
+                if arg["dtype"] == "str":
+                    for key in ["testValue1", "testValue2"]:
+                        if key in arg:
+                            assert(type(arg[key]) is str)
+                            # For some reason, this format adds two quotes
+                            arg[key] = '"{0}"'.format(arg[key]).replace('""', '"')
+                    for key in ["validValues", "badValues"]:
+                        if key in arg:
+                            assert(type(arg[key]) is list)
+                            # For some reason, this format adds two quotes
                         arg[key] = ['"{0}"'.format(val).replace('""', '"') for val in arg[key]]
 
     try:
