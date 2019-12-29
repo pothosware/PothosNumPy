@@ -94,6 +94,7 @@ BUILD_PYTHON_MODULE(
     CPP_SOURCES
         ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/Factory.cpp
         ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/BlockExecutionTestAuto.cpp
+        Cpp/NumericInfo.cpp
         Cpp/RegisteredCalls.cpp
 
         Testing/BlockExecutionTest.cpp

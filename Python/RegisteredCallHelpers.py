@@ -48,11 +48,19 @@ def getNumPyConfigInfoJSONString():
     return json.dumps(topLevel)
 
 def getNumPyIntInfoFromPothosDType(pothosDType):
+    pothosDType = Utility.dtypeToScalar(Utility.toDType(pothosDType))
     Utility.validateDType(pothosDType, dict(supportInt=True, supportUInt=True))
 
-    return numpy.iinfo(Pothos.Buffer.dtype_to_numpy(pothosDType))
+    path = "NumPy/IntInfo{0}".format(pothosDType.name().title().replace("Ui","UI"))
+
+    env = Pothos.ProxyEnvironment("managed")
+    return env.findProxy(path)()
 
 def getNumPyFloatInfoFromPothosDType(pothosDType):
+    pothosDType = Utility.dtypeToScalar(Utility.toDType(pothosDType))
     Utility.validateDType(pothosDType, dict(supportFloat=True, supportComplex=True))
 
-    return numpy.finfo(Pothos.Buffer.dtype_to_numpy(pothosDType))
+    path = "NumPy/FloatInfo{0}".format(pothosDType.name().title().replace("Ui","UI"))
+
+    env = Pothos.ProxyEnvironment("managed")
+    return env.findProxy(path)()

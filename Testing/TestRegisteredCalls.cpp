@@ -27,20 +27,27 @@ static void testIntInfo()
 
     auto iinfo = getAndCallPlugin<Pothos::Proxy>("/numpy/info/iinfo", dtype);
 
-    // This should be enough to confirm that this is the type we were hoping
-    // for. Past this, we run into limitations of types coming through Pothos,
-    // so just make sure the fields exist.
-    testEqual<int>(
+    POTHOS_TEST_EQUAL(
+        dtype.name(),
+        iinfo.call("dtype").call<std::string>("name"));
+    POTHOS_TEST_EQUAL(
         (sizeof(T) * 8),
-        iinfo.get<int>("bits"));
-    (void)iinfo.get<T>("min");
+        iinfo.call<size_t>("getBits"));
+    POTHOS_TEST_EQUAL(
+        std::numeric_limits<T>::min(),
+        iinfo.call<T>("getMinValue"));
 
-    // Pothos's converters have an issue getting this value out of Python,
-    // so we're going with the assumption that if this value exists elsewhere,
-    // then it exists here.
+    // 2019/12/28: Currently, uint64_t values outside the range of int64_t
+    // don't properly convert from Python to C++, so don't call it here. The
+    // call working with other types should be enough.
+    //
+    // TODO: reenable this for uint64_t when this is fixed:
+    // https://github.com/pothosware/PothosPython/issues/18
     if(!std::is_same<T, std::uint64_t>::value)
     {
-        (void)iinfo.get<T>("max");
+        POTHOS_TEST_EQUAL(
+            std::numeric_limits<T>::max(),
+            iinfo.call<T>("getMaxValue"));
     }
 }
 
@@ -52,26 +59,45 @@ static EnableIfNotComplex<T, void> testFloatInfo()
 
     auto finfo = getAndCallPlugin<Pothos::Proxy>("/numpy/info/finfo", dtype);
 
-    // This should be enough to confirm that this is the type we were hoping
-    // for. Past this, we run into limitations of types coming through Pothos,
-    // so just make sure the fields exist.
-    testEqual<int>(
+    POTHOS_TEST_EQUAL(
+        dtype.name(),
+        finfo.call("dtype").call<std::string>("name"));
+    POTHOS_TEST_EQUAL(
         (sizeof(T) * 8),
-        finfo.get<int>("bits"));
-    (void)finfo.get<T>("eps");
-    (void)finfo.get<T>("epsneg");
-    (void)finfo.get<int>("iexp");
-    (void)finfo.get<int>("machep");
-    (void)finfo.get<T>("max");
-    (void)finfo.get<int>("maxexp");
-    (void)finfo.get<T>("min");
-    (void)finfo.get<int>("minexp");
-    (void)finfo.get<int>("negep");
-    (void)finfo.get<int>("nexp");
-    (void)finfo.get<int>("nmant");
-    (void)finfo.get<int>("precision");
-    (void)finfo.get<T>("resolution");
-    (void)finfo.get<T>("tiny");
+        finfo.call<size_t>("getBits"));
+    POTHOS_TEST_EQUAL(
+        std::numeric_limits<T>::epsilon(),
+        finfo.call<T>("getEpsilon"));
+    POTHOS_TEST_EQUAL(
+        std::numeric_limits<T>::lowest(),
+        finfo.call<T>("getMinValue"));
+    POTHOS_TEST_EQUAL(
+        (std::numeric_limits<T>::min_exponent - 1),
+        finfo.call<ssize_t>("getMinExponent"));
+    POTHOS_TEST_EQUAL(
+        std::numeric_limits<T>::max(),
+        finfo.call<T>("getMaxValue"));
+    POTHOS_TEST_EQUAL(
+        std::numeric_limits<T>::max_exponent,
+        finfo.call<size_t>("getMaxExponent"));
+    POTHOS_TEST_EQUAL(
+        std::numeric_limits<T>::digits10,
+        finfo.call<size_t>("getPrecision"));
+    POTHOS_TEST_EQUAL(
+        // 1e-precision
+        (T(1.0) * std::pow<T>(T(10.0), (std::numeric_limits<T>::digits10 * T(-1.0)))),
+        finfo.call<T>("getResolution"));
+    POTHOS_TEST_EQUAL(
+        std::numeric_limits<T>::min(),
+        finfo.call<T>("getMinPositiveValue"));
+
+    // These calls don't have C++ analogues we can test against, so just make
+    // sure the call works.
+    (void)finfo.call<T>("getNegativeEpsilon");
+    (void)finfo.call<size_t>("getExponentBits");
+    (void)finfo.call<ssize_t>("getEpsilonExponent");
+    (void)finfo.call<ssize_t>("getNegativeEpsilonExponent");
+    (void)finfo.call<size_t>("getMantissaBits");
 }
 
 template <typename T>
@@ -88,8 +114,8 @@ static EnableIfComplex<T, void> testFloatInfo()
                            Pothos::DType(typeid(typename T::value_type)));
 
     testEqual<std::string>(
-        finfo.get<Pothos::Proxy>("dtype").get<std::string>("name"),
-        scalarFInfo.get<Pothos::Proxy>("dtype").get<std::string>("name"));
+        finfo.call("dtype").call<std::string>("name"),
+        scalarFInfo.call("dtype").call<std::string>("name"));
 }
 
 //
