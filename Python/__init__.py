@@ -9,3 +9,5 @@ from .RegisteredCallHelpers import *
 from .Save import *
 from .Utility import *
 from .Window import *
+
+from . import TestFuncs

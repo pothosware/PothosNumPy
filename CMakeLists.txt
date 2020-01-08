@@ -87,6 +87,7 @@ BUILD_PYTHON_MODULE(
         Python/RegisteredCallHelpers.py
         Python/Save.py
         Python/Source.py
+        Python/TestFuncs.py
         Python/TwoToOneBlock.py
         Python/Utility.py
         Python/Window.py

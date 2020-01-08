@@ -127,6 +127,23 @@ static Pothos::BufferChunk getRandomInputs(
     return Pothos::BufferChunk();
 }
 
+using NpzContentsMap = std::unordered_map<std::string, Pothos::BufferChunk>;
+
+static Pothos::ProxyMap npzTestInputsToProxyMap(const NpzContentsMap& testInputs)
+{
+    auto env = Pothos::ProxyEnvironment::make("python");
+
+    Pothos::ProxyMap ret;
+    for(const auto& mapPair: testInputs)
+    {
+        ret.emplace(
+            env->makeProxy("port_"+mapPair.first),
+            env->makeProxy(mapPair.second));
+    }
+
+    return ret;
+}
+
 //
 // Common test code
 //
@@ -177,6 +194,15 @@ static void testNPYIO(const std::string& type)
     POTHOS_TEST_TRUE(
         Poco::File(filepath).getSize() >=
         (numElements * dtype.elemSize()));
+
+    //
+    // Before testing our load block, call NumPy directly and confirm the
+    // contents match.
+    //
+    auto env = Pothos::ProxyEnvironment::make("python");
+    auto testFuncs = env->findProxy("PothosNumPy.TestFuncs");
+
+    testFuncs.call("checkNpyContents", filepath, randomInputs);
 
     //
     // Read from the .NPY file and check the file contents.
@@ -363,7 +389,7 @@ static void testNPZIO(bool compressed)
     std::cout << "Testing " << blockName << " (" << (compressed ? "compressed" : "uncompressed") << ")" << std::endl;
     const std::string filepath = getTemporaryTestFile(".npz");
 
-    std::unordered_map<std::string, Pothos::BufferChunk> testInputs;
+    NpzContentsMap testInputs;
 
     //
     // Generate our inputs.
@@ -408,6 +434,18 @@ static void testNPZIO(bool compressed)
         {
             POTHOS_TEST_TRUE(Poco::File(filepath).getSize() >= minSize);
         }
+
+        //
+        // Before testing our load block, call NumPy directly and confirm the
+        // contents match.
+        //
+        auto env = Pothos::ProxyEnvironment::make("python");
+        auto testFuncs = env->findProxy("PothosNumPy.TestFuncs");
+
+        testFuncs.call(
+            "checkNpzContents",
+            filepath,
+            npzTestInputsToProxyMap(testInputs));
 
         //
         // Read from the .NPZ file and check the file contents. Since we're not
@@ -473,6 +511,8 @@ static void testNPZIO(bool compressed)
 //
 // Registered tests
 //
+
+// TODO: generate file in raw NumPy, test with block
 
 POTHOS_TEST_BLOCK("/numpy/tests", test_npy_io)
 {
