@@ -23,38 +23,36 @@
 %for param in makoVars["factoryParams"]:
  *
     %if param == "dtype":
- * |param dtype(Data Type) The block data type.
+ * |param dtype[Data Type] The block data type.
  * |widget DTypeChooser(${makoVars["outputDTypeChooser"]})
  * |default "${makoVars["outputDTypeDefault"]}"
  * |preview disable
     %elif param == "inputDType":
- * |param inputDType(Data Type) The input data type.
+ * |param inputDType[Input Data Type] The input data type.
  * |widget DTypeChooser(${makoVars["inputDTypeChooser"]})
  * |default "${makoVars["inputDTypeDefault"]}"
- * |preview disable
-    %elif param == "outputDType":
- * |param outputDType(Data Type) The output data type.
+ * |param outputDType[Output Data Type] The output data type.
  * |widget DTypeChooser(${makoVars["outputDTypeChooser"]})
  * |default "${makoVars["outputDTypeDefault"]}"
  * |preview disable
     %elif param == "nchans":
- * |param nchans(Num Channels)
+ * |param nchans[Num Channels]
  * |default 2
  * |widget SpinBox(minimum=2)
  * |preview disable
     %elif param == "repeat":
- * |param repeat(Repeat?)
+ * |param repeat[Repeat?]
  * |default false
  * |widget ToggleSwitch(on="True",off="False")
  * |preview enable
     %elif param == "ignoreNaN":
- * |param ignoreNaN(Ignore NaN?)
+ * |param ignoreNaN[Ignore NaN?]
  * |default false
  * |widget ToggleSwitch(on="True",off="False")
  * |preview enable
     %else:
         %for arg in [funcArg for funcArg in makoVars.get("funcArgs",[]) if funcArg["name"] == param]:
- * |param ${arg["name"]}(${arg["title"]})
+ * |param ${arg["name"]}[${arg["title"]}]
             %if "widget" in arg:
  * |widget ${arg["widget"]}(${arg["widgetArgs"]})
             %endif

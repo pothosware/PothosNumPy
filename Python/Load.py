@@ -70,12 +70,12 @@ class LoadBaseBlock(BaseBlock):
  * |factory /numpy/load_npy(filepath,repeat)
  * |setter setRepeat(repeat)
  *
- * |param filepath(File path)
+ * |param filepath[Filepath]
  * |widget FileEntry(mode=open)
  * |default ""
  * |preview enable
  *
- * |param repeat(Repeat?)
+ * |param repeat[Repeat?]
  * |widget ToggleSwitch(on="True",off="False")
  * |default false
  * |preview enable
@@ -97,20 +97,20 @@ class LoadNpy(LoadBaseBlock):
  *
  * |category /NumPy/File IO
  * |keywords load numpy binary file IO
- * |factory /numpy/load_npz(filepath,key)
+ * |factory /numpy/load_npz(filepath,key,repeat)
  * |setter setRepeat(repeat)
  *
- * |param filepath(File path)
+ * |param filepath[Filepath]
  * |widget FileEntry(mode=open)
  * |default ""
  * |preview enable
  *
- * |param key(Key)
+ * |param key[Key]
  * |widget StringEntry()
  * |default "key"
  * |preview enable
  *
- * |param repeat(Repeat?)
+ * |param repeat[Repeat?]
  * |widget ToggleSwitch(on="True",off="False")
  * |default false
  * |preview enable

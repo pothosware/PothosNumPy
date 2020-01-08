@@ -21,17 +21,17 @@ import os
  * |keywords save numpy binary file IO
  * |factory /numpy/save_npy(filepath,dtype,append)
  *
- * |param filepath(File path)
+ * |param filepath[Filepath]
  * |widget FileEntry(mode=save)
  * |default ""
  * |preview enable
  *
- * |param dtype(Data Type) The block data type.
+ * |param dtype[Data Type] The block data type.
  * |widget DTypeChooser(int=1,uint=1,float=1,cfloat=1)
  * |default "float64"
  * |preview disable
  *
- * |param append(Append?)
+ * |param append[Append?]
  * |default false
  * |widget ToggleSwitch(on="True",off="False")
  * |preview enable
@@ -97,27 +97,27 @@ class SaveNpy(BaseBlock):
  * |keywords save numpy binary file IO
  * |factory /numpy/save_npz(filepath,key,dtype,compressed,append)
  *
- * |param filepath(File path)
+ * |param filepath[Filepath]
  * |widget FileEntry(mode=save)
  * |default ""
  * |preview enable
  *
- * |param key(Key)
+ * |param key[Key]
  * |widget StringEntry()
  * |default "key"
  * |preview enable
  *
- * |param dtype(Data Type) The block data type.
+ * |param dtype[Data Type] The block data type.
  * |widget DTypeChooser(int=1,uint=1,float=1,cfloat=1)
  * |default "float64"
  * |preview disable
  *
- * |param compressed(Compressed?)
+ * |param compressed[Compressed?]
  * |default false
  * |widget ToggleSwitch(on="True",off="False")
  * |preview enable
  *
- * |param append(Append?)
+ * |param append[Append?]
  * |default false
  * |widget ToggleSwitch(on="True",off="False")
  * |preview enable

@@ -62,12 +62,12 @@ class FFTClass(BaseBlock):
  * |keywords fft
  * |factory /numpy/fft/fft(dtype,numBins)
  *
- * |param dtype(Input Data Type) The block data type.
+ * |param dtype[Input Data Type] The block data type.
  * |widget DTypeChooser(float=1,cfloat=1)
  * |default "complex_float64"
  * |preview disable
  *
- * |param numBins(Num FFT Bins)
+ * |param numBins[Num FFT Bins]
  * |default 1024
  * |option 512
  * |option 1024
@@ -117,12 +117,12 @@ def FFT(dtype, numBins):
  * |keywords fft ifft inverse
  * |factory /numpy/fft/ifft(dtype,numBins)
  *
- * |param dtype(Input Data Type) The block data type.
+ * |param dtype[Input Data Type] The block data type.
  * |widget DTypeChooser(float=1,cfloat=1)
  * |default "complex_float64"
  * |preview disable
  *
- * |param numBins(Num FFT Bins)
+ * |param numBins[Num FFT Bins]
  * |default 1024
  * |option 512
  * |option 1024
@@ -178,12 +178,12 @@ def IFFT(dtype, numBins):
  * |keywords fft rfft real
  * |factory /numpy/fft/rfft(dtype,numBins)
  *
- * |param dtype(Input Data Type) The block data type.
+ * |param dtype[Input Data Type] The block data type.
  * |widget DTypeChooser(float=1)
  * |default "float64"
  * |preview disable
  *
- * |param numBins(Num FFT Bins)
+ * |param numBins[Num FFT Bins]
  * |default 1024
  * |option 512
  * |option 1024
@@ -226,12 +226,12 @@ def RFFT(dtype, numBins):
  * |keywords fft rfft rifft real inverse
  * |factory /numpy/fft/irfft(dtype,numBins)
  *
- * |param dtype(Input Data Type) The block data type.
+ * |param dtype[Input Data Type] The block data type.
  * |widget DTypeChooser(float=1,cfloat=1)
  * |default "complex_float64"
  * |preview disable
  *
- * |param numBins(Num FFT Bins)
+ * |param numBins[Num FFT Bins]
  * |default 1024
  * |option 512
  * |option 1024
@@ -266,12 +266,12 @@ def IRFFT(dtype, numBins):
  * |keywords fft hfft hermetian
  * |factory /numpy/fft/hfft(dtype,numBins)
  *
- * |param dtype(Input Data Type) The block data type.
+ * |param dtype[Input Data Type] The block data type.
  * |widget DTypeChooser(float=1,cfloat=1)
  * |default "complex_float64"
  * |preview disable
  *
- * |param numBins(Num FFT Bins)
+ * |param numBins[Num FFT Bins]
  * |default 1024
  * |option 512
  * |option 1024
@@ -306,12 +306,12 @@ def HFFT(dtype, numBins):
  * |keywords fft hfft ihfft inverse hermetian
  * |factory /numpy/fft/ihfft(dtype,numBins)
  *
- * |param dtype(Input Data Type) The block data type.
+ * |param dtype[Input Data Type] The block data type.
  * |widget DTypeChooser(float=1)
  * |default "float64"
  * |preview disable
  *
- * |param numBins(Num FFT Bins)
+ * |param numBins[Num FFT Bins]
  * |default 1024
  * |option 512
  * |option 1024

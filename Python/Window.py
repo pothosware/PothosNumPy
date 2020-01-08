@@ -83,12 +83,12 @@ class WindowBlock(OneToOneBlock):
  * |keywords numpy filter window bartlett blackman hamming hanning kaiser
  * |factory /numpy/window(dtype,windowType)
  *
- * |param dtype(Data Type) The block data type.
+ * |param dtype[Data Type] The block data type.
  * |widget DTypeChooser(float=1,cfloat=1)
  * |default "float64"
  * |preview disable
  *
- * |param windowType(Window Type)
+ * |param windowType[Window Type]
  * |widget ComboBox(editable=False)
  * |default "BARTLETT"
  * |option [Bartlett] "BARTLETT"
@@ -98,7 +98,7 @@ class WindowBlock(OneToOneBlock):
  * |option [Kaiser] "KAISER"
  * |preview enable
  *
- * |param beta(Beta)
+ * |param beta[Beta]
  * |widget DoubleSpinBox()
  * |default 0.0
  * |preview when(enum=windowType, "KAISER")
