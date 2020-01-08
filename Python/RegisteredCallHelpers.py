@@ -60,7 +60,7 @@ def getNumPyFloatInfoFromPothosDType(pothosDType):
     pothosDType = Utility.dtypeToScalar(Utility.toDType(pothosDType))
     Utility.validateDType(pothosDType, dict(supportFloat=True, supportComplex=True))
 
-    path = "NumPy/FloatInfo{0}".format(pothosDType.name().title().replace("Ui","UI"))
+    path = "NumPy/FloatInfo{0}".format(pothosDType.name().title())
 
     env = Pothos.ProxyEnvironment("managed")
     return env.findProxy(path)()
