@@ -137,72 +137,59 @@ static Pothos::ProxyMap npzTestInputsToProxyMap(const NpzContentsMap& testInputs
     for(const auto& mapPair: testInputs)
     {
         ret.emplace(
-            env->makeProxy("port_"+mapPair.first),
+            env->makeProxy(mapPair.first),
             env->makeProxy(mapPair.second));
     }
 
     return ret;
 }
 
+static NpzContentsMap proxyMapToNpzTestInputs(const Pothos::ProxyMap& proxyMap)
+{
+    NpzContentsMap testValues;
+    for(const auto& mapPair: proxyMap)
+    {
+        POTHOS_TEST_TRUE(
+            typeid(std::string) ==
+            mapPair.first.toObject().type());
+        POTHOS_TEST_TRUE(
+            typeid(Pothos::BufferChunk) ==
+            mapPair.second.toObject().type());
+
+        testValues.emplace(
+            mapPair.first.toObject().extract<std::string>(),
+            mapPair.second.toObject().extract<Pothos::BufferChunk>());
+    }
+
+    return testValues;
+}
+
 //
 // Common test code
 //
 
-static void testNPYIO(const std::string& type)
+static void testLoadNPY(const std::string& type)
 {
-    static constexpr size_t numElements = 256;
-
     const Pothos::DType dtype(type);
     std::cout << "Testing " << dtype.toString() << std::endl;
 
     const std::string filepath = getTemporaryTestFile(dtype, ".npy");
-    const auto randomInputs = getRandomInputs(type, numElements);
 
     //
-    // Write known values to the .NPY file.
+    // Generate our test file in NumPy and save our expected values.
     //
 
-    auto feederSource = Pothos::BlockRegistry::make(
-                            "/blocks/feeder_source",
-                            dtype);
-    feederSource.call("feedBuffer", randomInputs);
-
-    auto numpySave = Pothos::BlockRegistry::make(
-                         "/numpy/save_npy",
-                         filepath,
-                         dtype,
-                         false /*append*/);
-    POTHOS_TEST_EQUAL(
-        filepath,
-        numpySave.call<std::string>("getFilepath"));
-    POTHOS_TEST_TRUE(!numpySave.call<bool>("getAppend"));
-
-    // Execute the topology.
-    {
-        Pothos::Topology topology;
-        topology.connect(
-            feederSource, 0,
-            numpySave, 0);
-
-        topology.commit();
-
-        // When this block exits, the flowgraph will stop.
-        Poco::Thread::sleep(10);
-    }
-
-    POTHOS_TEST_TRUE(Poco::File(filepath).exists());
-    POTHOS_TEST_TRUE(
-        Poco::File(filepath).getSize() >=
-        (numElements * dtype.elemSize()));
-
-    //
-    // Before testing our load block, call NumPy directly and confirm the
-    // contents match.
-    //
     auto env = Pothos::ProxyEnvironment::make("python");
     auto testFuncs = env->findProxy("PothosNumPy.TestFuncs");
 
-    testFuncs.call("checkNpyContents", filepath, randomInputs);
+    auto expectedOutputs = testFuncs.call(
+                               "generateNpyFile",
+                               filepath,
+                               dtype);
+    POTHOS_TEST_TRUE(
+        typeid(Pothos::BufferChunk) ==
+        expectedOutputs.toObject().type());
+    POTHOS_TEST_TRUE(Poco::File(filepath).exists());
 
     //
     // Read from the .NPY file and check the file contents.
@@ -250,7 +237,141 @@ static void testNPYIO(const std::string& type)
     {
         testBufferChunk(
             collectorSink.call("getBuffer"),
-            randomInputs);
+            expectedOutputs.toObject().extract<Pothos::BufferChunk>());
+    }
+}
+
+static void testSaveNPY(const std::string& type)
+{
+    static constexpr size_t numElements = 256;
+
+    const Pothos::DType dtype(type);
+    std::cout << "Testing " << dtype.toString() << std::endl;
+
+    const std::string filepath = getTemporaryTestFile(dtype, ".npy");
+    const auto randomInputs = getRandomInputs(type, numElements);
+
+    //
+    // Write known values to the .NPY file.
+    //
+
+    auto feederSource = Pothos::BlockRegistry::make(
+                            "/blocks/feeder_source",
+                            dtype);
+    feederSource.call("feedBuffer", randomInputs);
+
+    auto numpySave = Pothos::BlockRegistry::make(
+                         "/numpy/save_npy",
+                         filepath,
+                         dtype,
+                         false /*append*/);
+    POTHOS_TEST_EQUAL(
+        filepath,
+        numpySave.call<std::string>("getFilepath"));
+    POTHOS_TEST_TRUE(!numpySave.call<bool>("getAppend"));
+
+    // Execute the topology.
+    {
+        Pothos::Topology topology;
+        topology.connect(
+            feederSource, 0,
+            numpySave, 0);
+
+        topology.commit();
+
+        // When this block exits, the flowgraph will stop.
+        Poco::Thread::sleep(10);
+    }
+
+    POTHOS_TEST_TRUE(Poco::File(filepath).exists());
+    POTHOS_TEST_TRUE(
+        Poco::File(filepath).getSize() >=
+        (numElements * dtype.elemSize()));
+
+    //
+    // Use NumPy directly to test our values.
+    //
+    auto env = Pothos::ProxyEnvironment::make("python");
+    auto testFuncs = env->findProxy("PothosNumPy.TestFuncs");
+
+    testFuncs.call("checkNpyContents", filepath, randomInputs);
+}
+
+static void testLoadNPZ(bool compressed)
+{
+    if(compressed)
+    {
+        std::cout << "Testing loading compressed .npz file." << std::endl;
+    }
+    else
+    {
+        std::cout << "Testing loading uncompressed .npz file." << std::endl;
+    }
+
+    const std::string filepath = getTemporaryTestFile(".npz");
+
+    //
+    // Generate our test file in NumPy and save our expected values.
+    //
+
+    auto env = Pothos::ProxyEnvironment::make("python");
+    auto testFuncs = env->findProxy("PothosNumPy.TestFuncs");
+
+    auto expectedOutputs = testFuncs.call(
+                               "generateNpzFile",
+                               filepath,
+                               compressed);
+    POTHOS_TEST_TRUE(
+        typeid(Pothos::ProxyMap) ==
+        expectedOutputs.toObject().type());
+    POTHOS_TEST_TRUE(Poco::File(filepath).exists());
+
+    auto testValues = proxyMapToNpzTestInputs(expectedOutputs.toObject().extract<Pothos::ProxyMap>());
+    std::vector<std::string> keys;
+    std::transform(
+        testValues.begin(),
+        testValues.end(),
+        std::back_inserter(keys),
+        [](const NpzContentsMap::value_type& mapPair){return mapPair.first;});
+    POTHOS_TEST_EQUAL(keys.size(), testValues.size());
+
+    for(const auto& key: keys)
+    {
+        auto numpyLoadNpz = Pothos::BlockRegistry::make(
+                                "/numpy/load_npz",
+                                filepath,
+                                key,
+                                false /*repeat*/);
+
+        // Note: we need to get the Python object's internal port proxy because
+        // the Python class returns a NumPy DType.
+        auto dtype = numpyLoadNpz.call("output", "0")
+                                 .get("_port")
+                                 .template call<Pothos::DType>("dtype");
+
+        std::cout << " * Testing " << dtype.name() << std::endl;
+
+        auto collectorSink = Pothos::BlockRegistry::make(
+                                 "/blocks/collector_sink",
+                                 dtype);
+
+        // Execute the topology.
+        {
+            Pothos::Topology topology;
+
+            topology.connect(
+                numpyLoadNpz, 0,
+                collectorSink, 0);
+
+            topology.commit();
+
+            // When this block exits, the flowgraph will stop.
+            Poco::Thread::sleep(10);
+        }
+
+        testBufferChunk(
+            collectorSink.call<Pothos::BufferChunk>("getBuffer"),
+            testValues[key]);
     }
 }
 
@@ -318,59 +439,7 @@ static void testSaveNPZ(
     }
 }
 
-static void testLoadNPZ(
-    const std::string& filepath,
-    const std::string& key,
-    const Pothos::BufferChunk& values)
-{
-    const auto& dtype = values.dtype;
-
-    auto numpyLoadNpz = Pothos::BlockRegistry::make(
-                            "/numpy/load_npz",
-                            filepath,
-                            key,
-                            false /*repeat*/);
-    POTHOS_TEST_EQUAL(
-        filepath,
-        numpyLoadNpz.call<std::string>("getFilepath"));
-    POTHOS_TEST_EQUAL(
-        key,
-        numpyLoadNpz.call<std::string>("getKey"));
-    POTHOS_TEST_TRUE(!numpyLoadNpz.call<bool>("getRepeat"));
-
-    // Note: we need to get the Python class's internal port because the Python
-    // class's dtype() function returns the NumPy dtype.
-    POTHOS_TEST_EQUAL(
-        dtype.name(),
-        numpyLoadNpz.call("output", 0)
-                    .get("_port")
-                    .call("dtype")
-                    .call<std::string>("name"));
-
-    auto collectorSink = Pothos::BlockRegistry::make(
-                             "/blocks/collector_sink",
-                             dtype);
-
-    // Execute the topology.
-    {
-        Pothos::Topology topology;
-
-        topology.connect(
-            numpyLoadNpz, 0,
-            collectorSink, 0);
-
-        topology.commit();
-
-        // When this block exits, the flowgraph will stop.
-        Poco::Thread::sleep(10);
-    }
-
-    testBufferChunk(
-        collectorSink.call<Pothos::BufferChunk>("getBuffer"),
-        values);
-}
-
-static void testNPZIO(bool compressed)
+static void testSaveNPZ(bool compressed)
 {
     static constexpr size_t numElements = 256;
 
@@ -417,11 +486,9 @@ static void testNPZIO(bool compressed)
             const auto& typeName = mapPair.first;
             const auto& inputs = mapPair.second;
 
-            const std::string key = "port_" + typeName;
-
             testSaveNPZ(
                 filepath,
-                key,
+                typeName,
                 compressed,
                 false /*append*/,
                 inputs);
@@ -436,8 +503,7 @@ static void testNPZIO(bool compressed)
         }
 
         //
-        // Before testing our load block, call NumPy directly and confirm the
-        // contents match.
+        // Use NumPy directly to test our values.
         //
         auto env = Pothos::ProxyEnvironment::make("python");
         auto testFuncs = env->findProxy("PothosNumPy.TestFuncs");
@@ -446,65 +512,6 @@ static void testNPZIO(bool compressed)
             "checkNpzContents",
             filepath,
             npzTestInputsToProxyMap(testInputs));
-
-        //
-        // Read from the .NPZ file and check the file contents. Since we're not
-        // appending, this should always equal the same values.
-        //
-        for(const auto& mapPair: testInputs)
-        {
-            const auto& typeName = mapPair.first;
-            const auto& inputs = mapPair.second;
-
-            const std::string key = "port_" + typeName;
-
-            testLoadNPZ(
-                filepath,
-                key,
-                inputs);
-        }
-    }
-
-    //
-    // Do all this again, but this time, append the values.
-    //
-    for(const auto& mapPair: testInputs)
-    {
-        const auto& typeName = mapPair.first;
-        const auto& inputs = mapPair.second;
-
-        const std::string key = "port_" + typeName;
-
-        testSaveNPZ(
-            filepath,
-            key,
-            compressed,
-            true /*append*/,
-            inputs);
-    }
-
-    // Since every channel should have written again
-    if(!compressed)
-    {
-        POTHOS_TEST_TRUE(Poco::File(filepath).getSize() >= (minSize*2));
-    }
-
-    //
-    // Read from the .NPZ file and check the file contents. Since we've appended,
-    // check for appended inputs.
-    //
-    for(const auto& mapPair: testInputs)
-    {
-        const auto& typeName = mapPair.first;
-        const std::string key = "port_" + typeName;
-
-        auto inputs = mapPair.second;
-        inputs.append(inputs);
-
-        testLoadNPZ(
-            filepath,
-            key,
-            inputs);
     }
 }
 
@@ -514,28 +521,50 @@ static void testNPZIO(bool compressed)
 
 // TODO: generate file in raw NumPy, test with block
 
-POTHOS_TEST_BLOCK("/numpy/tests", test_npy_io)
+POTHOS_TEST_BLOCK("/numpy/tests", test_load_npy)
 {
-    std::srand(std::time(0ULL));
-
-    testNPYIO("int8");
-    testNPYIO("int16");
-    testNPYIO("int32");
-    testNPYIO("int64");
-    testNPYIO("uint8");
-    testNPYIO("uint16");
-    testNPYIO("uint32");
-    testNPYIO("uint64");
-    testNPYIO("float32");
-    testNPYIO("float64");
-    testNPYIO("complex_float32");
-    testNPYIO("complex_float64");
+    testLoadNPY("int8");
+    testLoadNPY("int16");
+    testLoadNPY("int32");
+    testLoadNPY("int64");
+    testLoadNPY("uint8");
+    testLoadNPY("uint16");
+    testLoadNPY("uint32");
+    testLoadNPY("uint64");
+    testLoadNPY("float32");
+    testLoadNPY("float64");
+    testLoadNPY("complex_float32");
+    testLoadNPY("complex_float64");
 }
 
-POTHOS_TEST_BLOCK("/numpy/tests", test_npz_io)
+POTHOS_TEST_BLOCK("/numpy/tests", test_save_npy)
 {
     std::srand(std::time(0ULL));
 
-    testNPZIO(false /*compressed*/);
-    testNPZIO(true /*compressed*/);
+    testSaveNPY("int8");
+    testSaveNPY("int16");
+    testSaveNPY("int32");
+    testSaveNPY("int64");
+    testSaveNPY("uint8");
+    testSaveNPY("uint16");
+    testSaveNPY("uint32");
+    testSaveNPY("uint64");
+    testSaveNPY("float32");
+    testSaveNPY("float64");
+    testSaveNPY("complex_float32");
+    testSaveNPY("complex_float64");
+}
+
+POTHOS_TEST_BLOCK("/numpy/tests", test_load_npz)
+{
+    testLoadNPZ(false /*compressed*/);
+    testLoadNPZ(true /*compressed*/);
+}
+
+POTHOS_TEST_BLOCK("/numpy/tests", test_save_npz)
+{
+    std::srand(std::time(0ULL));
+
+    testSaveNPZ(false /*compressed*/);
+    testSaveNPZ(true /*compressed*/);
 }
