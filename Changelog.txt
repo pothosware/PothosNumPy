@@ -1,0 +1,6 @@
+This this the changelog file for the Pothos NumPy toolkit.
+
+Release 0.0.1 (pending)
+==========================
+
+- Initial release.
