@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Nicholas Corgan
+# Copyright (c) 2020 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
 import Pothos
