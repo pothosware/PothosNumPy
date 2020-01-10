@@ -171,10 +171,11 @@ ParamWidgets = dict(
     str_="ComboBox",
 )
 
-def generatePythonEntryPoint(func,yaml):
+def generateMakoVars(func,yaml):
     # Generate variables for processing.
     makoVars = dict()
     makoVars["name"] = yaml["name"]
+    makoVars["subclass"] = yaml.get("subclass", False)
     makoVars["class"] = yaml["class"]
     makoVars["category"] = " ".join(yaml["categories"])
     makoVars["func"] = func
@@ -183,8 +184,6 @@ def generatePythonEntryPoint(func,yaml):
     makoVars["prefix"] = yaml.get("prefix", "numpy")
     makoVars["pothosDocPrefix"] = makoVars["prefix"].replace("Random.NumPyRandom", NumPyRandomString).replace("Random", NumPyRandomString)
     makoVars["factoryVars"] = []
-
-    isEntryPointSubclass = yaml.get("subclass", False)
 
     if "funcArgs" in yaml:
         for arg in yaml["funcArgs"]:
@@ -279,10 +278,13 @@ def generatePythonEntryPoint(func,yaml):
     if "kwargs" in makoVars:
         makoVars["classParams"] += ["**kwargs"]
 
+    return makoVars
+
+def generatePythonEntryPoint(makoVars):
     try:
         pothosDoc = Template(PothosDocTemplate).render(makoVars=makoVars)
 
-        if isEntryPointSubclass:
+        if makoVars["subclass"]:
             entryPoint = Template(PythonSubclassTemplate).render(makoVars=makoVars)
         else:
             entryPoint = Template(PythonFactoryFunctionTemplate).render(makoVars=makoVars)
@@ -291,7 +293,7 @@ def generatePythonEntryPoint(func,yaml):
 
     return (pothosDoc + entryPoint)
 
-def generateCppOutput(expandedYAML):
+def generateCppOutput(allMakoVars):
     prefix = """// Copyright (c) 2019-{0} Nicholas Corgan
 // SPDX-License-Identifier: BSD-3-Clause
 
@@ -301,11 +303,11 @@ def generateCppOutput(expandedYAML):
 """.format(Now.year, Now)
 
     factories = []
-    for k,v in expandedYAML.items():
-        factories += [generateCppFactory(k,v["name"])]
-        if "alias" in v:
-            for alias in v["alias"]:
-                factories += [generateCppFactory(alias,v["name"])]
+    for makoVars in allMakoVars:
+        factories += [generateCppFactory(makoVars["blockRegistryPath"], makoVars["name"])]
+        if "alias" in makoVars:
+            for alias in makoVars["alias"]:
+                factories += [generateCppFactory(alias, makoVars["name"])]
 
     # Add C++-only blocks.
     cppOnlyYAMLPath = os.path.join(BlocksDir, "CppOnly.yaml")
@@ -329,7 +331,7 @@ def generateCppOutput(expandedYAML):
     with open(outputFilepath, 'w') as f:
         f.write(output)
 
-def generatePythonOutput(expandedYAML):
+def generatePythonOutput(allMakoVars):
     prefix = """# Copyright (c) 2019-{0} Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
@@ -348,7 +350,7 @@ from .Source import *
 """.format(Now.year, Now)
 
     try:
-        pythonEntryPointsList = [generatePythonEntryPoint(k.split("/")[-1],v) for k,v in expandedYAML.items() if not v.get("cppOnly", False)]
+        pythonEntryPointsList = [generatePythonEntryPoint(makoVars) for makoVars in allMakoVars]
     except:
         print(mako.exceptions.text_error_template().render())
 
@@ -410,7 +412,15 @@ if __name__ == "__main__":
     for yml in expandedYAMLList:
         expandedYAML.update(yml)
 
+    allMakoVars = []
+    for k,v in expandedYAML.items():
+        if not v.get("cppOnly", False):
+            makoVars = generateMakoVars(k.split("/")[-1], v)
+            makoVars["blockRegistryPath"] = k
+            makoVars["docRegistryPath"] = "/blocks/docs" + k
+            allMakoVars += [makoVars]
+
     populateTemplates()
-    generateCppOutput(expandedYAML)
-    generatePythonOutput(expandedYAML)
+    generateCppOutput(allMakoVars)
+    generatePythonOutput(allMakoVars)
     generateBlockExecutionTest(expandedYAML)
