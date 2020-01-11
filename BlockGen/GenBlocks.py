@@ -9,12 +9,35 @@ import os
 import sys
 import yaml
 
+#
+# Manual or version-specific helper stuff
+#
+
 if numpy.__version__ >= "1.17.0":
     NumPyRandomString = "numpy.random.default_rng()"
     NumPyRandomIntegersString = "integers"
 else:
     NumPyRandomString = "numpy.random"
     NumPyRandomIntegersString = "randint"
+
+def nonCentralChiSquareDFMin():
+    return 1 if (numpy.__version__ >= "1.10.0") else 2
+
+# Copied from NumPy source
+def poissonLamMax():
+    return (numpy.iinfo('int64').max - numpy.sqrt(numpy.iinfo('int64').max)*10)
+
+HardcodedValues = dict(
+    NonCentralChiSquareDFMin=nonCentralChiSquareDFMin(),
+    PoissonLamMax=poissonLamMax()
+)
+
+def getMapEntryIfStr(val):
+    return HardcodedValues[val] if (type(val) is str) else val
+
+#
+# Templates
+#
 
 ScriptDirName = os.path.dirname(__file__)
 BlocksDir = os.path.join(ScriptDirName, "Blocks")
@@ -47,6 +70,10 @@ def populateTemplates():
     blockExecutionTestTemplatePath = os.path.join(ScriptDirName, "BlockExecutionTest.mako.cpp")
     with open(blockExecutionTestTemplatePath) as f:
         BlockExecutionTestTemplate = f.read()
+
+#
+# Test code
+#
 
 def processYAMLFile(yamlPath):
     yml = None
@@ -195,15 +222,19 @@ def generateMakoVars(func,yaml):
                    arg["widgetArgs"]["editable"] = False
                 else:
                     if ">=" in arg:
+                        arg[">="] = getMapEntryIfStr(arg[">="])
                         arg["widgetArgs"]["minimum"] = str(arg[">="])
                     elif ">" in arg:
+                        arg[">"] = getMapEntryIfStr(arg[">"])
                         diff = 1 if (arg["widget"] == "SpinBox") else 0.01
-                        arg["widgetArgs"]["minimum"] = str(diff)
+                        arg["widgetArgs"]["minimum"] = str(arg[">"]+diff)
                     if "<=" in arg:
+                        arg["<="] = getMapEntryIfStr(arg["<="])
                         arg["widgetArgs"]["maximum"] = str(arg["<="])
                     elif "<" in arg:
+                        arg["<"] = getMapEntryIfStr(arg["<"])
                         diff = 1 if (arg["widget"] == "SpinBox") else 0.01
-                        arg["widgetArgs"]["maximum"] = str(diff)
+                        arg["widgetArgs"]["maximum"] = str(arg["<"]-diff)
         makoVars["funcArgsList"] = ["self.{0}".format(arg["privateVar"]) for arg in yaml["funcArgs"]]
 
     # Some keys are just straight copies.

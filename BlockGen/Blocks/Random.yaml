@@ -184,7 +184,6 @@ Samples are drawn from a negative binomial distribution with specified parameter
                 - {name: N, dtype: float, default: 10, testValue1: 0.01, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
                 - {name: P, dtype: float, default: 0.5, testValue1: 0.25, testValue2: 0.75, ">=": 0.0, "<=": 1.0, badValues: [-0.01, 1.01]}
 
-# TODO: figure out version-specific boundaries
 random/noncentral_chisquare:
         name: NonCentralChisquare
         niceName: Noncentral Chi-Square Distribution
@@ -193,10 +192,9 @@ random/noncentral_chisquare:
 
 The noncentral chi-square distribution is a generalization of the chi-square distribution (<b>/blocks/numpy/random/chisquare</b>)."
         funcArgs:
-                - {name: degreesOfFreedom, flowLabel: "Degrees of Freedom", dtype: uint, default: 2, testValue1: 1, testValue2: 3, ">": 0, badValues: [0]}
+                - {name: degreesOfFreedom, flowLabel: "Degrees of Freedom", dtype: uint, default: 2, testValue1: 1, testValue2: 3, ">=": "NonCentralChiSquareDFMin", badValues: [0]}
                 - {name: nonCentrality, flowLabel: "Noncentrality", dtype: float, default: 1.0, testValue1: 0.25, testValue2: 0.75, ">=": 0.0, badValues: [-0.01]}
 
-# TODO: figure out version-specific boundaries
 random/noncentral_f:
         name: NonCentralF
         niceName: Noncentral F-Distribution
@@ -236,7 +234,6 @@ The Pareto distribution must be greater than zero, and is unbounded above. It is
         funcArgs:
                 - {name: A, dtype: float, default: 1.0, testValue1: 0.5, testValue2: 1.5, ">": 0.0, badValues: [0.0]}
 
-# TODO: enforce mu not being within 10 sigma of int64 max?
 random/poisson:
         name: Poisson
         niceName: Poisson Distribution
@@ -245,7 +242,7 @@ random/poisson:
 
 The Poisson distribution is the limit of the binomial distribution for large <b>N</b>."
         funcArgs:
-                - {name: mu, dtype: float, default: 1.0, testValue1: 0.0, testValue2: 0.5, ">=": 0.0, badValues: [-0.01]}
+                - {name: lam, dtype: uint, default: 1, testValue1: 0, testValue2: 2, ">=": 0, "<=": "PoissonLamMax"}
 
 random/power:
         name: Power
