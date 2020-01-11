@@ -278,6 +278,27 @@ def generateMakoVars(func,yaml):
 
     return makoVars
 
+def addParameterBoundsToDesc(desc, funcArg):
+    wasEmpty = (len(desc) == 0)
+    if desc:
+        desc += "\n"
+
+    if ">" in funcArg:
+        desc += "\nLower bound: {0} (exclusive)\n".format(funcArg[">"])
+    elif ">=" in funcArg:
+        desc += "\nLower bound: {0} (inclusive)\n".format(funcArg[">="])
+
+    if "<" in funcArg:
+        desc += "\nUpper bound: {0} (exclusive)\n".format(funcArg["<"])
+    elif "<=" in funcArg:
+        desc += "\nUpper bound: {0} (inclusive)\n".format(funcArg["<="])
+
+    # If there was no incoming description, don't start it with a newline.
+    if wasEmpty:
+        desc = desc[1:]
+
+    return desc.rstrip("\n")
+
 def makoVarsToBlockDesc(makoVars):
     desc = dict()
     desc["name"] = makoVars.get("niceName", makoVars["name"])
@@ -354,11 +375,17 @@ def makoVarsToBlockDesc(makoVars):
                     param["default"] = str(funcArg.get("default", "0"))
 
                 if "description" in funcArg:
-                    param["desc"] = funcArg["description"].split("\n")
+                    param["desc"] = funcArg["description"]
                 if "widget" in funcArg:
                     param["widgetType"] = funcArg["widget"]
                 if "widgetArgs" in funcArg:
                     param["widgetKwargs"] = funcArg["widgetArgs"]
+
+                if any([op in funcArg for op in ["<","<=",">",">="]]):
+                    param["desc"] = addParameterBoundsToDesc(param.get("desc",""), funcArg)
+
+                if "desc" in param:
+                    param["desc"] = param["desc"].split("\n")
 
                 desc["calls"].append(dict(
                     type="setter",
