@@ -337,12 +337,14 @@ def makoVarsToBlockDesc(makoVars):
                 param["name"] = funcArg["title"]
                 if funcArg["dtype"] == "str":
                     param["widgetType"] = "ComboBox"
-                    param["widgetKwargs"] = dict(editable="false")
-                    param["options"] = [dict(x="\"{0}\"".format(x)) for x in funcArg["validValues"]]
+
                     if "validValues" in funcArg:
+                        param["options"] = [dict(name=val.title(),value="\"{0}\"".format(val)) for val in funcArg["validValues"]]
                         param["default"] = "\"{0}\"".format(funcArg["validValues"][0])
+                        param["widgetKwargs"] = dict(editable="false")
                     else:
                         param["default"] = "\"{0}\"".format(funcArg.get("default", ""))
+                        param["widgetKwargs"] = dict(editable="true")
                 else:
                     param["default"] = str(funcArg.get("default", "0"))
 
