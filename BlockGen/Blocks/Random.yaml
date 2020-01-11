@@ -56,8 +56,10 @@ random/binomial:
 
 Samples are drawn from a binomial distribution with specified parameters, <b>n</b> trials and <b>p</b> probability of success where <b>n</b> is an integer >= 0 and <b>p</b> is in the interval <b>[0,1]</b>."
         funcArgs:
-                - {name: N, dtype: uint, default: 10, testValue1: 0, testValue2: 1}
-                - {name: P, dtype: float, default: 0.5, testValue1: 0.25, testValue2: 0.75, ">=": 0.0, "<=": 1.0, badValues: [-0.01, 1.01]}
+                - {name: N, dtype: uint, default: 10, testValue1: 0, testValue2: 1, ">=": 0,
+                   description: "The number of independent trials."}
+                - {name: P, dtype: float, default: 0.5, testValue1: 0.25, testValue2: 0.75, ">=": 0.0, "<=": 1.0, badValues: [-0.01, 1.01],
+                   description: "The probability of success for each independent trial."}
 
 random/chisquare:
         name: ChiSquare
@@ -67,7 +69,7 @@ random/chisquare:
 
 When <b>df</b> independent random variables, each with standard normal distributions (mean 0, variance 1), are squared and summed, the resulting distribution is chi-square. This distribution is often used in hypothesis testing."
         funcArgs:
-                - {name: degreesOfFreedom, flowLabel: "Degrees of Freedom", dtype: float, default: 2, testValue1: 0.5, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
+                - {name: degreesOfFreedom, flowLabel: "Degrees of Freedom", dtype: uint, default: 2, testValue1: 1, testValue2: 3, ">": 0, badValues: [0]}
 
 random/exponential:
         name: Exponential
@@ -92,8 +94,8 @@ Samples are drawn from an <b>F</b> distribution with specified parameters, <b>df
 
 The random variate of the F distribution (also known as the Fisher distribution) is a continuous probability distribution that arises in ANOVA tests, and is the ratio of two chi-square variates."
         funcArgs:
-                - {name: numeratorDOF, flowLabel: "Numerator Degrees of Freedom", dtype: float, default: 1, testValue1: 0.5, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
-                - {name: denominatorDOF, flowLabel: "Denominator Degrees of Freedom", dtype: float, default: 1, testValue1: 0.5, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
+                - {name: numeratorDOF, flowLabel: "Numerator Degrees of Freedom", dtype: uint, default: 1, testValue1: 1, testValue2: 2, ">": 0, badValues: [0]}
+                - {name: denominatorDOF, flowLabel: "Denominator Degrees of Freedom", dtype: uint, default: 1, testValue1: 1, testValue2: 2, ">": 0, badValues: [0]}
 
 random/gamma:
         name: Gamma
@@ -191,7 +193,7 @@ random/noncentral_chisquare:
 
 The noncentral chi-square distribution is a generalization of the chi-square distribution (<b>/blocks/numpy/random/chisquare</b>)."
         funcArgs:
-                - {name: degreesOfFreedom, flowLabel: "Degrees of Freedom", dtype: float, default: 1, testValue1: 0.01, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
+                - {name: degreesOfFreedom, flowLabel: "Degrees of Freedom", dtype: uint, default: 2, testValue1: 1, testValue2: 3, ">": 0, badValues: [0]}
                 - {name: nonCentrality, flowLabel: "Noncentrality", dtype: float, default: 1.0, testValue1: 0.25, testValue2: 0.75, ">=": 0.0, badValues: [-0.01]}
 
 # TODO: figure out version-specific boundaries
@@ -203,8 +205,8 @@ random/noncentral_f:
 
 Samples are drawn from an F distribution with specified parameters, <b>dfnum</b> (degrees of freedom in numerator) and <b>dfden</b> (degrees of freedom in denominator), where both parameters <b>> 1</b>. <b>nonc</b> is the non-centrality parameter."
         funcArgs:
-                - {name: numeratorDOF, flowLabel: "Numerator Degrees of Freedom",  dtype: float, default: 2, testValue1: 1.5, testValue2: 2.0, ">": 1.0, badValues: [1.0]}
-                - {name: denominatorDOF, flowLabel: "Denominator Degrees of Freedom",  dtype: float, default: 1, testValue1: 0.5, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
+                - {name: numeratorDOF, flowLabel: "Numerator Degrees of Freedom", dtype: uint, default: 2, testValue1: 2, testValue2: 3, ">": 1, badValues: [1]}
+                - {name: denominatorDOF, flowLabel: "Denominator Degrees of Freedom", dtype: uint, default: 2, testValue1: 2, testValue2: 3, ">": 1, badValues: [1]}
                 - {name: nonCentrality, flowLabel: "Noncentrality", dtype: float, default: 1.0, testValue1: 0.25, testValue2: 0.75, ">=": 0.0, badValues: [-0.01]}
 
 random/normal:
@@ -287,7 +289,7 @@ random/standard_t:
 
 A special case of the hyperbolic distribution. As <b>df</b> gets large, the result resembles that of the standard normal distribution (<b>/blocks/numpy/random/standard_normal</b>)."
         funcArgs:
-                - {name: degreesOfFreedom, flowLabel: "Degrees of Freedom", dtype: float, default: 1.0, testValue1: 0.5, testValue2: 1.0, ">": 0.0, badValues: [0.0]}
+                - {name: degreesOfFreedom, flowLabel: "Degrees of Freedom", dtype: uint, default: 2, testValue1: 1, testValue2: 3, ">": 0, badValues: [0]}
 
 random/vonmises:
         name: VonMises
