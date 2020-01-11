@@ -186,8 +186,7 @@ def generateMakoVars(func,yaml):
 
     if "funcArgs" in yaml:
         for arg in yaml["funcArgs"]:
-            if "title" not in arg:
-                arg["title"] = arg["name"][0].upper() + arg["name"][1:]
+            arg["title"] = arg["name"][0].upper() + arg["name"][1:]
             arg["privateVar"] = "__{0}".format(arg["name"])
             if arg["dtype"]+"_" in ParamWidgets:
                 arg["widget"] = ParamWidgets[arg["dtype"]+"_"]
@@ -305,36 +304,42 @@ def makoVarsToBlockDesc(makoVars):
 
             if factoryParam == "dtype":
                 param["name"] = "Data Type"
+                param["desc"] = ["The block's data type."]
                 param["default"] = "\"{0}\"".format(makoVars["outputDTypeDefault"])
                 param["widgetKwargs"] = makoVars["outputDTypeChooser"]
             elif factoryParam == "inputDType":
                 param["name"] = "Input Data Type"
+                param["desc"] = ["The block's input data type."]
                 param["default"] = "\"{0}\"".format(makoVars["inputDTypeDefault"])
                 param["widgetKwargs"] = makoVars["inputDTypeChooser"]
             elif factoryParam == "outputDType":
                 param["name"] = "Output Data Type"
+                param["desc"] = ["The block's output data type."]
                 param["default"] = "\"{0}\"".format(makoVars["outputDTypeDefault"])
                 param["widgetKwargs"] = makoVars["outputDTypeChooser"]
             elif factoryParam == "nchans":
                 param["name"] = "Num Channels"
+                param["desc"] = ["The number of input channels for this block."]
                 param["default"] = "2"
                 param["preview"] = "disable"
                 param["widgetType"] = "SpinBox"
                 param["widgetKwargs"] = dict(minimum=2)
             elif factoryParam == "repeat":
                 param["name"] = "Repeat?"
+                param["desc"] = ["Whether or not a block with a fixed output repeatedly posts thsi output."]
                 param["default"] = "false"
                 param["widgetType"] = "ToggleSwitch"
                 param["widgetKwargs"] = dict(on="True",off="False")
             elif factoryParam == "ignoreNaN":
                 param["name"] = "Ignore NaN?"
+                param["desc"] = ["If this is set to \"true\", the output buffer will have all occurrences of <b>NaN</b> removed."]
                 param["default"] = "false"
                 param["widgetType"] = "ToggleSwitch"
                 param["widgetKwargs"] = dict(on="True",off="False")
             else:
                 # Find this parameter in our funcArgs, which has all this info.
                 funcArg = [funcArg for funcArg in makoVars.get("funcArgs",[]) if funcArg["name"] == factoryParam][0]
-                param["name"] = funcArg["title"]
+                param["name"] = funcArg.get("flowLabel", funcArg["title"])
                 if funcArg["dtype"] == "str":
                     param["widgetType"] = "ComboBox"
 
@@ -348,6 +353,8 @@ def makoVarsToBlockDesc(makoVars):
                 else:
                     param["default"] = str(funcArg.get("default", "0"))
 
+                if "description" in funcArg:
+                    param["desc"] = funcArg["description"].split("\n")
                 if "widget" in funcArg:
                     param["widgetType"] = funcArg["widget"]
                 if "widgetArgs" in funcArg:
