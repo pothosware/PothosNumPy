@@ -50,7 +50,7 @@ static void testBlockExecutionFunc(
                         dtype);
     }
 
-    testBlockExecutionCommon(testBlock);
+    PothosNumPyTests::testBlockExecutionCommon(testBlock);
 }
 
 template <typename T1, typename T2, typename T3>
@@ -72,13 +72,13 @@ static void test3ParamBlockExecution(
     POTHOS_TEST_TRUE(!testBlock.template call<bool>("getRepeat"));
 
     std::cout << blockRegistryPath << "(" << dtype.toString() << ", not repeating)" << std::endl;
-    testBlockExecutionCommon(testBlock);
+    PothosNumPyTests::testBlockExecutionCommon(testBlock);
 
     testBlock.template call("setRepeat", true);
     POTHOS_TEST_TRUE(testBlock.template call<bool>("getRepeat"));
 
     std::cout << blockRegistryPath << "(" << dtype.toString() << ", repeating)" << std::endl;
-    testBlockExecutionCommon(testBlock);
+    PothosNumPyTests::testBlockExecutionCommon(testBlock);
 }
 
 template <typename T>
@@ -121,22 +121,22 @@ static void testWindow()
                                blockRegistryPath,
                                dtype,
                                window);
-        testEqual(
+        PothosNumPyTests::testEqual(
             window,
             windowBlock.call<std::string>("getWindowType"));
-        testEqual(
+        PothosNumPyTests::testEqual(
             DefaultKaiserBeta,
             windowBlock.call<double>("getKaiserBeta"));
 
         if(window == "KAISER")
         {
             windowBlock.call("setKaiserBeta", TestKaiserBeta);
-            testEqual(
+            PothosNumPyTests::testEqual(
                 TestKaiserBeta,
                 windowBlock.call<double>("getKaiserBeta"));
         }
 
-        testBlockExecutionCommon(windowBlock);
+        PothosNumPyTests::testBlockExecutionCommon(windowBlock);
     }
 }
 
@@ -161,19 +161,19 @@ static void testManualBlockExecutionScalarCommon()
 }
 
 template <typename T>
-static EnableIfInteger<T, void> _testManualBlockExecution()
+static PothosNumPyTests::EnableIfInteger<T, void> _testManualBlockExecution()
 {
     testManualBlockExecutionScalarCommon<T>();
 }
 
 template <typename T>
-static EnableIfUnsignedInt<T, void> _testManualBlockExecution()
+static PothosNumPyTests::EnableIfUnsignedInt<T, void> _testManualBlockExecution()
 {
     testManualBlockExecutionScalarCommon<T>();
 }
 
 template <typename T>
-static EnableIfFloat<T, void> _testManualBlockExecution()
+static PothosNumPyTests::EnableIfFloat<T, void> _testManualBlockExecution()
 {
     testManualBlockExecutionScalarCommon<T>();
 
@@ -189,7 +189,7 @@ static EnableIfFloat<T, void> _testManualBlockExecution()
 }
 
 template <typename T>
-static EnableIfComplex<T, void> _testManualBlockExecution()
+static PothosNumPyTests::EnableIfComplex<T, void> _testManualBlockExecution()
 {
     testWindow<T>();
 }
@@ -197,6 +197,9 @@ static EnableIfComplex<T, void> _testManualBlockExecution()
 //
 // Actual template specializations here
 //
+
+namespace PothosNumPyTests
+{
 
 #define SPECIALIZE_MANUAL_BLOCK_EXECUTION(T) \
     template <> \
@@ -215,3 +218,5 @@ SPECIALIZE_MANUAL_BLOCK_EXECUTION(float)
 SPECIALIZE_MANUAL_BLOCK_EXECUTION(double)
 SPECIALIZE_MANUAL_BLOCK_EXECUTION(std::complex<float>)
 SPECIALIZE_MANUAL_BLOCK_EXECUTION(std::complex<double>)
+
+}

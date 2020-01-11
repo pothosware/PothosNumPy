@@ -9,6 +9,9 @@
 
 #include <string>
 
+namespace PothosNumPyTests
+{
+
 //
 // Test function
 //
@@ -28,3 +31,5 @@ void testBlockExecutionCommon(
 
 template <typename T>
 void testManualBlockExecution();
+
+}

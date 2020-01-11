@@ -54,7 +54,7 @@ static void testAutoBlockExecutionFunc(
     // Allow a longer timeout for random blocks.
     const bool longTimeout = (std::string::npos != blockRegistryPath.find("random"));
 
-    testBlockExecutionCommon(testBlock, longTimeout);
+    PothosNumPyTests::testBlockExecutionCommon(testBlock, longTimeout);
 }
 
 %for numParams in range(1,maxNumParams+1):
@@ -89,10 +89,10 @@ static void testAutoBlockExecutionFunc${numParams}Param(
 %endfor
                          );
 %for paramNum in range(numParams):
-    testEqual(param${paramNum}Value1, testBlock.template call<Param${paramNum}Type>(getter${paramNum}));
+    PothosNumPyTests::testEqual(param${paramNum}Value1, testBlock.template call<Param${paramNum}Type>(getter${paramNum}));
 %endfor
 
-    testBlockExecutionCommon(testBlock);
+    PothosNumPyTests::testBlockExecutionCommon(testBlock);
 
 %for setParamNum in range(numParams):
     {
@@ -104,7 +104,7 @@ static void testAutoBlockExecutionFunc${numParams}Param(
 %endfor
                         );
         testBlock.template call(setter${setParamNum}, param${setParamNum}Value2);
-        testEqual(param${setParamNum}Value2, testBlock.template call<Param${setParamNum}Type>(getter${setParamNum}));
+        PothosNumPyTests::testEqual(param${setParamNum}Value2, testBlock.template call<Param${setParamNum}Type>(getter${setParamNum}));
     }
 %endfor
 %for badParamNum in range(numParams):
@@ -133,7 +133,7 @@ static void testAutoBlockExecutionFunc${numParams}Param(
 %for typedefName,typeName in sfinaeMap.items():
 
 template <typename T>
-static EnableIf${typedefName}<T, void> testAutoBlockExecution()
+static PothosNumPyTests::EnableIf${typedefName}<T, void> testAutoBlockExecution()
 {
 %for blockName,blockInfo in blockYAML.items():
     %if (not blockInfo.get("skipExecTest", False) and blockInfo.get("subclass", False) and blockInfo["class"] not in ["FixedSingleOutputSource"]):
@@ -164,7 +164,7 @@ static EnableIf${typedefName}<T, void> testAutoBlockExecution()
     %endif
 %endfor
 
-    testManualBlockExecution<T>();
+    PothosNumPyTests::testManualBlockExecution<T>();
 }
 %endfor
 

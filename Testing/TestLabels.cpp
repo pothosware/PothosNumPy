@@ -141,7 +141,7 @@ POTHOS_TEST_BLOCK("/numpy/tests", test_labels)
     std::random_device rd;
     std::mt19937 g(rd());
 
-    std::vector<double> inputs = linspace<double>(-10, 10, 50);
+    std::vector<double> inputs = PothosNumPyTests::linspace<double>(-10, 10, 50);
     inputs.emplace_back(0.0); // To test PTP
     std::shuffle(inputs.begin(), inputs.end(), g);
 
@@ -212,7 +212,7 @@ POTHOS_TEST_BLOCK("/numpy/tests", test_labels)
         std::cout << "Testing label " << expectedLabel.id << std::endl;
 
         std::cout << " * Buffer..." << std::endl;
-        testBufferChunk<double>(
+        PothosNumPyTests::testBufferChunk<double>(
             blockBuffer,
             inputs);
         std::cout << " * ID..." << std::endl;
@@ -220,19 +220,19 @@ POTHOS_TEST_BLOCK("/numpy/tests", test_labels)
             expectedLabel.id,
             blockLabel.id);
         std::cout << " * Index..." << std::endl;
-        testEqual(
+        PothosNumPyTests::testEqual(
             expectedLabel.index,
             blockLabel.index);
         std::cout << " * Data..." << std::endl;
         if(expectedLabel.id == "NONZERO")
         {
-            testEqual(
+            PothosNumPyTests::testEqual(
                 expectedLabel.data.convert<size_t>(),
                 blockLabel.data.convert<size_t>());
         }
         else
         {
-            testEqual(
+            PothosNumPyTests::testEqual(
                 expectedLabel.data.convert<double>(),
                 blockLabel.data.convert<double>());
         }

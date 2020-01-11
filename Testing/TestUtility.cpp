@@ -5,6 +5,9 @@
 
 #include <Pothos/Testing.hpp>
 
+namespace PothosNumPyTests
+{
+
 void testBufferChunk(
     const Pothos::BufferChunk& expectedBufferChunk,
     const Pothos::BufferChunk& actualBufferChunk)
@@ -38,4 +41,6 @@ void testBufferChunk(
     IfTypeThenCompare("float64", double)
     IfTypeThenCompare("complex_float32", std::complex<float>)
     IfTypeThenCompare("complex_float64", std::complex<double>)
+}
+
 }

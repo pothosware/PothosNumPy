@@ -48,7 +48,7 @@ static std::string getTemporaryTestFile(
 
 // This is random enough for our use case.
 template <typename T>
-static EnableIfAnyInt<T, std::vector<T>> getRandomInputs(size_t numElements)
+static PothosNumPyTests::EnableIfAnyInt<T, std::vector<T>> getRandomInputs(size_t numElements)
 {
     std::vector<T> randomInputs(numElements);
     int* intBuffer = (int*)randomInputs.data();
@@ -66,7 +66,7 @@ static EnableIfAnyInt<T, std::vector<T>> getRandomInputs(size_t numElements)
 // The reinterpret_cast method above potentially results in NaN for floating-point
 // types, which ruins comparisons.
 template <typename T>
-static EnableIfFloat<T, std::vector<T>> getRandomInputs(size_t numElements)
+static PothosNumPyTests::EnableIfFloat<T, std::vector<T>> getRandomInputs(size_t numElements)
 {
     std::vector<T> randomInputs(numElements);
 
@@ -79,21 +79,21 @@ static EnableIfFloat<T, std::vector<T>> getRandomInputs(size_t numElements)
 }
 
 template <typename T>
-static EnableIfComplex<T, std::vector<T>> getRandomInputs(size_t numElements)
+static PothosNumPyTests::EnableIfComplex<T, std::vector<T>> getRandomInputs(size_t numElements)
 {
     using Scalar = typename T::value_type;
 
-    return toComplexVector(getRandomInputs<Scalar>(numElements * 2));
+    return PothosNumPyTests::toComplexVector(getRandomInputs<Scalar>(numElements * 2));
 }
 
 template <typename T>
-static inline EnableIfNotComplex<T, T> getEpsilon()
+static inline PothosNumPyTests::EnableIfNotComplex<T, T> getEpsilon()
 {
     return T(1e-4);
 }
 
 template <typename T>
-static inline EnableIfComplex<T, T> getEpsilon()
+static inline PothosNumPyTests::EnableIfComplex<T, T> getEpsilon()
 {
     using U = typename T::value_type;
 
@@ -106,7 +106,7 @@ static Pothos::BufferChunk getRandomInputs(
 {
     #define IfTypeGetRandomInputs(typeStr, ctype) \
         if(type == typeStr) \
-            return stdVectorToBufferChunk<ctype>( \
+            return PothosNumPyTests::stdVectorToBufferChunk<ctype>( \
                 Pothos::DType(typeStr), \
                 getRandomInputs<ctype>(numElements));
 
@@ -235,7 +235,7 @@ static void testLoadNPY(const std::string& type)
     // make sure it executes.
     if(std::string::npos == type.find("int64"))
     {
-        testBufferChunk(
+        PothosNumPyTests::testBufferChunk(
             collectorSink.call("getBuffer"),
             expectedOutputs.toObject().extract<Pothos::BufferChunk>());
     }
@@ -369,7 +369,7 @@ static void testLoadNPZ(bool compressed)
             Poco::Thread::sleep(10);
         }
 
-        testBufferChunk(
+        PothosNumPyTests::testBufferChunk(
             collectorSink.call<Pothos::BufferChunk>("getBuffer"),
             testValues[key]);
     }

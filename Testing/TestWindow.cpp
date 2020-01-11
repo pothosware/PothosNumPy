@@ -34,12 +34,12 @@ static void testWindowType(
                            blockRegistryPath,
                            dtype,
                            windowType);
-    testEqual(
+    PothosNumPyTests::testEqual(
         windowType,
         windowBlock.call<std::string>("getWindowType"));
 
     windowBlock.call("setKaiserBeta", KaiserBeta);
-    testEqual(
+    PothosNumPyTests::testEqual(
         KaiserBeta,
         windowBlock.call<double>("getKaiserBeta"));
 
@@ -67,7 +67,7 @@ static void testWindowType(
         POTHOS_TEST_TRUE(topology.waitInactive(0.01, 1.0));
     }
 
-    testBufferChunk(
+    PothosNumPyTests::testBufferChunk(
         collectorSink.call<Pothos::BufferChunk>("getBuffer"),
         expectedValues);
 }

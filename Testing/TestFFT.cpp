@@ -38,7 +38,7 @@ struct HFFTTestParams
 //
 
 template <typename T, typename U>
-static EnableIfBothComplex<T, U, BlockTestParams<T, U>> getFFTTestParams()
+static PothosNumPyTests::EnableIfBothComplex<T, U, BlockTestParams<T, U>> getFFTTestParams()
 {
     return
     {
@@ -116,7 +116,7 @@ static EnableIfBothComplex<T, U, BlockTestParams<T, U>> getFFTTestParams()
 }
 
 template <typename T, typename U>
-static EnableIfSecondComplex<T, U, BlockTestParams<T, U>> getRFFTTestParams()
+static PothosNumPyTests::EnableIfSecondComplex<T, U, BlockTestParams<T, U>> getRFFTTestParams()
 {
     return
     {
@@ -177,7 +177,7 @@ static EnableIfSecondComplex<T, U, BlockTestParams<T, U>> getRFFTTestParams()
 }
 
 template <typename T>
-static EnableIfNotComplex<T, HFFTTestParams<T, T, std::complex<T>>> getHFFTTestParams()
+static PothosNumPyTests::EnableIfNotComplex<T, HFFTTestParams<T, T, std::complex<T>>> getHFFTTestParams()
 {
     return
     {
@@ -317,13 +317,13 @@ static EnableIfNotComplex<T, HFFTTestParams<T, T, std::complex<T>>> getHFFTTestP
 }
 
 template <typename T>
-static inline EnableIfNotComplex<T, T> getEpsilon()
+static inline PothosNumPyTests::EnableIfNotComplex<T, T> getEpsilon()
 {
     return T(1e-4);
 }
 
 template <typename T>
-static inline EnableIfComplex<T, T> getEpsilon()
+static inline PothosNumPyTests::EnableIfComplex<T, T> getEpsilon()
 {
     using U = typename T::value_type;
 
@@ -390,7 +390,7 @@ static void testFFT()
     // Load the feeder
     feeder.call(
         "feedBuffer",
-        stdVectorToBufferChunk(
+        PothosNumPyTests::stdVectorToBufferChunk(
             complexDType,
             testParams.inputs));
 
@@ -409,12 +409,12 @@ static void testFFT()
 
     // Test the collectors
     std::cout << " * Testing " << fwdBlockRegistryPath << std::endl;
-    testBufferChunk(
+    PothosNumPyTests::testBufferChunk(
         fwdCollector.call("getBuffer"),
         testParams.outputs,
         getEpsilon<Complex>());
     std::cout << " * Testing " << invBlockRegistryPath << std::endl;
-    testBufferChunk(
+    PothosNumPyTests::testBufferChunk(
         invCollector.call("getBuffer"),
         testParams.inputs,
         getEpsilon<Complex>());
@@ -461,7 +461,7 @@ static void testRFFT()
     // Load the feeder
     feeder.call(
         "feedBuffer",
-        stdVectorToBufferChunk(
+        PothosNumPyTests::stdVectorToBufferChunk(
             dtype,
             testParams.inputs));
 
@@ -480,12 +480,12 @@ static void testRFFT()
 
     // Test the collectors
     std::cout << " * Testing " << fwdBlockRegistryPath << std::endl;
-    testBufferChunk(
+    PothosNumPyTests::testBufferChunk(
         fwdCollector.call("getBuffer"),
         testParams.outputs,
         getEpsilon<Complex>());
     std::cout << " * Testing " << invBlockRegistryPath << std::endl;
-    testBufferChunk(
+    PothosNumPyTests::testBufferChunk(
         invCollector.call("getBuffer"),
         testParams.inputs,
         getEpsilon<T>());
@@ -533,7 +533,7 @@ static void testHFFT()
     // Load the feeder
     feeder.call(
         "feedBuffer",
-        stdVectorToBufferChunk(
+        PothosNumPyTests::stdVectorToBufferChunk(
             dtype,
             testParams.inputs));
 
@@ -552,12 +552,12 @@ static void testHFFT()
 
     // Test the collectors
     std::cout << " * Testing " << fwdBlockRegistryPath << std::endl;
-    testBufferChunk(
+    PothosNumPyTests::testBufferChunk(
         fwdCollector.call("getBuffer"),
         testParams.outputs,
         getEpsilon<T>());
     std::cout << " * Testing " << invBlockRegistryPath << std::endl;
-    testBufferChunk(
+    PothosNumPyTests::testBufferChunk(
         invCollector.call("getBuffer"),
         testParams.revOutputs,
         getEpsilon<std::complex<T>>());

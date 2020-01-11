@@ -18,6 +18,9 @@
 #include <type_traits>
 #include <vector>
 
+namespace PothosNumPyTests
+{
+
 //
 // Useful typedefs
 //
@@ -288,6 +291,8 @@ std::string bufferChunkToString(const Pothos::BufferChunk& bufferChunk)
     }
 
     return ostream.str();
+}
+
 }
 
 #endif /* INCLUDED_TEST_UTILITY_HPP */

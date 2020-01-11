@@ -19,6 +19,9 @@
 
 #include <iostream>
 
+namespace PothosNumPyTests
+{
+
 //
 // Utility functions
 //
@@ -185,4 +188,6 @@ void testBlockExecutionCommon(
         const auto& collectorSink = collectorSinkMapPair.second;
         POTHOS_TEST_TRUE(collectorSink.call("getBuffer").call<size_t>("elements") > 0);
     }
+}
+
 }

@@ -25,7 +25,7 @@ static void testIntInfo()
     Pothos::DType dtype(typeid(T));
     std::cout << "Testing " << dtype.toString() << std::endl;
 
-    auto iinfo = getAndCallPlugin<Pothos::Proxy>("/numpy/info/iinfo", dtype);
+    auto iinfo = PothosNumPyTests::getAndCallPlugin<Pothos::Proxy>("/numpy/info/iinfo", dtype);
 
     POTHOS_TEST_EQUAL(
         dtype.name(),
@@ -52,12 +52,12 @@ static void testIntInfo()
 }
 
 template <typename T>
-static EnableIfNotComplex<T, void> testFloatInfo()
+static PothosNumPyTests::EnableIfNotComplex<T, void> testFloatInfo()
 {
     Pothos::DType dtype(typeid(T));
     std::cout << "Testing " << dtype.toString() << std::endl;
 
-    auto finfo = getAndCallPlugin<Pothos::Proxy>("/numpy/info/finfo", dtype);
+    auto finfo = PothosNumPyTests::getAndCallPlugin<Pothos::Proxy>("/numpy/info/finfo", dtype);
 
     POTHOS_TEST_EQUAL(
         dtype.name(),
@@ -101,19 +101,19 @@ static EnableIfNotComplex<T, void> testFloatInfo()
 }
 
 template <typename T>
-static EnableIfComplex<T, void> testFloatInfo()
+static PothosNumPyTests::EnableIfComplex<T, void> testFloatInfo()
 {
     Pothos::DType dtype(typeid(T));
     std::cout << "Testing " << dtype.toString() << std::endl;
 
     // For complex, just make sure the finfo returned corresponds to the scalar
     // type.
-    auto finfo = getAndCallPlugin<Pothos::Proxy>("/numpy/info/finfo", dtype);
-    auto scalarFInfo = getAndCallPlugin<Pothos::Proxy>(
+    auto finfo = PothosNumPyTests::getAndCallPlugin<Pothos::Proxy>("/numpy/info/finfo", dtype);
+    auto scalarFInfo = PothosNumPyTests::getAndCallPlugin<Pothos::Proxy>(
                            "/numpy/info/finfo",
                            Pothos::DType(typeid(typename T::value_type)));
 
-    testEqual<std::string>(
+    POTHOS_TEST_EQUAL(
         finfo.call("dtype").call<std::string>("name"),
         scalarFInfo.call("dtype").call<std::string>("name"));
 }
@@ -149,7 +149,7 @@ POTHOS_TEST_BLOCK("/numpy/tests", test_finfo)
 POTHOS_TEST_BLOCK("/numpy/tests", test_registered_string_calls)
 {
     // Make sure this is valid JSON. This will throw if the JSON is invalid.
-    std::string numpyConfigInfo = getAndCallPlugin<std::string>("/devices/numpy/info");
+    std::string numpyConfigInfo = PothosNumPyTests::getAndCallPlugin<std::string>("/devices/numpy/info");
     POTHOS_TEST_TRUE(!numpyConfigInfo.empty());
     auto json = nlohmann::json::parse(numpyConfigInfo);
 
