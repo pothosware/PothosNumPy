@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import datetime
+import json
 from mako.template import Template
 import mako.exceptions
 import numpy
@@ -21,14 +22,12 @@ OutputDir = os.path.abspath(sys.argv[1])
 Now = datetime.datetime.now()
 
 CppFactoryTemplate = None
-PothosDocTemplate = None
 PythonFactoryFunctionTemplate = None
 PythonSubclassTemplate = None
 BlockExecutionTestTemplate = None
 
 def populateTemplates():
     global CppFactoryTemplate
-    global PothosDocTemplate
     global PythonFactoryFunctionTemplate
     global PythonSubclassTemplate
     global BlockExecutionTestTemplate
@@ -36,10 +35,6 @@ def populateTemplates():
     cppFactoryFunctionTemplatePath = os.path.join(ScriptDirName, "Factory.mako.cpp")
     with open(cppFactoryFunctionTemplatePath) as f:
         CppFactoryTemplate = f.read()
-
-    pothosDocTemplatePath = os.path.join(ScriptDirName, "PothosDoc.mako.py")
-    with open(pothosDocTemplatePath) as f:
-        PothosDocTemplate = f.read()
 
     pythonFactoryFunctionTemplatePath = os.path.join(ScriptDirName, "PythonFactoryFunction.mako.py")
     with open(pythonFactoryFunctionTemplatePath) as f:
@@ -99,17 +94,21 @@ def blockTypeToDTypeChooser(blockTypeYAML):
     else:
         yamlToProcess = blockTypeYAML
 
-    return ",".join(["{0}=1".format(typeStr) for typeStr in [t.replace("complex","cfloat") for t in yamlToProcess]])
+    args = dict()
+    for typeStr in yamlToProcess:
+        args[typeStr.replace("complex","cfloat")] = 1
+
+    return args
 
 def blockTypeToDTypeDefault(blockTypeYAML):
     dtypeChooser = blockTypeToDTypeChooser(blockTypeYAML)
 
-    if dtypeChooser == "cfloat=1":
+    if dtypeChooser.get("cfloat",0) == 1:
         defaultType = "complex_float64"
     elif "float" in dtypeChooser:
         defaultType = "float64"
     else:
-        defaultType = dtypeChooser.split(",")[0].replace("complex", "complex_float").split("=")[0] + "64"
+        defaultType = list(dtypeChooser.keys())[0].replace("complex", "complex_float").split("=")[0] + "64"
 
     return defaultType
 
@@ -187,25 +186,25 @@ def generateMakoVars(func,yaml):
 
     if "funcArgs" in yaml:
         for arg in yaml["funcArgs"]:
-            arg["title"] = arg["name"][0].upper() + arg["name"][1:]
+            if "title" not in arg:
+                arg["title"] = arg["name"][0].upper() + arg["name"][1:]
             arg["privateVar"] = "__{0}".format(arg["name"])
             if arg["dtype"]+"_" in ParamWidgets:
                 arg["widget"] = ParamWidgets[arg["dtype"]+"_"]
-                arg["widgetArgs"] = []
+                arg["widgetArgs"] = dict()
                 if arg["widget"] == "ComboBox":
-                   arg["widgetArgs"] += ["editable=False"]
+                   arg["widgetArgs"]["editable"] = False
                 else:
                     if ">=" in arg:
-                        arg["widgetArgs"] += ["minimum={0}".format(arg[">="])]
+                        arg["widgetArgs"]["minimum"] = str(arg[">="])
                     elif ">" in arg:
                         diff = 1 if (arg["widget"] == "SpinBox") else 0.01
-                        arg["widgetArgs"] += ["minimum={0}".format(arg[">"]+diff)]
+                        arg["widgetArgs"]["minimum"] = str(diff)
                     if "<=" in arg:
-                        arg["widgetArgs"] += ["maximum={0}".format(arg["<="])]
+                        arg["widgetArgs"]["maximum"] = str(arg["<="])
                     elif "<" in arg:
                         diff = 1 if (arg["widget"] == "SpinBox") else 0.01
-                        arg["widgetArgs"] += ["maximum={0}".format(arg[">"]+diff)]
-                arg["widgetArgs"] = ",".join(arg["widgetArgs"])
+                        arg["widgetArgs"]["maximum"] = str(diff)
         makoVars["funcArgsList"] = ["self.{0}".format(arg["privateVar"]) for arg in yaml["funcArgs"]]
 
     # Some keys are just straight copies.
@@ -214,7 +213,7 @@ def generateMakoVars(func,yaml):
             makoVars[key] = yaml[key]
 
     if "description" in yaml:
-        makoVars["description"] = yaml["description"].replace("\n", "\n *\n * ")
+        makoVars["description"] = yaml["description"]
 
     makoVars["classParams"] = []
     makoVars["factoryParams"] = []
@@ -280,10 +279,91 @@ def generateMakoVars(func,yaml):
 
     return makoVars
 
+def makoVarsToBlockDesc(makoVars):
+    desc = dict()
+    desc["name"] = makoVars.get("niceName", makoVars["name"])
+    desc["path"] = "/numpy/"+makoVars["blockRegistryPath"]
+    desc["args"] = makoVars["factoryParams"]
+    desc["keywords"] = makoVars.get("keywords", [makoVars["func"]])
+    desc["categories"]  = makoVars["category"].split(" ")
+    if "description" in makoVars:
+        desc["docs"] = makoVars["description"].split("\n")
+
+    if "alias" in makoVars:
+        desc["alias"] = ["/numpy/"+alias for alias in makoVars["alias"]]
+
+    if "factoryParams" in makoVars:
+        desc["params"] = list()
+        desc["calls"] = list()
+
+        for factoryParam in makoVars["factoryParams"]:
+            param = dict(key=factoryParam, preview="enable")
+
+            if "dtype" in factoryParam.lower():
+                param["widgetType"] = "DTypeChooser"
+                param["preview"] = "disable"
+
+            if factoryParam == "dtype":
+                param["name"] = "Data Type"
+                param["default"] = "\"{0}\"".format(makoVars["outputDTypeDefault"])
+                param["widgetKwargs"] = makoVars["outputDTypeChooser"]
+            elif factoryParam == "inputDType":
+                param["name"] = "Input Data Type"
+                param["default"] = "\"{0}\"".format(makoVars["inputDTypeDefault"])
+                param["widgetKwargs"] = makoVars["inputDTypeChooser"]
+            elif factoryParam == "outputDType":
+                param["name"] = "Output Data Type"
+                param["default"] = "\"{0}\"".format(makoVars["outputDTypeDefault"])
+                param["widgetKwargs"] = makoVars["outputDTypeChooser"]
+            elif factoryParam == "nchans":
+                param["name"] = "Num Channels"
+                param["default"] = "2"
+                param["preview"] = "disable"
+                param["widgetType"] = "SpinBox"
+                param["widgetKwargs"] = dict(minimum=2)
+            elif factoryParam == "repeat":
+                param["name"] = "Repeat?"
+                param["default"] = "false"
+                param["widgetType"] = "ToggleSwitch"
+                param["widgetKwargs"] = dict(on="True",off="False")
+            elif factoryParam == "ignoreNaN":
+                param["name"] = "Ignore NaN?"
+                param["default"] = "false"
+                param["widgetType"] = "ToggleSwitch"
+                param["widgetKwargs"] = dict(on="True",off="False")
+            else:
+                # Find this parameter in our funcArgs, which has all this info.
+                funcArg = [funcArg for funcArg in makoVars.get("funcArgs",[]) if funcArg["name"] == factoryParam][0]
+                param["name"] = funcArg["title"]
+                if funcArg["dtype"] == "str":
+                    param["widgetType"] = "ComboBox"
+                    param["widgetKwargs"] = dict(editable="false")
+                    param["options"] = [dict(x="\"{0}\"".format(x)) for x in funcArg["validValues"]]
+                    if "validValues" in funcArg:
+                        param["default"] = "\"{0}\"".format(funcArg["validValues"][0])
+                    else:
+                        param["default"] = "\"{0}\"".format(funcArg.get("default", ""))
+                else:
+                    param["default"] = str(funcArg.get("default", "0"))
+
+                if "widget" in funcArg:
+                    param["widgetType"] = funcArg["widget"]
+                if "widgetArgs" in funcArg:
+                    param["widgetKwargs"] = funcArg["widgetArgs"]
+
+                desc["calls"].append(dict(
+                    type="setter",
+                    name="set" + factoryParam[0].upper() + factoryParam[1:],
+                    args=factoryParam))
+
+            desc["params"].append(param)
+
+    # Encode the block description into escaped JSON
+    descEscaped = "".join([hex(ord(ch)).replace("0x", "\\x") for ch in json.dumps(desc)])
+    return "Pothos::PluginRegistry::add(\"{0}\", std::string(\"{1}\"));".format(makoVars["docRegistryPath"], descEscaped)
+
 def generatePythonEntryPoint(makoVars):
     try:
-        pothosDoc = Template(PothosDocTemplate).render(makoVars=makoVars)
-
         if makoVars["subclass"]:
             entryPoint = Template(PythonSubclassTemplate).render(makoVars=makoVars)
         else:
@@ -291,7 +371,7 @@ def generatePythonEntryPoint(makoVars):
     except:
         print(mako.exceptions.text_error_template().render())
 
-    return (pothosDoc + entryPoint)
+    return "{0}\n# /numpy/{1}\n{2}\n{3}".format("#"*79, makoVars["blockRegistryPath"], "#"*79, entryPoint)
 
 def generateCppOutput(allMakoVars):
     prefix = """// Copyright (c) 2019-{0} Nicholas Corgan
@@ -303,8 +383,10 @@ def generateCppOutput(allMakoVars):
 """.format(Now.year, Now)
 
     factories = []
+    docs = []
     for makoVars in allMakoVars:
         factories += [generateCppFactory(makoVars["blockRegistryPath"], makoVars["name"])]
+        docs += [makoVarsToBlockDesc(makoVars)]
         if "alias" in makoVars:
             for alias in makoVars["alias"]:
                 factories += [generateCppFactory(alias, makoVars["name"])]
@@ -321,7 +403,7 @@ def generateCppOutput(allMakoVars):
             factories += [generateCppFactory(alias,v["name"])]
 
     try:
-        rendered = Template(CppFactoryTemplate).render(factories=factories)
+        rendered = Template(CppFactoryTemplate).render(factories=factories, docs=docs)
     except:
         print(mako.exceptions.text_error_template().render())
 
@@ -417,7 +499,7 @@ if __name__ == "__main__":
         if not v.get("cppOnly", False):
             makoVars = generateMakoVars(k.split("/")[-1], v)
             makoVars["blockRegistryPath"] = k
-            makoVars["docRegistryPath"] = "/blocks/docs" + k
+            makoVars["docRegistryPath"] = "/blocks/docs/numpy/{0}".format(k)
             allMakoVars += [makoVars]
 
     populateTemplates()

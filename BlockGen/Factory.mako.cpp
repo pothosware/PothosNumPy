@@ -1,5 +1,6 @@
 #include <Pothos/Callable.hpp>
 #include <Pothos/Framework.hpp>
+#include <Pothos/Plugin.hpp>
 #include <Pothos/Proxy.hpp>
 
 static Pothos::Object FactoryFunc(
@@ -31,3 +32,10 @@ static const std::vector<Pothos::BlockRegistry> blockRegistries =
     ${factory},
 %endfor
 };
+
+pothos_static_block(register_pothos_numpy_docs)
+{
+%for doc in docs:
+    ${doc}
+%endfor
+}

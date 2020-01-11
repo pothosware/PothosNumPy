@@ -1,3 +1,4 @@
+
 class ${makoVars["name"]}(${makoVars["class"]}):
     def __init__(self, ${", ".join(makoVars["factoryParams"])}):
 %for var in makoVars["factoryVars"][::-1]:

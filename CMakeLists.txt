@@ -46,7 +46,6 @@ set(autogenDeps
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Trig.yaml
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Factory.mako.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/BlockExecutionTest.mako.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/PothosDoc.mako.py
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/PythonFactoryFunction.mako.py
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/PythonSubclass.mako.py
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/GenBlocks.py)
@@ -58,7 +57,7 @@ add_custom_command(
     OUTPUT ${autogenOutputs}
     DEPENDS ${autogenDeps}
     COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/GenBlocks.py" "${CMAKE_CURRENT_BINARY_DIR}/BlockGen"
-    COMMENT "Auto-generating C++ factories and Python entry points")
+    COMMENT "Generating C++ factories and Python entry points")
 add_custom_target(
     autogen_files ALL
     DEPENDS ${autogenOutputs})
@@ -107,7 +106,6 @@ BUILD_PYTHON_MODULE(
         Testing/TestUtility.cpp
         Testing/TestWindow.cpp
     DOC_SOURCES
-        ${autogenOutputs}
         Python/FFT.py
         Python/Load.py
         Python/Save.py
