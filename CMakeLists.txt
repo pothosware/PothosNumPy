@@ -27,6 +27,14 @@ find_python_module(mako REQUIRED)
 find_python_module(yaml REQUIRED)
 
 ########################################################################
+# Get NumPy version to store with installation
+########################################################################
+execute_process(
+    COMMAND ${PYTHON_EXECUTABLE} -c "import numpy; print(numpy.__version__)"
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    OUTPUT_VARIABLE NUMPY_VERSION)
+
+########################################################################
 # Auto-generate the majority of blocks
 ########################################################################
 
@@ -70,12 +78,15 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${JSON_HPP_INCLUDE_DIR})
 
+configure_file(
+    Python/__init__.py.in
+    ${CMAKE_CURRENT_BINARY_DIR}/Python/__init__.py)
+
 include(BuildPythonModule)
 BUILD_PYTHON_MODULE(
     TARGET NumPyBlocks
     DESTINATION PothosNumPy
     SOURCES
-        Python/__init__.py
         Python/BaseBlock.py
         Python/FFT.py
         Python/ForwardAndPostLabelBlock.py
@@ -90,6 +101,7 @@ BUILD_PYTHON_MODULE(
         Python/TwoToOneBlock.py
         Python/Utility.py
         Python/Window.py
+        ${CMAKE_CURRENT_BINARY_DIR}/Python/__init__.py
         ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/BlockEntryPoints.py
     CPP_SOURCES
         ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/Factory.cpp
