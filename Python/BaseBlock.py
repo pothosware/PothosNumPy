@@ -12,6 +12,9 @@ class BaseBlock(Pothos.Block):
     def __init__(self, blockPath, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, funcArgs, funcKWargs, *args, **kwargs):
         Pothos.Block.__init__(self)
 
+        # Or else the name of all blocks will be /blocks/python_block
+        self.setName(blockPath)
+
         self.func = func
         self.funcArgs = funcArgs
         self.funcKWargs = funcKWargs

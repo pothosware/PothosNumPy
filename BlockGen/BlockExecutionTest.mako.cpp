@@ -50,6 +50,9 @@ static void testAutoBlockExecutionFunc(
                         blockRegistryPath,
                         dtype);
     }
+    POTHOS_TEST_EQUAL(
+        blockRegistryPath,
+        testBlock.call<std::string>("getName"));
 
     // Allow a longer timeout for random blocks.
     const bool longTimeout = (std::string::npos != blockRegistryPath.find("random"));

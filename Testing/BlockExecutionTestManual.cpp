@@ -49,6 +49,9 @@ static void testBlockExecutionFunc(
                         blockRegistryPath,
                         dtype);
     }
+    POTHOS_TEST_EQUAL(
+        blockRegistryPath,
+        testBlock.call<std::string>("getName"));
 
     PothosNumPyTests::testBlockExecutionCommon(testBlock);
 }
@@ -70,6 +73,9 @@ static void test3ParamBlockExecution(
                          param3,
                          false /*repeat*/);
     POTHOS_TEST_TRUE(!testBlock.template call<bool>("getRepeat"));
+    POTHOS_TEST_EQUAL(
+        blockRegistryPath,
+        testBlock.template call<std::string>("getName"));
 
     std::cout << blockRegistryPath << "(" << dtype.toString() << ", not repeating)" << std::endl;
     PothosNumPyTests::testBlockExecutionCommon(testBlock);
@@ -121,6 +127,9 @@ static void testWindow()
                                blockRegistryPath,
                                dtype,
                                window);
+        POTHOS_TEST_EQUAL(
+            blockRegistryPath,
+            windowBlock.call<std::string>("getName"));
         PothosNumPyTests::testEqual(
             window,
             windowBlock.call<std::string>("getWindowType"));
