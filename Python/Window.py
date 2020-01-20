@@ -56,15 +56,20 @@ class WindowBlock(OneToOneBlock):
         self.kaiserBetaChanged(kaiserBeta)
 
     def work(self):
-        if len(self.input(0).buffer()) == 0:
+        elems = self.workInfo().minAllInElements
+        if 0 == elems:
             return
 
-        in0 = self.input(0).takeBuffer()
-        self.input(0).consume(len(in0))
-        window = self.func(len(in0), *self.funcArgs).astype(self.numpyOutputDType)
+        in0 = self.input(0).buffer()
+        out0 = self.output(0).buffer()
+        N = min(len(in0), len(out0))
 
-        in0 = in0 * window
-        self.output(0).postBuffer(in0)
+        out = (in0[:N] * self.func(N, *self.funcArgs)).astype(self.numpyOutputDType, copy=False)
+
+        if (out is not None) and (len(out) > 0):
+            out0[:N] = out
+            self.input(0).consume(N)
+            self.output(0).produce(N)
 
 """
 /*
