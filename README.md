@@ -1,6 +1,6 @@
 # NumPy Pothos Blocks
 
-Pothos blocks implemented in Python that wrap the majority of NumPy's functionality.
+This toolkit provides Python-based Pothos blocks that wrap the majority of NumPy's functionality, as well as providing interfaces to NumPy's numeric info classes.
 
 ## Documentation
 
@@ -14,7 +14,7 @@ Pothos blocks implemented in Python that wrap the majority of NumPy's functional
 
 ## Licensing information
 
-Copyright 2019 Nicholas Corgan
+Copyright 2019-2020 Nicholas Corgan
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
