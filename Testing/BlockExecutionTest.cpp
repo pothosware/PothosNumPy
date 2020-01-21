@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Nicholas Corgan
+// Copyright (c) 2019-2020 Nicholas Corgan
 // SPDX-License-Identifier: BSD-3-Clause
 
 #include "Testing/BlockExecutionTest.hpp"
@@ -25,6 +25,20 @@ namespace PothosNumPyTests
 //
 // Utility functions
 //
+
+template <typename T>
+static std::vector<T> getIntTestParams(T a, T step, size_t N)
+{
+    std::vector<T> ret;
+    ret.reserve(N);
+
+    for(size_t i = 0; i < N; ++i)
+    {
+        ret.emplace_back(a + (T(i)*step));
+    }
+
+    return ret;
+}
 
 template <typename T>
 static EnableIfInteger<T, std::vector<T>> getTestInputs()
@@ -68,7 +82,7 @@ Pothos::BufferChunk getTestInputs(const std::string& type)
 {
     #define IfTypeThenGetInputs(typeStr, ctype) \
         if(type == typeStr) \
-            return stdVectorToBufferChunk<ctype>(Pothos::DType(type), getTestInputs<ctype>());
+            return stdVectorToBufferChunk<ctype>(getTestInputs<ctype>());
 
     IfTypeThenGetInputs("int8", std::int8_t)
     IfTypeThenGetInputs("int16", std::int16_t)

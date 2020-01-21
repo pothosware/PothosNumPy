@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Nicholas Corgan
+// Copyright (c) 2019-2020 Nicholas Corgan
 // SPDX-License-Identifier: BSD-3-Clause
 
 #pragma once
@@ -15,11 +15,6 @@ namespace PothosNumPyTests
 //
 // Test function
 //
-
-template <typename T>
-void testBlockExecutionCommon(
-    const Pothos::Proxy& testBlock,
-    bool longTimeout = false);
 
 void testBlockExecutionCommon(
     const Pothos::Proxy& testBlock,

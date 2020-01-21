@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Nicholas Corgan
+// Copyright (c) 2019-2020 Nicholas Corgan
 // SPDX-License-Identifier: BSD-3-Clause
 
 #include "TestUtility.hpp"
@@ -7,6 +7,9 @@
 
 namespace PothosNumPyTests
 {
+
+template <typename T>
+static constexpr EnableIfFloat<T,T> epsilon() {return T(1e-4);}
 
 void testBufferChunk(
     const Pothos::BufferChunk& expectedBufferChunk,
@@ -28,6 +31,34 @@ void testBufferChunk(
                 expectedBufferChunk.elements()); \
             return; \
         }
+    #define IfTypeThenCompareFloat(typeStr, cType) \
+        if(expectedBufferChunk.dtype.name() == typeStr) \
+        { \
+            for(size_t i = 0; i < expectedBufferChunk.elements(); ++i) \
+            { \
+                POTHOS_TEST_CLOSE( \
+                    expectedBufferChunk.as<const cType*>()[i], \
+                    actualBufferChunk.as<const cType*>()[i], \
+                    epsilon<cType>()); \
+            } \
+            return; \
+        }
+    #define IfTypeThenCompareComplex(typeStr, cType) \
+        if(expectedBufferChunk.dtype.name() == typeStr) \
+        { \
+            for(size_t i = 0; i < expectedBufferChunk.elements(); ++i) \
+            { \
+                POTHOS_TEST_CLOSE( \
+                    expectedBufferChunk.as<const cType*>()[i].real(), \
+                    actualBufferChunk.as<const cType*>()[i].real(), \
+                    epsilon<typename cType::value_type>()); \
+                POTHOS_TEST_CLOSE( \
+                    expectedBufferChunk.as<const cType*>()[i].imag(), \
+                    actualBufferChunk.as<const cType*>()[i].imag(), \
+                    epsilon<typename cType::value_type>()); \
+            } \
+            return; \
+        }
 
     IfTypeThenCompare("int8", std::int8_t)
     IfTypeThenCompare("int16", std::int16_t)
@@ -37,10 +68,10 @@ void testBufferChunk(
     IfTypeThenCompare("uint16", std::uint16_t)
     IfTypeThenCompare("uint32", std::uint32_t)
     IfTypeThenCompare("uint64", std::uint64_t)
-    IfTypeThenCompare("float32", float)
-    IfTypeThenCompare("float64", double)
-    IfTypeThenCompare("complex_float32", std::complex<float>)
-    IfTypeThenCompare("complex_float64", std::complex<double>)
+    IfTypeThenCompareFloat("float32", float)
+    IfTypeThenCompareFloat("float64", double)
+    IfTypeThenCompareComplex("complex_float32", std::complex<float>)
+    IfTypeThenCompareComplex("complex_float64", std::complex<double>)
 }
 
 }

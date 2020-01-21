@@ -1,8 +1,7 @@
-// Copyright (c) 2019 Nicholas Corgan
+// Copyright (c) 2019-2020 Nicholas Corgan
 // SPDX-License-Identifier: BSD-3-Clause
 
-#ifndef INCLUDED_TEST_UTILITY_HPP
-#define INCLUDED_TEST_UTILITY_HPP
+#pragma once
 
 #include <Pothos/Framework/BufferChunk.hpp>
 #include <Pothos/Framework/DType.hpp>
@@ -94,18 +93,15 @@ static inline EnableIfComplex<T, void> testEqual(T x, T y)
 }
 
 template <typename T>
-static Pothos::BufferChunk stdVectorToBufferChunk(
-    const Pothos::DType& dtype,
-    const std::vector<T>& vectorIn)
+static Pothos::BufferChunk stdVectorToBufferChunk(const std::vector<T>& vectorIn)
 {
+    static const Pothos::DType dtype(typeid(T));
+
     auto ret = Pothos::BufferChunk(
                    dtype,
                    (vectorIn.size() / dtype.dimension()));
-    auto buf = ret.as<T*>();
-    for(size_t i = 0; i < vectorIn.size(); ++i)
-    {
-        buf[i] = vectorIn[i];
-    }
+    auto* buf = ret.as<T*>();
+    std::memcpy(buf, vectorIn.data(), ret.length);
 
     return ret;
 }
@@ -164,85 +160,9 @@ static std::vector<T> linspace(T a, T b, size_t N)
     return xs;
 }
 
-template <typename T>
-std::vector<T> flip(const std::vector<T>& input)
-{
-    std::vector<T> output(input);
-    std::reverse(output.begin(), output.end());
-    return output;
-}
-
-template <typename T>
-static std::vector<T> getIntTestParams(T a, T step, size_t N)
-{
-    std::vector<T> ret;
-    ret.reserve(N);
-
-    for(size_t i = 0; i < N; ++i)
-    {
-        ret.emplace_back(a + (T(i)*step));
-    }
-
-    return ret;
-}
-
 void testBufferChunk(
     const Pothos::BufferChunk& expectedBufferChunk,
     const Pothos::BufferChunk& actualBufferChunk);
-
-template <typename T>
-static EnableIfFloat<T, void> testBufferChunk(
-    const Pothos::BufferChunk& bufferChunk,
-    const std::vector<T>& expectedOutputs,
-    T epsilon = 1e-6)
-{
-    POTHOS_TEST_TRUE(bufferChunk.elements() > 0);
-    auto pOut = bufferChunk.as<const T*>();
-    for (size_t i = 0; i < bufferChunk.elements(); i++)
-    {
-        POTHOS_TEST_CLOSE(
-            expectedOutputs[i],
-            pOut[i],
-            epsilon);
-    }
-}
-
-template <typename T>
-static EnableIfAnyInt<T, void> testBufferChunk(
-    const Pothos::BufferChunk& bufferChunk,
-    const std::vector<T>& expectedOutputs,
-    T)
-{
-    POTHOS_TEST_TRUE(bufferChunk.elements() > 0);
-    auto pOut = bufferChunk.as<const T*>();
-    for (size_t i = 0; i < bufferChunk.elements(); i++)
-    {
-        POTHOS_TEST_EQUAL(
-            expectedOutputs[i],
-            pOut[i]);
-    }
-}
-
-// Pass in a "complex" epsilon so the template works
-template <typename T>
-static EnableIfComplex<T, void> testBufferChunk(
-    const Pothos::BufferChunk& bufferChunk,
-    const std::vector<T>& expectedOutputs,
-    T epsilon = T{1e-6,1e-6})
-{
-    auto pOut = bufferChunk.as<const T*>();
-    for (size_t i = 0; i < bufferChunk.elements(); i++)
-    {
-        POTHOS_TEST_CLOSE(
-            expectedOutputs[i].real(),
-            pOut[i].real(),
-            epsilon.real());
-        POTHOS_TEST_CLOSE(
-            expectedOutputs[i].imag(),
-            pOut[i].imag(),
-            epsilon.real());
-    }
-}
 
 template <typename ReturnType, typename... ArgsType>
 ReturnType getAndCallPlugin(
@@ -255,44 +175,4 @@ ReturnType getAndCallPlugin(
     return getter.call<ReturnType>(args...);
 }
 
-//
-// For debugging purposes
-//
-
-template <typename T>
-std::string stdVectorToString(const std::vector<T>& vec)
-{
-    std::ostringstream ostream;
-    for(const T& val: vec)
-    {
-        if(&val != &vec[0])
-        {
-            ostream << " ";
-        }
-        ostream << (ssize_t)val;
-    }
-
-    return ostream.str();
 }
-
-template <typename T>
-std::string bufferChunkToString(const Pothos::BufferChunk& bufferChunk)
-{
-    std::ostringstream ostream;
-
-    const T* buff = bufferChunk.as<const T*>();
-    for(size_t i = 0; i < bufferChunk.elements(); ++i)
-    {
-        if(0 != i)
-        {
-            ostream << " ";
-        }
-        ostream << buff[i];
-    }
-
-    return ostream.str();
-}
-
-}
-
-#endif /* INCLUDED_TEST_UTILITY_HPP */

@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Nicholas Corgan
+// Copyright (c) 2019-2020 Nicholas Corgan
 // SPDX-License-Identifier: BSD-3-Clause
 
 #include "TestUtility.hpp"
@@ -387,9 +387,7 @@ static void testFFT()
     // Load the feeder
     feeder.call(
         "feedBuffer",
-        PothosNumPyTests::stdVectorToBufferChunk(
-            dtype,
-            testParams.inputs));
+        PothosNumPyTests::stdVectorToBufferChunk(testParams.inputs));
 
     // Run the topology
     {
@@ -408,13 +406,11 @@ static void testFFT()
     std::cout << " * Testing " << fwdBlockRegistryPath << std::endl;
     PothosNumPyTests::testBufferChunk(
         fwdCollector.call("getBuffer"),
-        testParams.outputs,
-        getEpsilon<T>());
+        PothosNumPyTests::stdVectorToBufferChunk(testParams.outputs));
     std::cout << " * Testing " << invBlockRegistryPath << std::endl;
     PothosNumPyTests::testBufferChunk(
         invCollector.call("getBuffer"),
-        testParams.inputs,
-        getEpsilon<T>());
+        PothosNumPyTests::stdVectorToBufferChunk(testParams.inputs));
 }
 
 template <typename T>
@@ -458,9 +454,7 @@ static void testRFFT()
     // Load the feeder
     feeder.call(
         "feedBuffer",
-        PothosNumPyTests::stdVectorToBufferChunk(
-            dtype,
-            testParams.inputs));
+        PothosNumPyTests::stdVectorToBufferChunk(testParams.inputs));
 
     // Run the topology
     {
@@ -479,13 +473,11 @@ static void testRFFT()
     std::cout << " * Testing " << fwdBlockRegistryPath << std::endl;
     PothosNumPyTests::testBufferChunk(
         fwdCollector.call("getBuffer"),
-        testParams.outputs,
-        getEpsilon<Complex>());
+        PothosNumPyTests::stdVectorToBufferChunk(testParams.outputs));
     std::cout << " * Testing " << invBlockRegistryPath << std::endl;
     PothosNumPyTests::testBufferChunk(
         invCollector.call("getBuffer"),
-        testParams.inputs,
-        getEpsilon<T>());
+        PothosNumPyTests::stdVectorToBufferChunk(testParams.inputs));
 }
 
 template <typename T>
@@ -530,9 +522,7 @@ static void testHFFT()
     // Load the feeder
     feeder.call(
         "feedBuffer",
-        PothosNumPyTests::stdVectorToBufferChunk(
-            dtype,
-            testParams.inputs));
+        PothosNumPyTests::stdVectorToBufferChunk(testParams.inputs));
 
     // Run the topology
     {
@@ -551,13 +541,11 @@ static void testHFFT()
     std::cout << " * Testing " << fwdBlockRegistryPath << std::endl;
     PothosNumPyTests::testBufferChunk(
         fwdCollector.call("getBuffer"),
-        testParams.outputs,
-        getEpsilon<T>());
+        PothosNumPyTests::stdVectorToBufferChunk(testParams.outputs));
     std::cout << " * Testing " << invBlockRegistryPath << std::endl;
     PothosNumPyTests::testBufferChunk(
         invCollector.call("getBuffer"),
-        testParams.revOutputs,
-        getEpsilon<std::complex<T>>());
+        PothosNumPyTests::stdVectorToBufferChunk(testParams.revOutputs));
 }
 
 // TODO: test scalar into FFT

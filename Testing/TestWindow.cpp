@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Nicholas Corgan
+// Copyright (c) 2019-2020 Nicholas Corgan
 // SPDX-License-Identifier: BSD-3-Clause
 
 #include "TestUtility.hpp"
@@ -69,7 +69,7 @@ static void testWindowType(
 
     PothosNumPyTests::testBufferChunk(
         collectorSink.call<Pothos::BufferChunk>("getBuffer"),
-        expectedValues);
+        PothosNumPyTests::stdVectorToBufferChunk(expectedValues));
 }
 
 POTHOS_TEST_BLOCK("/numpy/tests", test_windows)

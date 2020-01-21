@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Nicholas Corgan
+// Copyright (c) 2019-2020 Nicholas Corgan
 // SPDX-License-Identifier: BSD-3-Clause
 
 #include "TestUtility.hpp"
@@ -141,7 +141,7 @@ POTHOS_TEST_BLOCK("/numpy/tests", test_labels)
     std::random_device rd;
     std::mt19937 g(rd());
 
-    std::vector<double> inputs = PothosNumPyTests::linspace<double>(-10, 10, 50);
+    auto inputs = PothosNumPyTests::linspace<double>(-10, 10, 50);
     inputs.emplace_back(0.0); // To test PTP
     std::shuffle(inputs.begin(), inputs.end(), g);
 
@@ -212,9 +212,9 @@ POTHOS_TEST_BLOCK("/numpy/tests", test_labels)
         std::cout << "Testing label " << expectedLabel.id << std::endl;
 
         std::cout << " * Buffer..." << std::endl;
-        PothosNumPyTests::testBufferChunk<double>(
+        PothosNumPyTests::testBufferChunk(
             blockBuffer,
-            inputs);
+            PothosNumPyTests::stdVectorToBufferChunk(inputs));
         std::cout << " * ID..." << std::endl;
         POTHOS_TEST_EQUAL(
             expectedLabel.id,

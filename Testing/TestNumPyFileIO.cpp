@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Nicholas Corgan
+// Copyright (c) 2019-2020 Nicholas Corgan
 // SPDX-License-Identifier: BSD-3-Clause
 
 #include "TestUtility.hpp"
@@ -107,8 +107,7 @@ static Pothos::BufferChunk getRandomInputs(
     #define IfTypeGetRandomInputs(typeStr, ctype) \
         if(type == typeStr) \
             return PothosNumPyTests::stdVectorToBufferChunk<ctype>( \
-                Pothos::DType(typeStr), \
-                getRandomInputs<ctype>(numElements));
+                       getRandomInputs<ctype>(numElements));
 
     IfTypeGetRandomInputs("int8", std::int8_t)
     IfTypeGetRandomInputs("int16", std::int16_t)
