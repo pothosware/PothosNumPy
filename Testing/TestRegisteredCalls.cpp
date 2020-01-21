@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Nicholas Corgan
+// Copyright (c) 2019-2020 Nicholas Corgan
 // SPDX-License-Identifier: BSD-3-Clause
 
 #include "TestUtility.hpp"
@@ -25,7 +25,7 @@ static void testIntInfo()
     Pothos::DType dtype(typeid(T));
     std::cout << "Testing " << dtype.toString() << std::endl;
 
-    auto iinfo = PothosNumPyTests::getAndCallPlugin<Pothos::Proxy>("/numpy/info/iinfo", dtype);
+    auto iinfo = PothosNumPyTests::getAndCallPlugin<Pothos::Proxy>("/numpy/typeinfo/iinfo", dtype);
 
     POTHOS_TEST_EQUAL(
         dtype.name(),
@@ -57,7 +57,7 @@ static PothosNumPyTests::EnableIfNotComplex<T, void> testFloatInfo()
     Pothos::DType dtype(typeid(T));
     std::cout << "Testing " << dtype.toString() << std::endl;
 
-    auto finfo = PothosNumPyTests::getAndCallPlugin<Pothos::Proxy>("/numpy/info/finfo", dtype);
+    auto finfo = PothosNumPyTests::getAndCallPlugin<Pothos::Proxy>("/numpy/typeinfo/finfo", dtype);
 
     POTHOS_TEST_EQUAL(
         dtype.name(),
@@ -108,9 +108,9 @@ static PothosNumPyTests::EnableIfComplex<T, void> testFloatInfo()
 
     // For complex, just make sure the finfo returned corresponds to the scalar
     // type.
-    auto finfo = PothosNumPyTests::getAndCallPlugin<Pothos::Proxy>("/numpy/info/finfo", dtype);
+    auto finfo = PothosNumPyTests::getAndCallPlugin<Pothos::Proxy>("/numpy/typeinfo/finfo", dtype);
     auto scalarFInfo = PothosNumPyTests::getAndCallPlugin<Pothos::Proxy>(
-                           "/numpy/info/finfo",
+                           "/numpy/typeinfo/finfo",
                            Pothos::DType(typeid(typename T::value_type)));
 
     POTHOS_TEST_EQUAL(

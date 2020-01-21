@@ -39,10 +39,10 @@ pothos_static_block(registerCalls)
         Pothos::Callable(getNumPyConfigInfoJSONString));
 
     Pothos::PluginRegistry::addCall(
-        "/numpy/info/finfo",
+        "/numpy/typeinfo/finfo",
         Pothos::Callable(getNumPyFloatInfo));
 
     Pothos::PluginRegistry::addCall(
-        "/numpy/info/iinfo",
+        "/numpy/typeinfo/iinfo",
         Pothos::Callable(getNumPyIntInfo));
 }
