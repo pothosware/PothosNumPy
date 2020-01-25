@@ -339,6 +339,16 @@ def makoVarsToBlockDesc(makoVars):
     desc["categories"]  = makoVars["category"].split(" ")
     if "description" in makoVars:
         desc["docs"] = makoVars["description"].split("\n")
+    else:
+        desc["docs"] = []
+
+    if makoVars["class"] in ["OneToOneBlock", "TwoToOneBlock", "NToOneBlock"]:
+        desc["docs"] += ["<p>Corresponding NumPy function: <b>numpy.{0}</b></p>".format(makoVars["func"])]
+    elif makoVars["class"] == "ForwardAndPostLabelBlock":
+        if "nanFunc" in makoVars:
+            desc["docs"] += ["<p>Corresponding NumPy functions: <b>numpy.{0}</b>, <b>numpy.{1}</b></p>".format(makoVars["func"], makoVars["nanFunc"])]
+        else:
+            desc["docs"] += ["<p>Corresponding NumPy function: <b>numpy.{0}</b></p>".format(makoVars["func"])]
 
     if "alias" in makoVars:
         desc["alias"] = ["/numpy/"+alias for alias in makoVars["alias"]]
