@@ -1,10 +1,10 @@
 # NumPy Pothos Blocks
 
-This toolkit provides Python-based Pothos blocks that wrap the majority of NumPy's functionality, as well as providing interfaces to NumPy's numeric info classes.
+This toolkit adds 100+ Pothos blocks that wrap the majority of NumPy's API, as well as providing interfaces to NumPy's numeric info classes, accessible outside Pothos flowgraphs.
 
 ## Documentation
 
-* https://github.com/pothosware/PothosNumPy/wiki
+* https://github.com/pothosware/PothosNumPy/wiki (TODO)
 
 ## Dependencies
 
