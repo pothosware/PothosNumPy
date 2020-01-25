@@ -77,11 +77,11 @@ class WindowBlock(OneToOneBlock):
  *
  * Corresponding NumPy functions:
  * <ol>
- * <li>numpy.bartlett</li>
- * <li>numpy.blackman</li>
- * <li>numpy.hamming</li>
- * <li>numpy.hanning</li>
- * <li>numpy.kaiser</li>
+ * <li><b>numpy.bartlett</b></li>
+ * <li><b>numpy.blackman</b></li>
+ * <li><b>numpy.hamming</b></li>
+ * <li><b>numpy.hanning</b></li>
+ * <li><b>numpy.kaiser</b></li>
  * </ol>
  *
  * |category /NumPy/Filter

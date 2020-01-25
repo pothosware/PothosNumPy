@@ -15,7 +15,7 @@ import os
 /*
  * |PothosDoc Save .npy
  *
- * Corresponding NumPy function: numpy.save
+ * Corresponding NumPy function: <b>numpy.save</b>
  *
  * |category /NumPy/File IO
  * |keywords save numpy binary file IO
@@ -86,12 +86,11 @@ class SaveNpy(BaseBlock):
         self.__buffer = numpy.concatenate([self.__buffer, in0])
         self.input(0).consume(N)
 
-# TODO: overlay
 """
 /*
  * |PothosDoc Save .npz
  *
- * Corresponding NumPy functions: numpy.savez, numpy.savez_compressed
+ * Corresponding NumPy functions: <b>numpy.savez</b>, <b>numpy.savez_compressed</b>
  *
  * |category /NumPy/File IO
  * |keywords save numpy binary file IO

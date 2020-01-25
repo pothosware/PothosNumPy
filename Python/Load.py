@@ -66,7 +66,7 @@ class LoadBaseBlock(BaseBlock):
 /*
  * |PothosDoc Load .npy
  *
- * Corresponding NumPy function: numpy.load (with .npy extension)
+ * Corresponding NumPy function: <b>numpy.load</b> (with .npy extension)
  *
  * |category /NumPy/File IO
  * |keywords load numpy binary file IO
@@ -96,7 +96,7 @@ class LoadNpy(LoadBaseBlock):
 /*
  * |PothosDoc Load .npz
  *
- * Corresponding NumPy function: numpy.load (with .npz extension)
+ * Corresponding NumPy function: <b>numpy.load</b> (with .npz extension)
  *
  * |category /NumPy/File IO
  * |keywords load numpy binary file IO

@@ -56,10 +56,10 @@ class FFTClass(BaseBlock):
  * terms. The symmetry is highest when n is a power of 2, and the transform is
  * therefore most efficient for these sizes.
  *
- * Corresponding NumPy function: numpy.fft.fft
+ * Corresponding NumPy function: <b>numpy.fft.fft</b>
  *
  * |category /NumPy/FFT
- * |keywords fft
+ * |keywords fft discrete fast fourier transform
  * |factory /numpy/fft/fft(dtype,numBins)
  *
  * |param dtype[Input Data Type] The block data type.
@@ -111,10 +111,10 @@ def FFT(dtype, numBins):
  * values at the positive and negative Nyquist frequencies, as the two are
  * aliased together.
  *
- * Corresponding NumPy function: numpy.fft.ifft
+ * Corresponding NumPy function: <b>numpy.fft.ifft</b>
  *
  * |category /NumPy/FFT
- * |keywords fft ifft inverse
+ * |keywords fft ifft inverse discrete fast fourier transform
  * |factory /numpy/fft/ifft(dtype,numBins)
  *
  * |param dtype[Input Data Type] The block data type.
@@ -172,10 +172,10 @@ def IFFT(dtype, numBins):
  *
  * If the input a contains an imaginary part, it is silently discarded.
  *
- * Corresponding NumPy function: numpy.fft.rfft
+ * Corresponding NumPy function: <b>numpy.fft.rfft</b>
  *
  * |category /NumPy/FFT
- * |keywords fft rfft real
+ * |keywords fft rfft real discrete fast fourier transform
  * |factory /numpy/fft/rfft(dtype,numBins)
  *
  * |param dtype[Input Data Type] The block data type.
@@ -220,10 +220,10 @@ def RFFT(dtype, numBins):
  * real input is Hermitian-symmetric, the negative frequency terms are taken
  * to be the complex conjugates of the corresponding positive frequency terms.
  *
- * Corresponding NumPy function: numpy.fft.rifft
+ * Corresponding NumPy function: <b>numpy.fft.rifft</b>
  *
  * |category /NumPy/FFT
- * |keywords fft rfft rifft real inverse
+ * |keywords fft rfft rifft real inverse discrete fast fourier transform
  * |factory /numpy/fft/irfft(dtype,numBins)
  *
  * |param dtype[Input Data Type] The block data type.
@@ -260,10 +260,10 @@ def IRFFT(dtype, numBins):
  * spectrum. Here the signal has Hermitian symmetry in the time domain and
  * is real in the frequency domain.
  *
- * Corresponding NumPy function: numpy.fft.fft
+ * Corresponding NumPy function: <b>numpy.fft.fft</b>
  *
  * |category /NumPy/FFT
- * |keywords fft hfft hermetian
+ * |keywords fft hfft hermetian discrete fast fourier transform
  * |factory /numpy/fft/hfft(dtype,numBins)
  *
  * |param dtype[Input Data Type] The block data type.
@@ -300,10 +300,10 @@ def HFFT(dtype, numBins):
  * real spectrum. Here the signal has Hermitian symmetry in the time domain and
  * is real in the frequency domain.
  *
- * Corresponding NumPy function: numpy.fft.fft
+ * Corresponding NumPy function: <b>numpy.fft.fft</b>
  *
  * |category /NumPy/FFT
- * |keywords fft hfft ihfft inverse hermetian
+ * |keywords fft hfft ihfft inverse hermetian discrete fast fourier transform
  * |factory /numpy/fft/ihfft(dtype,numBins)
  *
  * |param dtype[Input Data Type] The block data type.
