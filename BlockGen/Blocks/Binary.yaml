@@ -10,6 +10,7 @@ Computes the bit-wise NOT of the underlying binary representation of the integer
 For signed integer inputs, the two's complement is returned. In a two's-complement system negative numbers are represented by the two's complement of the absolute value. This is the most common method of representing signed integers on computers <b>[1]</b>. A N-bit two's-complement system can represent every integer in the range <b>-2<sup>N-1</sup> to +2<sup>N-1</sup>-1</b>.
 
 <b>[1]</b> Wikipedia, \"Two's complement\", https://en.wikipedia.org/wiki/Two's_complement"
+        keywords: [bitwise, not]
 
 bitwise_and:
         copy: invert

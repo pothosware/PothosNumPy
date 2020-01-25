@@ -4,12 +4,14 @@ add:
         class: NToOneBlock
         blockType: [all]
         description: "Add arguments element-wise."
+        keywords: [add, sum, addition, math, arithmetic, plus]
 
 multiply:
         copy: add
         name: Multiply
         blockType: [float, complex]
         description: "Multiply arguments element-wise."
+        keywords: [multiply, product, multiplication, math, arithmetic]
 
 #ldexp:
 #        copy: add
@@ -22,6 +24,7 @@ subtract:
         class: TwoToOneBlock
         blockType: [all]
         description: "Subtract arguments, element-wise."
+        keywords: [subtract, difference, minus, math, arithmetic]
 
 divide:
         copy: subtract
@@ -30,6 +33,7 @@ divide:
         description: "Returns a true division of the inputs, element-wise.
 
 Instead of the Python traditional 'floor division', this returns a true division. True division adjusts the output type to present the best answer, regardless of input types."
+        keywords: [divide, quotient, division, math, arithmetic]
 
 true_divide:
         copy: subtract
@@ -39,6 +43,7 @@ true_divide:
         description: "Returns a true division of the inputs, element-wise.
 
 Instead of the Python traditional 'floor division', this returns a true division. True division adjusts the output type to present the best answer, regardless of input types."
+        keywords: [divide, quotient, division, math, arithmetic]
 
 floor_divide:
         copy: subtract
@@ -48,6 +53,7 @@ floor_divide:
         description: "Return the largest integer smaller or equal to the division of the inputs.
 
 It is equivalent to the Python // operator and pairs with the Python % (remainder), function so that <b>a = a % b + b * (a // b)</b> up to roundoff."
+        keywords: [divide, quotient, division, math, arithmetic]
 
 remainder:
         copy: subtract
@@ -58,6 +64,7 @@ remainder:
         description: "Return element-wise remainder of division.
 
 Computes the remainder complementary to the <b>/numpy/floor_divide</b> block. It is equivalent to the Python modulus operator <b>x1 % x2</b> and has the same sign as the divisor x2. The MATLAB function equivalent to <b>/numpy/remainder</b> is <b>mod</b>."
+        keywords: [divide, remainder, division, math, arithmetic]
 
 fmod:
         copy: subtract
@@ -66,6 +73,7 @@ fmod:
         description: "Return the element-wise remainder of division.
 
 This is the NumPy implementation of the C library function <b>fmod</b>, the remainder has the same sign as the dividend <b>x1</b>. It is equivalent to the Matlab(TM) <b>rem</b> function and should not be confused with the Python modulus operator <b>x1 % x2</b>."
+        keywords: [divide, remainder, division, math, arithmetic]
 
 reciprocal:
         name: Reciprocal
@@ -75,12 +83,14 @@ reciprocal:
         description: "Return the reciprocal of the argument, element-wise.
 
 Calculates <b>1/x</b>."
+        keywords: [reciprocal, math, arithmetic]
 
 sqrt:
         copy: reciprocal
         name: SqRt
         niceName: Square Root
         description: "Return the non-negative square-root of an array, element-wise."
+        keywords: [square, root, math, arithmetic]
 
 cbrt:
         name: CbRt
@@ -88,12 +98,14 @@ cbrt:
         blockType: [float]
         niceName: Cube Root
         description: "Return the cube-root of an array, element-wise."
+        keywords: [cube, root, math, arithmetic]
 
 square:
         name: Square
         copy: reciprocal
         blockType: [all]
         description: "Return the element-wise square of the input."
+        keywords: [square, math, arithmetic]
 
 absolute:
         name: Absolute
@@ -101,6 +113,7 @@ absolute:
         blockType: [float, int]
         description: "Calculate the absolute value element-wise."
         alias: [abs]
+        keywords: [absolute, value, math, arithmetic]
 
 fabs:
         name: FAbs
@@ -109,3 +122,4 @@ fabs:
         description: "Compute the absolute values element-wise.
 
 This function returns the absolute values (positive magnitude) of the data in x. Complex values are not handled, use <b>/numpy/absolute</b> to find the absolute values of complex data."
+        keywords: [absolute, value, math, arithmetic]

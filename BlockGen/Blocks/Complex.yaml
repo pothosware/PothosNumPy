@@ -11,6 +11,7 @@ real:
         name: Real
         niceName: Complex to Real
         description: "Return the real part of the complex argument."
+        keywords: [arg]
 
 imag:
         copy: angle

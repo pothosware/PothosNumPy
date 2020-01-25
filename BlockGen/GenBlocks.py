@@ -206,7 +206,7 @@ def generateMakoVars(func,yaml):
     makoVars["category"] = " ".join(yaml["categories"])
     makoVars["func"] = func
     makoVars["pothosDocFunc"] = makoVars["func"].replace("randint", "integers").replace("integers", NumPyRandomIntegersString)
-    makoVars["keywords"] = func
+    makoVars["keywords"] = yaml.get("keywords", [func])
     makoVars["prefix"] = yaml.get("prefix", "numpy")
     makoVars["pothosDocPrefix"] = makoVars["prefix"].replace("Random.NumPyRandom", NumPyRandomString).replace("Random", NumPyRandomString)
     makoVars["factoryVars"] = []
@@ -335,7 +335,7 @@ def makoVarsToBlockDesc(makoVars):
     desc["name"] = makoVars.get("niceName", makoVars["name"])
     desc["path"] = "/numpy/"+makoVars["blockRegistryPath"]
     desc["args"] = makoVars["factoryParams"]
-    desc["keywords"] = makoVars.get("keywords", [makoVars["func"]])
+    desc["keywords"] = makoVars["keywords"]
     desc["categories"]  = makoVars["category"].split(" ")
     if "description" in makoVars:
         desc["docs"] = makoVars["description"].split("\n")

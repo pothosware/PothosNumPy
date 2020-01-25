@@ -4,11 +4,13 @@ ones:
         categories: ["/NumPy/Sources"]
         blockType: [all]
         description: "Return a new array of given shape and type, filled with ones."
+        keywords: [constant]
 
 zeros:
         name: Zeros
         copy: ones
         description: "Return a new array of given shape and type, filled with zeros."
+        keywords: [constant]
 
 full:
         name: Full
@@ -17,6 +19,7 @@ full:
         description: "Return a new array of given shape and type, filled with <b>fillValue</b>."
         funcArgs:
                 - {name: fillValue, dtype: blockType, testValue1: 0, testValue2: 1}
+        keywords: [constant]
 
 arange:
         name: ARange
@@ -38,6 +41,7 @@ When using a non-integer step, such as <b>0.1</b>, the results will often not be
                    addedValidation:
                    ["Utility.errorForUnevenIntegralSpace(self.func, self.__start, stop, self.__step, self.numpyOutputDType)"]}
                 - {name: step, dtype: blockType, default: 1, testValue1: 1, testValue2: 2}
+        keywords: [range]
 
 linspace:
         name: LinSpace
@@ -59,6 +63,7 @@ Returns <b>numValues</b> evenly spaced samples, calculated over the interval <b>
                 - {name: numValues, dtype: uint, default: 10, testValue1: 3, testValue2: 4, ">": 0, badIntValues: [0, 5], badUIntValues: [0, 5],
                    addedValidation:
                    ["Utility.errorForUnevenIntegralSpace(self.func, self.__start, self.__stop, numValues, self.numpyOutputDType)"]}
+        keywords: [range]
 
 geomspace:
         name: GeomSpace
@@ -71,3 +76,4 @@ This is similar to <b>/blocks/numpy/logspace</b>, but with endpoints specified d
                 - {name: start, dtype: blockType, default: 1, testValue1: 10, testValue2: 2}
                 - {name: stop, dtype: blockType, default: 1000, testValue1: 4, testValue2: 10}
                 - {name: numValues, dtype: uint, default: 4, testValue1: 3, testValue2: 4, ">": 0, badValues: [0]}
+        keywords: [range]

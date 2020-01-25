@@ -27,6 +27,7 @@ trim_zeros:
         name: TrimZeros
         niceName: Trim Zeros
         description: "Trim the leading and/or trailing zeros from a 1-D array or sequence."
+        keywords: [strip]
 
 negative:
         copy: positive
@@ -39,6 +40,7 @@ ravel:
         class: NToOneBlock
         kwargs: [useDType=False, callReduce=False, callPostBuffer=True]
         description: "Return a contiguous flattened array."
+        keywords: [flat, merge]
 
 intersect1d:
         copy: unique
@@ -107,6 +109,7 @@ roll:
         description: "Roll array elements.
 
 Elements that roll beyond the last position are re-introduced at the first."
+        keywords: [shift]
 
 partition:
         name: Partition
