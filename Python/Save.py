@@ -77,14 +77,14 @@ class SaveNpy(BaseBlock):
         self.logger.info("The \"append\" option is currently unimplemented.")
 
     def work(self):
-        in0 = self.input(0).buffer()
-        n = len(in0)
-
-        if 0 == n:
+        if 0 == self.workInfo().minAllInElements:
             return
 
+        in0 = self.input(0).buffer()
+        N = len(in0)
+
         self.__buffer = numpy.concatenate([self.__buffer, in0])
-        self.input(0).consume(n)
+        self.input(0).consume(N)
 
 # TODO: overlay
 """
@@ -181,14 +181,14 @@ class SaveZBlock(BaseBlock):
         return self.__allKeys
 
     def work(self):
-        in0 = self.input(0).buffer()
-        n = len(in0)
-
-        if 0 == n:
+        if 0 == self.workInfo().minAllInElements:
             return
 
+        in0 = self.input(0).buffer()
+        N = len(in0)
+
         self.__buffer = numpy.concatenate([self.__buffer, in0])
-        self.input(0).consume(n)
+        self.input(0).consume(N)
 
 def SaveNpz(filepath, key, dtype, compressed, append):
     func = numpy.savez_compressed if compressed else numpy.savez

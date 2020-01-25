@@ -44,6 +44,9 @@ class LoadBaseBlock(BaseBlock):
 
     def work(self):
         out0 = self.output(0).buffer()
+        if 0 == len(out0):
+            return
+
         n = min(len(out0), (len(self.data) - self.__pos))
 
         if 0 == n:
@@ -116,7 +119,6 @@ class LoadNpy(LoadBaseBlock):
  * |preview enable
  */
 """
-# TODO: can I make an "overlay" to choose the key?
 class LoadNpz(LoadBaseBlock):
     def __init__(self, filepath, key, repeat):
         LoadBaseBlock.__init__(self, "/numpy/load_npz", filepath, ".npz", repeat)

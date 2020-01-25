@@ -475,50 +475,45 @@ static void testSaveNPZ(bool compressed)
             getRandomInputs(type, numElements));
     }
 
-    for(size_t i = 0; i < 2; ++i)
+    //
+    // Save generated files to the .NPZ file.
+    //
+    for(const auto& mapPair: testInputs)
     {
-        //
-        // Save generated files to the .NPZ file.
-        //
-        for(const auto& mapPair: testInputs)
-        {
-            const auto& typeName = mapPair.first;
-            const auto& inputs = mapPair.second;
+        const auto& typeName = mapPair.first;
+        const auto& inputs = mapPair.second;
 
-            testSaveNPZ(
-                filepath,
-                typeName,
-                compressed,
-                false /*append*/,
-                inputs);
-        }
-
-        POTHOS_TEST_TRUE(Poco::File(filepath).exists());
-
-        // Since every channel should have written
-        if(!compressed)
-        {
-            POTHOS_TEST_TRUE(Poco::File(filepath).getSize() >= minSize);
-        }
-
-        //
-        // Use NumPy directly to test our values.
-        //
-        auto env = Pothos::ProxyEnvironment::make("python");
-        auto testFuncs = env->findProxy("PothosNumPy.TestFuncs");
-
-        testFuncs.call(
-            "checkNpzContents",
+        testSaveNPZ(
             filepath,
-            npzTestInputsToProxyMap(testInputs));
+            typeName,
+            compressed,
+            false /*append*/,
+            inputs);
     }
+
+    POTHOS_TEST_TRUE(Poco::File(filepath).exists());
+
+    // Since every channel should have written
+    if(!compressed)
+    {
+        POTHOS_TEST_TRUE(Poco::File(filepath).getSize() >= minSize);
+    }
+
+    //
+    // Use NumPy directly to test our values.
+    //
+    auto env = Pothos::ProxyEnvironment::make("python");
+    auto testFuncs = env->findProxy("PothosNumPy.TestFuncs");
+
+    testFuncs.call(
+        "checkNpzContents",
+        filepath,
+        npzTestInputsToProxyMap(testInputs));
 }
 
 //
 // Registered tests
 //
-
-// TODO: generate file in raw NumPy, test with block
 
 POTHOS_TEST_BLOCK("/numpy/tests", test_load_npy)
 {
