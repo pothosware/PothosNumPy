@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Nicholas Corgan
+// Copyright (c) 2019-2020 Nicholas Corgan
 // SPDX-License-Identifier: BSD-3-Clause
 
 #include <Pothos/Callable.hpp>
@@ -6,6 +6,10 @@
 #include <Pothos/Managed.hpp>
 #include <Pothos/Plugin.hpp>
 #include <Pothos/Proxy.hpp>
+
+#include <Poco/Logger.h>
+
+#include <limits>
 
 //
 // Wrappers around NumPy numeric info classes to expose nicer function names
@@ -49,7 +53,16 @@ class IntInfo
 
         T getMaxValue() const
         {
-            return _iinfo.get<T>("max");
+            // To workaround a bug in PothosPython with std::uint64_t conversion,
+            // we'll cheat and bypass it.
+            if(std::is_same<std::uint64_t, T>::value)
+            {
+                return std::numeric_limits<std::uint64_t>::max();
+            }
+            else
+            {
+                return _iinfo.get<T>("max");
+            }
         }
 
     private:

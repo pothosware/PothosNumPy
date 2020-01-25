@@ -36,19 +36,9 @@ static void testIntInfo()
     POTHOS_TEST_EQUAL(
         std::numeric_limits<T>::min(),
         iinfo.call<T>("getMinValue"));
-
-    // 2019/12/28: Currently, uint64_t values outside the range of int64_t
-    // don't properly convert from Python to C++, so don't call it here. The
-    // call working with other types should be enough.
-    //
-    // TODO: reenable this for uint64_t when this is fixed:
-    // https://github.com/pothosware/PothosPython/issues/18
-    if(!std::is_same<T, std::uint64_t>::value)
-    {
-        POTHOS_TEST_EQUAL(
-            std::numeric_limits<T>::max(),
-            iinfo.call<T>("getMaxValue"));
-    }
+    POTHOS_TEST_EQUAL(
+        std::numeric_limits<T>::max(),
+        iinfo.call<T>("getMaxValue"));
 }
 
 template <typename T>
