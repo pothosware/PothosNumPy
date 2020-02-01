@@ -1,8 +1,8 @@
 median: {name: Median}
-load_npy: {name: LoadNpy}
-load_npz: {name: LoadNpz}
-save_npy: {name: SaveNpy}
-save_npz: {name: SaveNpz}
+npy_source: {name: NpyFileSource}
+npz_source: {name: NpzFileSource}
+npy_sink: {name: NpyFileSink}
+npz_sink: {name: NpzFileSink}
 
 fft/fft: {name: FFT}
 fft/ifft: {name: IFFT}

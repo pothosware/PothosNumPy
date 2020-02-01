@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Nicholas Corgan
+# Copyright (c) 2019-2020 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
 from .BaseBlock import *
@@ -10,7 +10,7 @@ import Pothos
 import numpy
 import os
 
-class LoadBaseBlock(BaseBlock):
+class FileSourceBaseBlock(BaseBlock):
     def __init__(self, blockPath, filepath, extension, repeat):
         if not os.path.exists(filepath):
             raise IOError("The given file does not exist: {0}".format(filepath))
@@ -64,7 +64,7 @@ class LoadBaseBlock(BaseBlock):
 
 """
 /*
- * |PothosDoc Load .npy
+ * |PothosDoc .npy File Source
  *
  * Corresponding NumPy function: <b>numpy.load</b> (with .npy extension)
  *
@@ -84,9 +84,9 @@ class LoadBaseBlock(BaseBlock):
  * |preview enable
  */
 """
-class LoadNpy(LoadBaseBlock):
+class NpyFileSource(FileSourceBaseBlock):
     def __init__(self, filepath, repeat):
-        LoadBaseBlock.__init__(self, "/numpy/load_npy", filepath, ".npy", repeat)
+        FileSourceBaseBlock.__init__(self, "/numpy/npy_source", filepath, ".npy", repeat)
 
         # Note: "with numpy.load... as" only works in NumPy 1.15 and up
         self.data = numpy.load(filepath, "r")
@@ -94,7 +94,7 @@ class LoadNpy(LoadBaseBlock):
 
 """
 /*
- * |PothosDoc Load .npz
+ * |PothosDoc .npz File Source
  *
  * Corresponding NumPy function: <b>numpy.load</b> (with .npz extension)
  *
@@ -119,9 +119,9 @@ class LoadNpy(LoadBaseBlock):
  * |preview enable
  */
 """
-class LoadNpz(LoadBaseBlock):
+class NpzFileSource(FileSourceBaseBlock):
     def __init__(self, filepath, key, repeat):
-        LoadBaseBlock.__init__(self, "/numpy/load_npz", filepath, ".npz", repeat)
+        FileSourceBaseBlock.__init__(self, "/numpy/npz_source", filepath, ".npz", repeat)
 
         # Note: "with numpy.load... as" only works in NumPy 1.15 and up
         npzContents = numpy.load(filepath, "r")

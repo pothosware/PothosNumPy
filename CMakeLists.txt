@@ -90,12 +90,12 @@ BUILD_PYTHON_MODULE(
         Python/BaseBlock.py
         Python/FFT.py
         Python/ForwardAndPostLabelBlock.py
-        Python/Load.py
+        Python/FileSink.py
+        Python/FileSource.py
         Python/NToOneBlock.py
         Python/OneToOneBlock.py
         Python/Random.py
         Python/RegisteredCallHelpers.py
-        Python/Save.py
         Python/Source.py
         Python/TestFuncs.py
         Python/TwoToOneBlock.py
@@ -119,8 +119,8 @@ BUILD_PYTHON_MODULE(
         Testing/TestWindow.cpp
     DOC_SOURCES
         Python/FFT.py
-        Python/Load.py
-        Python/Save.py
+        Python/FileSink.py
+        Python/FileSource.py
         Python/Window.py
 )
 add_dependencies(NumPyBlocks autogen_files)

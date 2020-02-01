@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Nicholas Corgan
+# Copyright (c) 2019-2020 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
 from .BaseBlock import *
@@ -13,7 +13,7 @@ import os
 # TODO: implement "append" option
 """
 /*
- * |PothosDoc Save .npy
+ * |PothosDoc .npy File Sink
  *
  * Corresponding NumPy function: <b>numpy.save</b>
  *
@@ -37,7 +37,7 @@ import os
  * |preview enable
  */
 """
-class SaveNpy(BaseBlock):
+class NpyFileSink(BaseBlock):
     def __init__(self, filepath, dtype, append):
         if os.path.splitext(filepath)[1] != ".npy":
             raise RuntimeError("Only .npy files are supported.")
@@ -45,7 +45,7 @@ class SaveNpy(BaseBlock):
         dtype = Utility.toDType(dtype)
 
         dtypeArgs = dict(supportAll=True)
-        BaseBlock.__init__(self, "/numpy/save_npy", numpy.save, dtype, None, dtypeArgs, None, list(), dict())
+        BaseBlock.__init__(self, "/numpy/npy_sink", numpy.save, dtype, None, dtypeArgs, None, list(), dict())
 
         if "int64" in dtype.toString():
             self.logger.warning(
@@ -88,7 +88,7 @@ class SaveNpy(BaseBlock):
 
 """
 /*
- * |PothosDoc Save .npz
+ * |PothosDoc .npz File Sink
  *
  * Corresponding NumPy functions: <b>numpy.savez</b>, <b>numpy.savez_compressed</b>
  *
@@ -133,7 +133,7 @@ class SaveZBlock(BaseBlock):
             raise ValueError("Key must be a string. Got {0}".format(type(key)))
 
         dtypeArgs = dict(supportAll=True)
-        BaseBlock.__init__(self, "/numpy/save_npz", func, dtype, None, dtypeArgs, None, list(), dict())
+        BaseBlock.__init__(self, "/numpy/npz_sink", func, dtype, None, dtypeArgs, None, list(), dict())
 
         self.__buffers = dict()
         if os.path.exists(filepath):
@@ -189,6 +189,6 @@ class SaveZBlock(BaseBlock):
         self.__buffer = numpy.concatenate([self.__buffer, in0])
         self.input(0).consume(N)
 
-def SaveNpz(filepath, key, dtype, compressed, append):
+def NpzFileSink(filepath, key, dtype, compressed, append):
     func = numpy.savez_compressed if compressed else numpy.savez
     return SaveZBlock(func, dtype, filepath, key, compressed, append)
