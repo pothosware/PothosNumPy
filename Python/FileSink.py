@@ -19,7 +19,7 @@ import os
  *
  * |category /NumPy/File IO
  * |keywords save numpy binary file IO
- * |factory /numpy/save_npy(filepath,dtype,append)
+ * |factory /numpy/npy_sink(filepath,dtype,append)
  *
  * |param filepath[Filepath]
  * |widget FileEntry(mode=save)
@@ -94,7 +94,7 @@ class NpyFileSink(BaseBlock):
  *
  * |category /NumPy/File IO
  * |keywords save numpy binary file IO
- * |factory /numpy/save_npz(filepath,key,dtype,compressed,append)
+ * |factory /numpy/npz_sink(filepath,key,dtype,compressed,append)
  *
  * |param filepath[Filepath]
  * |widget FileEntry(mode=save)

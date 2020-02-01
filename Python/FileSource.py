@@ -70,7 +70,7 @@ class FileSourceBaseBlock(BaseBlock):
  *
  * |category /NumPy/File IO
  * |keywords load numpy binary file IO
- * |factory /numpy/load_npy(filepath,repeat)
+ * |factory /numpy/npy_source(filepath,repeat)
  * |setter setRepeat(repeat)
  *
  * |param filepath[Filepath]
@@ -100,7 +100,7 @@ class NpyFileSource(FileSourceBaseBlock):
  *
  * |category /NumPy/File IO
  * |keywords load numpy binary file IO
- * |factory /numpy/load_npz(filepath,key,repeat)
+ * |factory /numpy/npz_source(filepath,key,repeat)
  * |setter setRepeat(repeat)
  *
  * |param filepath[Filepath]
