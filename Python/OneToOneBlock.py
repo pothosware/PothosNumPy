@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Nicholas Corgan
+# Copyright (c) 2019-2020 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
 from .BaseBlock import *
@@ -50,9 +50,9 @@ class OneToOneBlock(BaseBlock):
         N = min(len(in0), len(out0))
         out = None
 
-        out = self.func(in0, *self.funcArgs, **self.funcKWargs).astype(self.numpyOutputDType, copy=False)
+        out = self.func(in0[:N], *self.funcArgs, **self.funcKWargs).astype(self.numpyOutputDType, copy=False)
 
         if (out is not None) and (len(out) > 0):
             out0[:N] = out
-            self.input(0).consume(elems)
-            self.output(0).produce(elems)
+            self.input(0).consume(N)
+            self.output(0).produce(N)

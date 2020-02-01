@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Nicholas Corgan
+# Copyright (c) 2019-2020 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
 from .BaseBlock import *
@@ -70,6 +70,6 @@ class TwoToOneBlock(BaseBlock):
         if (out is not None) and (len(out) > 0):
             out0[:N] = out
 
-            self.input(0).consume(elems)
-            self.input(1).consume(elems)
-            self.output(0).produce(elems)
+            self.input(0).consume(N)
+            self.input(1).consume(N)
+            self.output(0).produce(N)

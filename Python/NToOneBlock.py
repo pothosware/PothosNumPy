@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Nicholas Corgan
+# Copyright (c) 2019-2020 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
 from .BaseBlock import *
@@ -51,9 +51,11 @@ class NToOneBlock(BaseBlock):
         if 0 == elems:
             return
 
+        N = min(elems, len(self.output(0).buffer()))
+
         # This creates a 2D ndarray containing the array subsets we're interested
         # in. This points to the input buffers themselves without copying memory.
-        allArrs = numpy.array([buf.buffer()[:elems].view() for buf in self.inputs()], dtype=self.numpyInputDType)
+        allArrs = numpy.array([buf.buffer()[:N].view() for buf in self.inputs()], dtype=self.numpyInputDType)
         out = None
 
         # TODO: what happens if a function doesn't take in *args or **kwargs?
@@ -64,7 +66,7 @@ class NToOneBlock(BaseBlock):
 
         if (out is not None) and (len(out) > 0):
             for port in self.inputs():
-                port.consume(elems)
+                port.consume(N)
             self.output(0).postBuffer(out)
 
     def workWithGivenOutputBuffer(self):
