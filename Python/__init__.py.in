@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Nicholas Corgan
+# Copyright (c) 2019-2020 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
 from .BlockEntryPoints import *
@@ -16,14 +16,7 @@ __NUMPY_VERSION__ = "@NUMPY_VERSION@"
 import numpy
 
 if numpy.__version__ != __NUMPY_VERSION__:
-    # Import Pothos before the warnings module so the warnings module outputs
-    # warnings to a Pothos logger.
-    import Pothos
-    import warnings
-
-    warnings.warn(
+    raise RuntimeError(
         """The version of NumPy on this system is {0}, but this installation of """
-        """PothosNumPy was built against NumPy {1}. Execution will continue, but """
-        """compatibility is not guaranteed. We recommend rebuilding this module """
-        """against the version of NumPy used on this system.""".format(numpy.__version__, __NUMPY_VERSION__),
-        Warning)
+        """PothosNumPy was built against NumPy {1}. Rebuild this module against """
+        """the version of NumPy used on this system.""".format(numpy.__version__, __NUMPY_VERSION__))
