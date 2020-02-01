@@ -43,7 +43,7 @@ set(autogenDeps
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Arithmetic.yaml
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Binary.yaml
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Complex.yaml
-    ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/CppOnly.yaml
+    ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/FactoryOnly.yaml
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Exponential.yaml
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Random.yaml
     ${CMAKE_CURRENT_SOURCE_DIR}/BlockGen/Blocks/Rounding.yaml

@@ -469,11 +469,11 @@ def generateCppOutput(allMakoVars):
                 factories += [generateCppFactory(alias, makoVars["name"])]
 
     # Add C++-only blocks.
-    cppOnlyYAMLPath = os.path.join(BlocksDir, "CppOnly.yaml")
-    with open(cppOnlyYAMLPath) as f:
-        cppOnlyYAML = yaml.load(f.read())
+    factoryOnlyYAMLPath = os.path.join(BlocksDir, "FactoryOnly.yaml")
+    with open(factoryOnlyYAMLPath) as f:
+        factoryOnlyYAML = yaml.load(f.read())
 
-    for k,v in cppOnlyYAML.items():
+    for k,v in factoryOnlyYAML.items():
         factories += [generateCppFactory(k,v["name"])]
     if "alias" in v:
         for alias in v["alias"]:
@@ -564,7 +564,7 @@ def generateBlockExecutionTest(expandedYAML):
 if __name__ == "__main__":
     yamlFiles = [os.path.join(BlocksDir, filepath) for filepath in os.listdir(BlocksDir) if os.path.splitext(filepath)[1] == ".yaml"]
 
-    expandedYAMLList = [processYAMLFile(yamlFile) for yamlFile in yamlFiles if "CppOnly.yaml" not in yamlFile]
+    expandedYAMLList = [processYAMLFile(yamlFile) for yamlFile in yamlFiles if "FactoryOnly.yaml" not in yamlFile]
 
     # At this point, we have a list of dictionaries, so consolidate them.
     expandedYAML = dict()
@@ -573,7 +573,7 @@ if __name__ == "__main__":
 
     allMakoVars = []
     for k,v in expandedYAML.items():
-        if not v.get("cppOnly", False):
+        if not v.get("factoryOnly", False):
             makoVars = generateMakoVars(k.split("/")[-1], v)
             makoVars["blockRegistryPath"] = k
             makoVars["docRegistryPath"] = "/blocks/docs/numpy/{0}".format(k)
