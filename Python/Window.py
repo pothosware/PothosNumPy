@@ -1,7 +1,7 @@
-# Copyright (c) 2019 Nicholas Corgan
+# Copyright (c) 2019-2020 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
-from .OneToOneBlock import *
+from .Source import *
 
 import Pothos
 
@@ -15,10 +15,11 @@ WindowFuncDict = dict(
     KAISER=numpy.kaiser
 )
 
-class WindowBlock(OneToOneBlock):
+class WindowBlock(SingleOutputSource):
     def __init__(self, dtype, windowType):
         dtypeArgs = dict(supportFloat=True, supportComplex=True)
-        OneToOneBlock.__init__(self, "/numpy/window", None, dtype, dtype, dtypeArgs, dtypeArgs, list(), dict(), dict())
+        kwargs = dict(useDType=False)
+        SingleOutputSource.__init__(self, "/numpy/window", None, dtype, dtypeArgs, list(), dict(), list(), **kwargs)
 
         self.registerProbe("windowType", "windowTypeChanged", "setWindowType")
         self.registerProbe("kaiserBeta", "kaiserBetaChanged", "setKaiserBeta")
@@ -54,22 +55,6 @@ class WindowBlock(OneToOneBlock):
 
         # C++ equivalent: emitSignal("kaiserBetaChanged", beta)
         self.kaiserBetaChanged(kaiserBeta)
-
-    def work(self):
-        elems = self.workInfo().minAllInElements
-        if 0 == elems:
-            return
-
-        in0 = self.input(0).buffer()
-        out0 = self.output(0).buffer()
-        N = min(len(in0), len(out0))
-
-        out = (in0[:N] * self.func(N, *self.funcArgs)).astype(self.numpyOutputDType, copy=False)
-
-        if (out is not None) and (len(out) > 0):
-            out0[:N] = out
-            self.input(0).consume(N)
-            self.output(0).produce(N)
 
 """
 /*
