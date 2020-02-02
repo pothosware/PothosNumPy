@@ -20,6 +20,7 @@ bitwise_and:
         description: "Compute the bit-wise AND of two arrays element-wise.
 
 Computes the bit-wise AND of the underlying binary representation of the integers in the input arrays. This ufunc implements the C/Python operator <b>&</b>."
+        keywords: ["&"]
 
 bitwise_or:
         copy: invert
@@ -29,6 +30,7 @@ bitwise_or:
         description: "Compute the bit-wise OR of two arrays element-wise.
 
 Computes the bit-wise OR of the underlying binary representation of the integers in the input arrays. This ufunc implements the C/Python operator <b>|</b>."
+        keywords: ["|"]
 
 bitwise_xor:
         copy: invert
@@ -38,3 +40,4 @@ bitwise_xor:
         description: "Compute the bit-wise XOR of two arrays element-wise.
 
 Computes the bit-wise XOR of the underlying binary representation of the integers in the input arrays. This ufunc implements the C/Python operator <b>^</b>."
+        keywords: ["^", exclusive, or]

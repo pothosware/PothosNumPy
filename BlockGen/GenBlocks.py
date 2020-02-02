@@ -352,6 +352,7 @@ def makoVarsToBlockDesc(makoVars):
 
     if "alias" in makoVars:
         desc["alias"] = ["/numpy/"+alias for alias in makoVars["alias"]]
+        desc["keywords"] += makoVars["alias"]
 
     if "factoryParams" in makoVars:
         desc["params"] = list()

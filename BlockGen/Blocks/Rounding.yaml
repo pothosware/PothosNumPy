@@ -6,17 +6,6 @@ rint:
         blockType: [float, complex]
         description: "Round elements of the array to the nearest integer."
 
-fix:
-        name: Fix
-        categories: ["/NumPy/Rounding"]
-        class: OneToOneBlock
-        blockType: [float]
-        kwargs: [useDType=False]
-        description: "Round to nearest integer towards zero.
-
-Round an array of floats element-wise to nearest integer towards zero. The rounded values are returned as floats."
-        keywords: [round]
-
 ceil:
         name: Ceil
         categories: ["/NumPy/Rounding"]
@@ -34,6 +23,7 @@ floor:
 
 The floor of the scalar <b>x</b> is the largest integer <b>i</b>, such that <b>i <= x</b>."
         keywords: [round]
+        alias: [fix]
 
 trunc:
         copy: ceil
