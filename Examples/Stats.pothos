@@ -1,0 +1,973 @@
+{
+    "config": {
+        "graphHeight": 1080,
+        "graphWidth": 1920
+    },
+    "pages": [
+        {
+            "docked": true,
+            "graphObjects": [
+                {
+                    "affinityZone": "",
+                    "enabled": true,
+                    "id": "Mean0",
+                    "inputDesc": [
+                        {
+                            "alias": "0",
+                            "dtype": "float64",
+                            "isSigSlot": false,
+                            "name": "0",
+                            "size": 8
+                        },
+                        {
+                            "alias": "probeLastValue",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "probeLastValue",
+                            "size": 1
+                        }
+                    ],
+                    "outputDesc": [
+                        {
+                            "alias": "0",
+                            "dtype": "float64",
+                            "isSigSlot": false,
+                            "name": "0",
+                            "size": 8
+                        },
+                        {
+                            "alias": "lastValueTriggered",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "lastValueTriggered",
+                            "size": 1
+                        }
+                    ],
+                    "path": "/numpy/mean",
+                    "positionX": 492,
+                    "positionY": 219,
+                    "properties": [
+                        {
+                            "key": "dtype",
+                            "value": "\"float64\""
+                        },
+                        {
+                            "key": "ignoreNaN",
+                            "value": "true"
+                        }
+                    ],
+                    "rotation": 0,
+                    "selected": false,
+                    "what": "Block",
+                    "zValue": 160
+                },
+                {
+                    "affinityZone": "",
+                    "enabled": true,
+                    "id": "PTP0",
+                    "inputDesc": [
+                        {
+                            "alias": "0",
+                            "dtype": "float64",
+                            "isSigSlot": false,
+                            "name": "0",
+                            "size": 8
+                        },
+                        {
+                            "alias": "probeLastValue",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "probeLastValue",
+                            "size": 1
+                        }
+                    ],
+                    "outputDesc": [
+                        {
+                            "alias": "0",
+                            "dtype": "float64",
+                            "isSigSlot": false,
+                            "name": "0",
+                            "size": 8
+                        },
+                        {
+                            "alias": "lastValueTriggered",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "lastValueTriggered",
+                            "size": 1
+                        }
+                    ],
+                    "path": "/numpy/ptp",
+                    "positionX": 802,
+                    "positionY": 222,
+                    "properties": [
+                        {
+                            "key": "dtype",
+                            "value": "\"float64\""
+                        }
+                    ],
+                    "rotation": 0,
+                    "selected": false,
+                    "what": "Block",
+                    "zValue": 180
+                },
+                {
+                    "affinityZone": "",
+                    "enabled": true,
+                    "id": "PeriodicTrigger0",
+                    "inputDesc": [
+                        {
+                            "alias": "setRate",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setRate",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setArgs",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setArgs",
+                            "size": 1
+                        }
+                    ],
+                    "outputDesc": [
+                        {
+                            "alias": "triggered",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "triggered",
+                            "size": 1
+                        }
+                    ],
+                    "path": "/blocks/periodic_trigger",
+                    "positionX": 751,
+                    "positionY": 67,
+                    "properties": [
+                        {
+                            "key": "rate",
+                            "value": "1.0"
+                        },
+                        {
+                            "key": "args",
+                            "value": "[]"
+                        }
+                    ],
+                    "rotation": 0,
+                    "selected": false,
+                    "what": "Block",
+                    "zValue": 168
+                },
+                {
+                    "affinityZone": "",
+                    "enabled": true,
+                    "id": "StandardDeviation0",
+                    "inputDesc": [
+                        {
+                            "alias": "0",
+                            "dtype": "float64",
+                            "isSigSlot": false,
+                            "name": "0",
+                            "size": 8
+                        },
+                        {
+                            "alias": "probeLastValue",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "probeLastValue",
+                            "size": 1
+                        }
+                    ],
+                    "outputDesc": [
+                        {
+                            "alias": "0",
+                            "dtype": "float64",
+                            "isSigSlot": false,
+                            "name": "0",
+                            "size": 8
+                        },
+                        {
+                            "alias": "lastValueTriggered",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "lastValueTriggered",
+                            "size": 1
+                        }
+                    ],
+                    "path": "/numpy/std",
+                    "positionX": 954,
+                    "positionY": 220,
+                    "properties": [
+                        {
+                            "key": "dtype",
+                            "value": "\"float64\""
+                        },
+                        {
+                            "key": "ignoreNaN",
+                            "value": "true"
+                        }
+                    ],
+                    "rotation": 0,
+                    "selected": false,
+                    "what": "Block",
+                    "zValue": 182
+                },
+                {
+                    "affinityZone": "",
+                    "enabled": true,
+                    "id": "TextDisplay0",
+                    "inputDesc": [
+                        {
+                            "alias": "setTitle",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setTitle",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setFormatStr",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setFormatStr",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setBase",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setBase",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setStringValue",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setStringValue",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setFloatValue",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setFloatValue",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setComplexValue",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setComplexValue",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setIntValue",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setIntValue",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setValue",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setValue",
+                            "size": 1
+                        }
+                    ],
+                    "path": "/widgets/text_display",
+                    "positionX": 489,
+                    "positionY": 345,
+                    "properties": [
+                        {
+                            "key": "title",
+                            "value": "\"Mean\""
+                        },
+                        {
+                            "key": "formatStr",
+                            "value": "\"%1\""
+                        },
+                        {
+                            "key": "base",
+                            "value": "10"
+                        }
+                    ],
+                    "rotation": 0,
+                    "selected": false,
+                    "what": "Block",
+                    "zValue": 171
+                },
+                {
+                    "affinityZone": "",
+                    "enabled": true,
+                    "id": "TextDisplay1",
+                    "inputDesc": [
+                        {
+                            "alias": "setTitle",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setTitle",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setFormatStr",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setFormatStr",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setBase",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setBase",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setStringValue",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setStringValue",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setFloatValue",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setFloatValue",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setComplexValue",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setComplexValue",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setIntValue",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setIntValue",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setValue",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setValue",
+                            "size": 1
+                        }
+                    ],
+                    "path": "/widgets/text_display",
+                    "positionX": 663,
+                    "positionY": 341,
+                    "properties": [
+                        {
+                            "key": "title",
+                            "value": "\"Variance\""
+                        },
+                        {
+                            "key": "formatStr",
+                            "value": "\"%1\""
+                        },
+                        {
+                            "key": "base",
+                            "value": "10"
+                        }
+                    ],
+                    "rotation": 0,
+                    "selected": false,
+                    "what": "Block",
+                    "zValue": 173
+                },
+                {
+                    "affinityZone": "",
+                    "enabled": true,
+                    "id": "TextDisplay2",
+                    "inputDesc": [
+                        {
+                            "alias": "setTitle",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setTitle",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setFormatStr",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setFormatStr",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setBase",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setBase",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setStringValue",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setStringValue",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setFloatValue",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setFloatValue",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setComplexValue",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setComplexValue",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setIntValue",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setIntValue",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setValue",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setValue",
+                            "size": 1
+                        }
+                    ],
+                    "path": "/widgets/text_display",
+                    "positionX": 806,
+                    "positionY": 343,
+                    "properties": [
+                        {
+                            "key": "title",
+                            "value": "\"PTP\""
+                        },
+                        {
+                            "key": "formatStr",
+                            "value": "\"%1\""
+                        },
+                        {
+                            "key": "base",
+                            "value": "10"
+                        }
+                    ],
+                    "rotation": 0,
+                    "selected": false,
+                    "what": "Block",
+                    "zValue": 176
+                },
+                {
+                    "affinityZone": "",
+                    "enabled": true,
+                    "id": "TextDisplay3",
+                    "inputDesc": [
+                        {
+                            "alias": "setTitle",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setTitle",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setFormatStr",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setFormatStr",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setBase",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setBase",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setStringValue",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setStringValue",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setFloatValue",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setFloatValue",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setComplexValue",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setComplexValue",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setIntValue",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setIntValue",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setValue",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setValue",
+                            "size": 1
+                        }
+                    ],
+                    "path": "/widgets/text_display",
+                    "positionX": 933,
+                    "positionY": 347,
+                    "properties": [
+                        {
+                            "key": "title",
+                            "value": "\"StdDev\""
+                        },
+                        {
+                            "key": "formatStr",
+                            "value": "\"%1\""
+                        },
+                        {
+                            "key": "base",
+                            "value": "10"
+                        }
+                    ],
+                    "rotation": 0,
+                    "selected": false,
+                    "what": "Block",
+                    "zValue": 178
+                },
+                {
+                    "affinityZone": "",
+                    "enabled": true,
+                    "id": "Variance0",
+                    "inputDesc": [
+                        {
+                            "alias": "0",
+                            "dtype": "float64",
+                            "isSigSlot": false,
+                            "name": "0",
+                            "size": 8
+                        },
+                        {
+                            "alias": "probeLastValue",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "probeLastValue",
+                            "size": 1
+                        }
+                    ],
+                    "outputDesc": [
+                        {
+                            "alias": "0",
+                            "dtype": "float64",
+                            "isSigSlot": false,
+                            "name": "0",
+                            "size": 8
+                        },
+                        {
+                            "alias": "lastValueTriggered",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "lastValueTriggered",
+                            "size": 1
+                        }
+                    ],
+                    "path": "/numpy/var",
+                    "positionX": 668,
+                    "positionY": 220,
+                    "properties": [
+                        {
+                            "key": "dtype",
+                            "value": "\"float64\""
+                        },
+                        {
+                            "key": "ignoreNaN",
+                            "value": "true"
+                        }
+                    ],
+                    "rotation": 0,
+                    "selected": false,
+                    "what": "Block",
+                    "zValue": 179
+                },
+                {
+                    "affinityZone": "",
+                    "enabled": true,
+                    "id": "WaveformSource0",
+                    "inputDesc": [
+                        {
+                            "alias": "setWaveform",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setWaveform",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setOffset",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setOffset",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setAmplitude",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setAmplitude",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setFrequency",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setFrequency",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setSampleRate",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setSampleRate",
+                            "size": 1
+                        },
+                        {
+                            "alias": "setResolution",
+                            "dtype": "unspecified",
+                            "isSigSlot": true,
+                            "name": "setResolution",
+                            "size": 1
+                        }
+                    ],
+                    "outputDesc": [
+                        {
+                            "alias": "0",
+                            "dtype": "float64",
+                            "isSigSlot": false,
+                            "name": "0",
+                            "size": 8
+                        }
+                    ],
+                    "path": "/comms/waveform_source",
+                    "positionX": 190,
+                    "positionY": 219,
+                    "properties": [
+                        {
+                            "key": "dtype",
+                            "value": "\"float64\""
+                        },
+                        {
+                            "key": "wave",
+                            "value": "\"SINE\""
+                        },
+                        {
+                            "key": "rate",
+                            "value": "100e6"
+                        },
+                        {
+                            "key": "freq",
+                            "value": "50e3"
+                        },
+                        {
+                            "key": "ampl",
+                            "value": "0.5"
+                        },
+                        {
+                            "key": "offset",
+                            "value": "0.0"
+                        },
+                        {
+                            "key": "res",
+                            "value": "0"
+                        }
+                    ],
+                    "rotation": 0,
+                    "selected": false,
+                    "what": "Block",
+                    "zValue": 192
+                },
+                {
+                    "enabled": true,
+                    "id": "Connection_Mean00_Variance00",
+                    "inputId": "Variance0",
+                    "inputKey": "0",
+                    "outputId": "Mean0",
+                    "outputKey": "0",
+                    "positionX": 0,
+                    "positionY": 0,
+                    "rotation": 0,
+                    "selected": false,
+                    "what": "Connection",
+                    "zValue": 0
+                },
+                {
+                    "enabled": true,
+                    "id": "Connection_Mean0signals_TextDisplay0",
+                    "positionX": 0,
+                    "positionY": 0,
+                    "rotation": 0,
+                    "selected": false,
+                    "sigSlots": [
+                        [
+                            "lastValueTriggered",
+                            "setValue"
+                        ]
+                    ],
+                    "signalId": "Mean0",
+                    "signalKey": "signals",
+                    "slotId": "TextDisplay0",
+                    "slotKey": "slots",
+                    "what": "Connection",
+                    "zValue": 0
+                },
+                {
+                    "enabled": true,
+                    "id": "Connection_PTP00_StandardDeviation00",
+                    "inputId": "StandardDeviation0",
+                    "inputKey": "0",
+                    "outputId": "PTP0",
+                    "outputKey": "0",
+                    "positionX": 0,
+                    "positionY": 0,
+                    "rotation": 0,
+                    "selected": false,
+                    "what": "Connection",
+                    "zValue": 0
+                },
+                {
+                    "enabled": true,
+                    "id": "Connection_PTP0signals_TextDisplay2",
+                    "positionX": 0,
+                    "positionY": 0,
+                    "rotation": 0,
+                    "selected": false,
+                    "sigSlots": [
+                        [
+                            "lastValueTriggered",
+                            "setValue"
+                        ]
+                    ],
+                    "signalId": "PTP0",
+                    "signalKey": "signals",
+                    "slotId": "TextDisplay2",
+                    "slotKey": "slots",
+                    "what": "Connection",
+                    "zValue": 0
+                },
+                {
+                    "enabled": true,
+                    "id": "Connection_PeriodicTrigger0signals_Mean0",
+                    "positionX": 0,
+                    "positionY": 0,
+                    "rotation": 0,
+                    "selected": false,
+                    "sigSlots": [
+                        [
+                            "triggered",
+                            "probeLastValue"
+                        ]
+                    ],
+                    "signalId": "PeriodicTrigger0",
+                    "signalKey": "signals",
+                    "slotId": "Mean0",
+                    "slotKey": "slots",
+                    "what": "Connection",
+                    "zValue": 0
+                },
+                {
+                    "enabled": true,
+                    "id": "Connection_PeriodicTrigger0signals_PTP0",
+                    "positionX": 0,
+                    "positionY": 0,
+                    "rotation": 0,
+                    "selected": false,
+                    "sigSlots": [
+                        [
+                            "triggered",
+                            "probeLastValue"
+                        ]
+                    ],
+                    "signalId": "PeriodicTrigger0",
+                    "signalKey": "signals",
+                    "slotId": "PTP0",
+                    "slotKey": "slots",
+                    "what": "Connection",
+                    "zValue": 0
+                },
+                {
+                    "enabled": true,
+                    "id": "Connection_PeriodicTrigger0signals_StandardDeviation0",
+                    "positionX": 0,
+                    "positionY": 0,
+                    "rotation": 0,
+                    "selected": false,
+                    "sigSlots": [
+                        [
+                            "triggered",
+                            "probeLastValue"
+                        ]
+                    ],
+                    "signalId": "PeriodicTrigger0",
+                    "signalKey": "signals",
+                    "slotId": "StandardDeviation0",
+                    "slotKey": "slots",
+                    "what": "Connection",
+                    "zValue": 0
+                },
+                {
+                    "enabled": true,
+                    "id": "Connection_PeriodicTrigger0signals_Variance0",
+                    "positionX": 0,
+                    "positionY": 0,
+                    "rotation": 0,
+                    "selected": false,
+                    "sigSlots": [
+                        [
+                            "triggered",
+                            "probeLastValue"
+                        ]
+                    ],
+                    "signalId": "PeriodicTrigger0",
+                    "signalKey": "signals",
+                    "slotId": "Variance0",
+                    "slotKey": "slots",
+                    "what": "Connection",
+                    "zValue": 0
+                },
+                {
+                    "enabled": true,
+                    "id": "Connection_StandardDeviation0signals_TextDisplay3",
+                    "positionX": 0,
+                    "positionY": 0,
+                    "rotation": 0,
+                    "selected": false,
+                    "sigSlots": [
+                        [
+                            "lastValueTriggered",
+                            "setValue"
+                        ]
+                    ],
+                    "signalId": "StandardDeviation0",
+                    "signalKey": "signals",
+                    "slotId": "TextDisplay3",
+                    "slotKey": "slots",
+                    "what": "Connection",
+                    "zValue": 0
+                },
+                {
+                    "enabled": true,
+                    "id": "Connection_Variance00_PTP00",
+                    "inputId": "PTP0",
+                    "inputKey": "0",
+                    "outputId": "Variance0",
+                    "outputKey": "0",
+                    "positionX": 0,
+                    "positionY": 0,
+                    "rotation": 0,
+                    "selected": false,
+                    "what": "Connection",
+                    "zValue": 0
+                },
+                {
+                    "enabled": true,
+                    "id": "Connection_Variance0signals_TextDisplay1",
+                    "positionX": 0,
+                    "positionY": 0,
+                    "rotation": 0,
+                    "selected": false,
+                    "sigSlots": [
+                        [
+                            "lastValueTriggered",
+                            "setValue"
+                        ]
+                    ],
+                    "signalId": "Variance0",
+                    "signalKey": "signals",
+                    "slotId": "TextDisplay1",
+                    "slotKey": "slots",
+                    "what": "Connection",
+                    "zValue": 0
+                },
+                {
+                    "enabled": true,
+                    "id": "Connection_WaveformSource00_Mean00",
+                    "inputId": "Mean0",
+                    "inputKey": "0",
+                    "outputId": "WaveformSource0",
+                    "outputKey": "0",
+                    "positionX": 0,
+                    "positionY": 0,
+                    "rotation": 0,
+                    "selected": false,
+                    "what": "Connection",
+                    "zValue": 0
+                },
+                {
+                    "blockId": "TextDisplay0",
+                    "enabled": true,
+                    "height": 25,
+                    "id": "WidgetTextDisplay0",
+                    "positionX": 1091,
+                    "positionY": 156,
+                    "rotation": 0,
+                    "selected": false,
+                    "what": "Widget",
+                    "width": 55,
+                    "zValue": 193
+                },
+                {
+                    "blockId": "TextDisplay1",
+                    "enabled": true,
+                    "height": 25,
+                    "id": "WidgetTextDisplay1",
+                    "positionX": 1088,
+                    "positionY": 191,
+                    "rotation": 0,
+                    "selected": false,
+                    "what": "Widget",
+                    "width": 78,
+                    "zValue": 191
+                },
+                {
+                    "blockId": "TextDisplay2",
+                    "enabled": true,
+                    "height": 25,
+                    "id": "WidgetTextDisplay2",
+                    "positionX": 1090,
+                    "positionY": 229,
+                    "rotation": 0,
+                    "selected": false,
+                    "what": "Widget",
+                    "width": 45,
+                    "zValue": 187
+                },
+                {
+                    "blockId": "TextDisplay3",
+                    "enabled": true,
+                    "height": 25,
+                    "id": "WidgetTextDisplay3",
+                    "positionX": 1086,
+                    "positionY": 261,
+                    "rotation": 0,
+                    "selected": false,
+                    "what": "Widget",
+                    "width": 68,
+                    "zValue": 189
+                }
+            ],
+            "pageName": "Main",
+            "selected": true
+        }
+    ]
+}
