@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Nicholas Corgan
+# Copyright (c) 2019-2020 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
 from .BaseBlock import *
@@ -19,11 +19,16 @@ class FFTClass(BaseBlock):
                 "numBins was specified as {0}, which is not a power of 2. " \
                 "This will result in suboptimal performance.".format(numBins))
 
-        self.numBins = numBins
+        self.__numBins = numBins
 
         self.setupInput(0, inputDType)
         self.setupOutput(0, outputDType)
         self.input(0).setReserve(numBins)
+
+        self.registerProbe("numBins")
+
+    def numBins(self):
+        return self.__numBins
 
     def work(self):
         elems = self.workInfo().minAllElements
@@ -35,7 +40,7 @@ class FFTClass(BaseBlock):
 
         output = self.func(in0.buffer()).astype(self.numpyOutputDType)
 
-        in0.consume(self.numBins)
+        in0.consume(self.__numBins)
         out0.postBuffer(output)
 
 #
