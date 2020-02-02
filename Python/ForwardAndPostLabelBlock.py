@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Nicholas Corgan
+# Copyright (c) 2019-2020 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
 from .BaseBlock import *
@@ -23,6 +23,9 @@ class ForwardAndPostLabelBlock(BaseBlock):
 
         self.findIndexFunc = findIndexFunc
         self.labelName = labelName
+        self.__lastValue = None
+
+        self.registerProbe("lastValue")
 
     def work(self):
         assert(self.numpyInputDType is not None)
@@ -52,6 +55,11 @@ class ForwardAndPostLabelBlock(BaseBlock):
 
         self.output(0).postLabel(Pothos.Label(self.labelName, numpyRet, index))
         self.output(0).postBuffer(buf)
+
+        self.__lastValue = numpyRet
+
+    def lastValue(self):
+        return self.__lastValue
 
 #
 # Subclasses
