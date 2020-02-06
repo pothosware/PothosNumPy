@@ -12,3 +12,4 @@ fft/hfft: {name: HFFT}
 fft/ihfft: {name: IHFFT}
 
 window: {name: Window}
+astype: {name: AsType}

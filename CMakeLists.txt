@@ -87,6 +87,7 @@ BUILD_PYTHON_MODULE(
     TARGET NumPyBlocks
     DESTINATION PothosNumPy
     SOURCES
+        Python/AsType.py
         Python/BaseBlock.py
         Python/FFT.py
         Python/ForwardAndPostLabelBlock.py
@@ -117,6 +118,7 @@ BUILD_PYTHON_MODULE(
         Testing/TestRegisteredCalls.cpp
         Testing/TestUtility.cpp
     DOC_SOURCES
+        Python/AsType.py
         Python/FFT.py
         Python/FileSink.py
         Python/FileSource.py

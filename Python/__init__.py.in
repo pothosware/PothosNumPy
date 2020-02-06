@@ -1,6 +1,7 @@
 # Copyright (c) 2019-2020 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
+from .AsType import *
 from .BlockEntryPoints import *
 from .FFT import *
 from .FileSink import *
