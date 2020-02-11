@@ -389,7 +389,7 @@ def makoVarsToBlockDesc(makoVars):
                 param["widgetKwargs"] = dict(minimum=2)
             elif factoryParam == "repeat":
                 param["name"] = "Repeat?"
-                param["desc"] = ["Whether or not a block with a fixed output repeatedly posts thsi output."]
+                param["desc"] = ["Whether or not a block with a fixed output repeatedly posts this output."]
                 param["default"] = "false"
                 param["widgetType"] = "ToggleSwitch"
                 param["widgetKwargs"] = dict(on="True",off="False")
