@@ -2,6 +2,8 @@
 
 This toolkit adds 100+ Pothos blocks that wrap the majority of NumPy's API, as well as providing interfaces to NumPy's numeric info classes, accessible outside Pothos flowgraphs.
 
+**2020/02/15: This module currently depends on the master branches of the PothosCore and PothosPython repositories. Pothos 0.7 will be the first stable release this module supports.**
+
 ## Documentation
 
 * https://github.com/pothosware/PothosNumPy/wiki (TODO)
@@ -9,6 +11,7 @@ This toolkit adds 100+ Pothos blocks that wrap the majority of NumPy's API, as w
 ## Dependencies
 
 * Pothos library
+* Pothos Python bindings
 * NumPy Python module
 * Mako Python module (build-time only)
 
