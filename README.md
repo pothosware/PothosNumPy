@@ -10,7 +10,7 @@ This toolkit adds 100+ Pothos blocks that wrap the majority of NumPy's API, as w
 
 ## Dependencies
 
-* Pothos library
+* Pothos library (0.7+)
 * Pothos Python bindings
 * NumPy Python module
 * Mako Python module (build-time only)
