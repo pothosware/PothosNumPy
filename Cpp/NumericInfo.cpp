@@ -53,16 +53,7 @@ class IntInfo
 
         T getMaxValue() const
         {
-            // To workaround a bug in PothosPython with std::uint64_t conversion,
-            // we'll cheat and bypass it.
-            if(std::is_same<std::uint64_t, T>::value)
-            {
-                return std::numeric_limits<std::uint64_t>::max();
-            }
-            else
-            {
-                return _iinfo.get<T>("max");
-            }
+            return _iinfo.get<T>("max");
         }
 
     private:
