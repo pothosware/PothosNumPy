@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Nicholas Corgan
+// Copyright (c) 2019-2020 Nicholas Corgan
 // SPDX-License-Identifier: BSD-3-Clause
 
 #include "Testing/BlockExecutionTest.hpp"
@@ -72,7 +72,7 @@ static void test3ParamBlockExecution(
                          param2,
                          param3,
                          false /*repeat*/);
-    POTHOS_TEST_TRUE(!testBlock.template call<bool>("getRepeat"));
+    POTHOS_TEST_FALSE(testBlock.template call<bool>("getRepeat"));
     POTHOS_TEST_EQUAL(
         blockRegistryPath,
         testBlock.template call<std::string>("getName"));

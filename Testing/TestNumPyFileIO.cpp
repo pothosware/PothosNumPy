@@ -201,7 +201,7 @@ static void testNpySource(const std::string& type)
     POTHOS_TEST_EQUAL(
         filepath,
         numpyNpySource.call<std::string>("getFilepath"));
-    POTHOS_TEST_TRUE(!numpyNpySource.call<bool>("getRepeat"));
+    POTHOS_TEST_FALSE(numpyNpySource.call<bool>("getRepeat"));
 
     // Note: we need to get the Python class's internal port because the Python
     // class's dtype() function returns the NumPy dtype.
@@ -228,7 +228,7 @@ static void testNpySource(const std::string& type)
         // When this block exits, the flowgraph will stop.
         Poco::Thread::sleep(10);
     }
-    POTHOS_TEST_TRUE(collectorSink.call<Pothos::BufferChunk>("getBuffer").elements() > 0);
+    POTHOS_TEST_GT(collectorSink.call<Pothos::BufferChunk>("getBuffer").elements(), 0);
 
     // Equality is not guaranteed with 64-bit integral types, so just
     // make sure it executes.
@@ -267,7 +267,7 @@ static void testNpySink(const std::string& type)
     POTHOS_TEST_EQUAL(
         filepath,
         numpySave.call<std::string>("getFilepath"));
-    POTHOS_TEST_TRUE(!numpySave.call<bool>("getAppend"));
+    POTHOS_TEST_FALSE(numpySave.call<bool>("getAppend"));
 
     // Execute the topology.
     {
@@ -283,9 +283,7 @@ static void testNpySink(const std::string& type)
     }
 
     POTHOS_TEST_TRUE(Poco::File(filepath).exists());
-    POTHOS_TEST_TRUE(
-        Poco::File(filepath).getSize() >=
-        (numElements * dtype.elemSize()));
+    POTHOS_TEST_GE(Poco::File(filepath).getSize(),(numElements * dtype.elemSize()));
 
     //
     // Use NumPy directly to test our values.
@@ -496,7 +494,7 @@ static void testNpzSink(bool compressed)
     // Since every channel should have written
     if(!compressed)
     {
-        POTHOS_TEST_TRUE(Poco::File(filepath).getSize() >= minSize);
+        POTHOS_TEST_GE(Poco::File(filepath).getSize(), minSize);
     }
 
     //

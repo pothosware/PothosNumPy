@@ -109,9 +109,7 @@ class NpyFileSource(FileSourceBaseBlock):
  * |preview enable
  *
  * |param key[Key]
- * |widget StringEntry()
- * |default "key"
- * |preview enable
+ * |default ""
  *
  * |param repeat[Repeat?]
  * |widget ToggleSwitch(on="True",off="False")

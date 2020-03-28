@@ -200,7 +200,7 @@ void testBlockExecutionCommon(
     for(const auto& collectorSinkMapPair: collectorSinks)
     {
         const auto& collectorSink = collectorSinkMapPair.second;
-        POTHOS_TEST_TRUE(collectorSink.call("getBuffer").call<size_t>("elements") > 0);
+        POTHOS_TEST_GT(collectorSink.call("getBuffer").call<size_t>("elements"), 0);
     }
 }
 

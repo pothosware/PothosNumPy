@@ -140,7 +140,7 @@ POTHOS_TEST_BLOCK("/numpy/tests", test_registered_string_calls)
 {
     // Make sure this is valid JSON. This will throw if the JSON is invalid.
     std::string numpyConfigInfo = PothosNumPyTests::getAndCallPlugin<std::string>("/devices/numpy/info");
-    POTHOS_TEST_TRUE(!numpyConfigInfo.empty());
+    POTHOS_TEST_FALSE(numpyConfigInfo.empty());
     auto json = nlohmann::json::parse(numpyConfigInfo);
 
     std::cout << json.dump() << std::endl;

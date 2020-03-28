@@ -356,8 +356,8 @@ static void testFFT()
     const std::string invBlockRegistryPath = "/numpy/fft/ifft";
 
     const auto testParams = getFFTTestParams<T, T>();
-    POTHOS_TEST_TRUE(!testParams.inputs.empty());
-    POTHOS_TEST_TRUE(!testParams.outputs.empty());
+    POTHOS_TEST_FALSE(testParams.inputs.empty());
+    POTHOS_TEST_FALSE(testParams.outputs.empty());
 
     Pothos::DType dtype(typeid(T));
     std::cout << "Testing " << dtype.toString() << " to "
@@ -422,8 +422,8 @@ static void testRFFT()
     using Complex = std::complex<T>;
 
     const auto testParams = getRFFTTestParams<T, Complex>();
-    POTHOS_TEST_TRUE(!testParams.inputs.empty());
-    POTHOS_TEST_TRUE(!testParams.outputs.empty());
+    POTHOS_TEST_FALSE(testParams.inputs.empty());
+    POTHOS_TEST_FALSE(testParams.outputs.empty());
 
     Pothos::DType dtype(typeid(T));
     Pothos::DType complexDType(typeid(Complex));
@@ -489,8 +489,8 @@ static void testHFFT()
     using Complex = std::complex<T>;
 
     const auto testParams = getHFFTTestParams<T>();
-    POTHOS_TEST_TRUE(!testParams.inputs.empty());
-    POTHOS_TEST_TRUE(!testParams.outputs.empty());
+    POTHOS_TEST_FALSE(testParams.inputs.empty());
+    POTHOS_TEST_FALSE(testParams.outputs.empty());
 
     Pothos::DType dtype(typeid(T));
     Pothos::DType complexDType(typeid(Complex));
