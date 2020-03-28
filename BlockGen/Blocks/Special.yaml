@@ -16,11 +16,12 @@ We use the algorithm published by Clenshaw <b>[1]</b> and referenced by Abramowi
 "
 
 sinc:
-        name: Sinc
+        name: NormalizedSinc
+        niceName: Normalized Sinc
         copy: i0
-        description: "Return the sinc function.
+        description: "Return the normalized sinc function.
 
-The sinc function is <b>sin(pi*x)/(pi*x).</b>
+The normalized sinc function is <b>sin(pi*x)/(pi*x).</b>
 
 <b>sinc(0)</b> is the limit value 1.
 
