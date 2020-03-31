@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Nicholas Corgan
+// Copyright (c) 2020 Nicholas Corgan
 // SPDX-License-Identifier: BSD-3-Clause
 
 // This file was generated on ${Now}.
@@ -10,6 +10,7 @@
 #include <Pothos/Framework.hpp>
 #include <Pothos/Proxy.hpp>
 
+#include <Poco/String.h>
 #include <Poco/Thread.h>
 
 #include <complex>
@@ -80,7 +81,7 @@ static void testAutoBlockExecutionFunc${numParams}Param(
     std::cout << blockRegistryPath << "(" << dtype.toString() << ")" << std::endl;
 
 %for paramNum in range(numParams):
-    const std::string getter${paramNum} = "get" + param${paramNum}Name;
+    const std::string getter${paramNum} = (param${paramNum}Name.size() == 1) ? param${paramNum}Name : (Poco::toLower(param${paramNum}Name.substr(0,1)) + param${paramNum}Name.substr(1));
     const std::string setter${paramNum} = "set" + param${paramNum}Name;
 %endfor
 

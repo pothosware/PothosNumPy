@@ -7,7 +7,8 @@ class ${makoVars["name"]}(${makoVars["class"]}):
         ${makoVars["class"]}.__init__(self, ${", ".join(makoVars["classParams"])})
 
 %for arg in makoVars.get("funcArgs",[]):
-        self.registerProbe("${arg["name"]}", "${arg["name"]}Changed", "set${arg["title"]}")
+        self.registerSignal("${arg["name"]}Changed")
+        self.registerProbe("${arg["name"]}")
 %endfor
 
 %for arg in makoVars.get("funcArgs",[]):
@@ -15,7 +16,7 @@ class ${makoVars["name"]}(${makoVars["class"]}):
 %endfor
 %for arg in makoVars.get("funcArgs",[]):
 
-    def get${arg["title"]}(self):
+    def ${arg["name"]}(self):
     %if (arg["dtype"] == "str") and arg.get("storeParamLowercase", False):
         return self.${arg["privateVar"]}.upper()
     %else:
