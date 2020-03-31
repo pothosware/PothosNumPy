@@ -17,6 +17,7 @@
 #include <cstdint>
 #include <complex>
 #include <iostream>
+#include <limits>
 #include <random>
 #include <string>
 #include <unordered_map>
@@ -50,29 +51,34 @@ static std::string getTemporaryTestFile(
 template <typename T>
 static PothosNumPyTests::EnableIfAnyInt<T, std::vector<T>> getRandomInputs(size_t numElements)
 {
-    std::vector<T> randomInputs(numElements);
-    int* intBuffer = (int*)randomInputs.data();
+    static std::random_device rd;
+    static std::mt19937 g(rd());
+    static std::uniform_int_distribution<T> dist(
+               std::numeric_limits<T>::min(),
+               std::numeric_limits<T>::max());
 
-    const size_t numIntElements = (numElements * sizeof(T)) / sizeof(int);
-
-    for(size_t intI = 0; intI < numIntElements; ++intI)
+    std::vector<T> randomInputs;
+    for(size_t i = 0; i < numElements; ++i)
     {
-        intBuffer[intI] = std::rand();
+        randomInputs.emplace_back(dist(g));
     }
 
     return randomInputs;
 }
 
-// The reinterpret_cast method above potentially results in NaN for floating-point
-// types, which ruins comparisons.
 template <typename T>
 static PothosNumPyTests::EnableIfFloat<T, std::vector<T>> getRandomInputs(size_t numElements)
 {
-    std::vector<T> randomInputs(numElements);
+    static std::random_device rd;
+    static std::mt19937 g(rd());
+    static std::uniform_real_distribution<T> dist(
+               std::numeric_limits<T>::min(),
+               std::numeric_limits<T>::max());
 
+    std::vector<T> randomInputs;
     for(size_t i = 0; i < numElements; ++i)
     {
-        randomInputs[i] = static_cast<T>(std::rand());
+        randomInputs.emplace_back(dist(g));
     }
 
     return randomInputs;
@@ -531,8 +537,6 @@ POTHOS_TEST_BLOCK("/numpy/tests", test_npy_source)
 
 POTHOS_TEST_BLOCK("/numpy/tests", test_npy_sink)
 {
-    std::srand(std::time(0ULL));
-
     testNpySink("int8");
     testNpySink("int16");
     testNpySink("int32");
@@ -555,8 +559,6 @@ POTHOS_TEST_BLOCK("/numpy/tests", test_npz_source)
 
 POTHOS_TEST_BLOCK("/numpy/tests", test_npz_sink)
 {
-    std::srand(std::time(0ULL));
-
     testNpzSink(false /*compressed*/);
     testNpzSink(true /*compressed*/);
 }
