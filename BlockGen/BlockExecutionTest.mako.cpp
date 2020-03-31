@@ -43,7 +43,7 @@ static void testAutoBlockExecutionFunc(
                         nchans);
         POTHOS_TEST_EQUAL(
             nchans,
-            testBlock.call<size_t>("getNumChannels"));
+            testBlock.call<size_t>("numChannels"));
     }
     else
     {

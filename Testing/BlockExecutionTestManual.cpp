@@ -72,7 +72,7 @@ static void test3ParamBlockExecution(
                          param2,
                          param3,
                          false /*repeat*/);
-    POTHOS_TEST_FALSE(testBlock.template call<bool>("getRepeat"));
+    POTHOS_TEST_FALSE(testBlock.template call<bool>("repeat"));
     POTHOS_TEST_EQUAL(
         blockRegistryPath,
         testBlock.template call<std::string>("getName"));
@@ -81,7 +81,7 @@ static void test3ParamBlockExecution(
     PothosNumPyTests::testBlockExecutionCommon(testBlock);
 
     testBlock.template call("setRepeat", true);
-    POTHOS_TEST_TRUE(testBlock.template call<bool>("getRepeat"));
+    POTHOS_TEST_TRUE(testBlock.template call<bool>("repeat"));
 
     std::cout << blockRegistryPath << "(" << dtype.toString() << ", repeating)" << std::endl;
     PothosNumPyTests::testBlockExecutionCommon(testBlock);
@@ -132,17 +132,17 @@ static void testWindow()
             windowBlock.call<std::string>("getName"));
         PothosNumPyTests::testEqual(
             window,
-            windowBlock.call<std::string>("getWindowType"));
+            windowBlock.call<std::string>("windowType"));
         PothosNumPyTests::testEqual(
             DefaultKaiserBeta,
-            windowBlock.call<double>("getKaiserBeta"));
+            windowBlock.call<double>("kaiserBeta"));
 
         if(window == "KAISER")
         {
             windowBlock.call("setKaiserBeta", TestKaiserBeta);
             PothosNumPyTests::testEqual(
                 TestKaiserBeta,
-                windowBlock.call<double>("getKaiserBeta"));
+                windowBlock.call<double>("kaiserBeta"));
         }
 
         PothosNumPyTests::testBlockExecutionCommon(windowBlock);

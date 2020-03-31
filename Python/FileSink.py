@@ -66,10 +66,10 @@ class NpyFileSink(BaseBlock):
             numpy.save(self.__filepath, self.__buffer)
             os.sync()
 
-    def getFilepath(self):
+    def filepath(self):
         return self.__filepath
 
-    def getAppend(self):
+    def append(self):
         self.logger.info("The \"append\" option is currently unimplemented.")
         return False
 
@@ -161,22 +161,22 @@ class SaveZBlock(BaseBlock):
             self.func(self.__filepath, **self.__buffers)
             os.sync()
 
-    def getFilepath(self):
+    def filepath(self):
         return self.__filepath
 
-    def getKey(self):
+    def key(self):
         return self.__key
 
-    def getCompressed(self):
+    def compressed(self):
         return self.__compressed
 
-    def getAppend(self):
+    def append(self):
         return self.__append
 
     def setAppend(self, append):
         self.__append = append
 
-    def getAllKeys(self):
+    def allKeys(self):
         return self.__allKeys
 
     def work(self):

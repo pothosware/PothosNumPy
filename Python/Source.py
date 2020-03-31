@@ -48,9 +48,7 @@ class FixedSingleOutputSource(SingleOutputSource):
         self.__repeat = repeat
         self.__workCalled = False
 
-        self.registerProbe("repeat", "repeatChanged", "setRepeat")
-
-    def getRepeat(self):
+    def repeat(self):
         return self.__repeat
 
     def setRepeat(self, repeat):

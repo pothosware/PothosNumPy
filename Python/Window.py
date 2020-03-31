@@ -21,13 +21,16 @@ class WindowBlock(SingleOutputSource):
         kwargs = dict(useDType=False)
         SingleOutputSource.__init__(self, "/numpy/window", None, dtype, dtypeArgs, list(), dict(), list(), **kwargs)
 
-        self.registerProbe("windowType", "windowTypeChanged", "setWindowType")
-        self.registerProbe("kaiserBeta", "kaiserBetaChanged", "setKaiserBeta")
+        self.registerProbe("windowType")
+        self.registerProbe("kaiserBeta")
+
+        self.registerSignal("windowTypeChanged")
+        self.registerSignal("kaiserBetaChanged")
 
         self.setKaiserBeta(0.0)
         self.setWindowType(windowType)
 
-    def getWindowType(self):
+    def windowType(self):
         return self.__windowType
 
     def setWindowType(self, windowType):
@@ -45,7 +48,7 @@ class WindowBlock(SingleOutputSource):
         # C++ equivalent: emitSignal("windowTypeChanged", windowType)
         self.windowTypeChanged(windowType)
 
-    def getKaiserBeta(self):
+    def kaiserBeta(self):
         return self.__kaiserBeta
 
     def setKaiserBeta(self, kaiserBeta):

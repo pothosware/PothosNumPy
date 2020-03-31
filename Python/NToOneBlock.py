@@ -24,7 +24,7 @@ class NToOneBlock(BaseBlock):
         self.setNumChannels(nchans)
         self.setupOutput(0, self.outputDType)
 
-    def getNumChannels(self):
+    def numChannels(self):
         return self.nchans
 
     def setNumChannels(self, nchans):

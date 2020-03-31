@@ -33,10 +33,10 @@ class FileSourceBaseBlock(BaseBlock):
 
         self.setupOutput(0, dtype)
 
-    def getFilepath(self):
+    def filepath(self):
         return self.__filepath
 
-    def getRepeat(self):
+    def repeat(self):
         return self.__repeat
 
     def setRepeat(self, repeat):
@@ -133,8 +133,8 @@ class NpzFileSource(FileSourceBaseBlock):
 
         self.__key = key
 
-    def getKey(self):
+    def key(self):
         return self.__key
 
-    def getAllKeys(self):
+    def allKeys(self):
         return self.__allKeys

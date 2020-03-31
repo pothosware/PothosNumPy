@@ -206,8 +206,8 @@ static void testNpySource(const std::string& type)
                               false /*repeat*/);
     POTHOS_TEST_EQUAL(
         filepath,
-        numpyNpySource.call<std::string>("getFilepath"));
-    POTHOS_TEST_FALSE(numpyNpySource.call<bool>("getRepeat"));
+        numpyNpySource.call<std::string>("filepath"));
+    POTHOS_TEST_FALSE(numpyNpySource.call<bool>("repeat"));
 
     // Note: we need to get the Python class's internal port because the Python
     // class's dtype() function returns the NumPy dtype.
@@ -272,8 +272,8 @@ static void testNpySink(const std::string& type)
                          false /*append*/);
     POTHOS_TEST_EQUAL(
         filepath,
-        numpySave.call<std::string>("getFilepath"));
-    POTHOS_TEST_FALSE(numpySave.call<bool>("getAppend"));
+        numpySave.call<std::string>("filepath"));
+    POTHOS_TEST_FALSE(numpySave.call<bool>("append"));
 
     // Execute the topology.
     {
@@ -396,20 +396,20 @@ static void testNpzSink(
                             append);
     POTHOS_TEST_EQUAL(
         filepath,
-        numpyNpzSink.call<std::string>("getFilepath"));
+        numpyNpzSink.call<std::string>("filepath"));
     POTHOS_TEST_EQUAL(
         key,
-        numpyNpzSink.call<std::string>("getKey"));
+        numpyNpzSink.call<std::string>("key"));
     POTHOS_TEST_EQUAL(
         compressed,
-        numpyNpzSink.call<bool>("getCompressed"));
+        numpyNpzSink.call<bool>("compressed"));
     POTHOS_TEST_EQUAL(
         append,
-        numpyNpzSink.call<bool>("getAppend"));
+        numpyNpzSink.call<bool>("append"));
 
     if(append)
     {
-        const auto allKeys = numpyNpzSink.call<std::vector<std::string>>("getAllKeys");
+        const auto allKeys = numpyNpzSink.call<std::vector<std::string>>("allKeys");
         POTHOS_TEST_TRUE(allKeys.end() != std::find(allKeys.begin(), allKeys.end(), key));
     }
 
