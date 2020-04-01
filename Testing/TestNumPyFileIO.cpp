@@ -407,6 +407,7 @@ static void testNpySink(const std::string& type)
                          "/numpy/npy_sink",
                          filepath,
                          dtype,
+                         1 /*nchans*/,
                          false /*append*/);
     POTHOS_TEST_EQUAL(
         filepath,
@@ -551,6 +552,7 @@ static void testNpzSink(
                             filepath,
                             key,
                             dtype,
+                            1 /*nchans*/,
                             compressed,
                             append);
     POTHOS_TEST_EQUAL(

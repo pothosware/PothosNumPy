@@ -19,7 +19,7 @@ import os
  *
  * |category /NumPy/File IO
  * |keywords save numpy binary file IO
- * |factory /numpy/npy_sink(filepath,dtype,append)
+ * |factory /numpy/npy_sink(filepath,dtype,nchans,append)
  *
  * |param filepath[Filepath]
  * |widget FileEntry(mode=save)
@@ -31,6 +31,11 @@ import os
  * |default "float64"
  * |preview disable
  *
+ * |param nchans[Num Channels] The number of inputs.
+ * |widget SpinBox(minimum=1)
+ * |default 1
+ * |preview disable
+ *
  * |param append[Append?]
  * |default false
  * |widget ToggleSwitch(on="True",off="False")
@@ -38,7 +43,7 @@ import os
  */
 """
 class NpyFileSink(BaseBlock):
-    def __init__(self, filepath, dtype, append):
+    def __init__(self, filepath, dtype, nchans, append):
         if os.path.splitext(filepath)[1] != ".npy":
             raise RuntimeError("Only .npy files are supported.")
 
@@ -46,6 +51,9 @@ class NpyFileSink(BaseBlock):
 
         dtypeArgs = dict(supportAll=True)
         BaseBlock.__init__(self, "/numpy/npy_sink", numpy.save, dtype, None, dtypeArgs, None, list(), dict())
+
+        if 1 == nchans:
+            self.logger.info("The \"nchans\" options is currently unimplemented.")
 
         self.__filepath = filepath
         self.__buffer = numpy.array([], dtype=self.numpyInputDType)
@@ -88,7 +96,7 @@ class NpyFileSink(BaseBlock):
  *
  * |category /NumPy/File IO
  * |keywords save numpy binary file IO
- * |factory /numpy/npz_sink(filepath,key,dtype,compressed,append)
+ * |factory /numpy/npz_sink(filepath,key,dtype,nchans,compressed,append)
  *
  * |param filepath[Filepath]
  * |widget FileEntry(mode=save)
@@ -105,6 +113,11 @@ class NpyFileSink(BaseBlock):
  * |default "float64"
  * |preview disable
  *
+ * |param nchans[Num Channels] The number of inputs.
+ * |widget SpinBox(minimum=1)
+ * |default 1
+ * |preview disable
+ *
  * |param compressed[Compressed?]
  * |default false
  * |widget ToggleSwitch(on="True",off="False")
@@ -117,7 +130,7 @@ class NpyFileSink(BaseBlock):
  */
 """
 class SaveZBlock(BaseBlock):
-    def __init__(self, func, dtype, filepath, key, compressed, append):
+    def __init__(self, func, dtype, filepath, key, nchans, compressed, append):
         if os.path.splitext(filepath)[1] != ".npz":
             raise RuntimeError("Only .npz files are supported.")
 
@@ -128,6 +141,9 @@ class SaveZBlock(BaseBlock):
 
         dtypeArgs = dict(supportAll=True)
         BaseBlock.__init__(self, "/numpy/npz_sink", func, dtype, None, dtypeArgs, None, list(), dict())
+
+        if 1 == nchans:
+            self.logger.info("The \"nchans\" options is currently unimplemented.")
 
         self.__buffers = dict()
         if os.path.exists(filepath):
@@ -183,6 +199,6 @@ class SaveZBlock(BaseBlock):
         self.__buffer = numpy.concatenate([self.__buffer, in0])
         self.input(0).consume(N)
 
-def NpzFileSink(filepath, key, dtype, compressed, append):
+def NpzFileSink(filepath, key, dtype, nchans, compressed, append):
     func = numpy.savez_compressed if compressed else numpy.savez
-    return SaveZBlock(func, dtype, filepath, key, compressed, append)
+    return SaveZBlock(func, dtype, filepath, key, nchans, compressed, append)
