@@ -108,7 +108,8 @@ def generateNpzFile(filepath, compressed):
         "float32", "float64", "complex64", "complex128"
     ]
     for key in keys:
-        values[key] = generate1DRandomValues(numpy.dtype(key), 256)
+        values[key+"_1D"] = generate1DRandomValues(numpy.dtype(key), 256)
+        values[key+"_2D"] = generate2DRandomValues(numpy.dtype(key), 4, 256)
 
     if compressed:
         numpy.savez_compressed(filepath, **values)
