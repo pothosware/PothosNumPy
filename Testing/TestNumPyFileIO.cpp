@@ -23,6 +23,8 @@
 #include <unordered_map>
 #include <vector>
 
+constexpr size_t kNumChannels = 4;
+
 //
 // Utility code
 //
@@ -132,6 +134,21 @@ static Pothos::BufferChunk getRandomInputs(
     return Pothos::BufferChunk();
 }
 
+static std::vector<Pothos::BufferChunk> convert2DNumPyArrayToBufferChunks(const Pothos::Proxy& numpyArray)
+{
+    POTHOS_TEST_EQUAL("numpy.ndarray", numpyArray.getClassName());
+
+    std::vector<Pothos::BufferChunk> ret;
+
+    const auto arrLength = numpyArray.call<size_t>("__len__");
+    for(size_t i = 0; i < arrLength; ++i)
+    {
+        ret.emplace_back(numpyArray.call<Pothos::BufferChunk>("__getitem__", i));
+    }
+
+    return ret;
+}
+
 using NpzContentsMap = std::unordered_map<std::string, Pothos::BufferChunk>;
 
 static Pothos::ProxyMap npzTestInputsToProxyMap(const NpzContentsMap& testInputs)
@@ -173,10 +190,10 @@ static NpzContentsMap proxyMapToNpzTestInputs(const Pothos::ProxyMap& proxyMap)
 // Common test code
 //
 
-static void testNpySource(const std::string& type)
+static void testNpySource1D(const std::string& type)
 {
     const Pothos::DType dtype(type);
-    std::cout << "Testing " << dtype.toString() << std::endl;
+    std::cout << "Testing " << dtype.toString() << " (1D)..." << std::endl;
 
     const std::string filepath = getTemporaryTestFile(dtype, ".npy");
 
@@ -188,7 +205,7 @@ static void testNpySource(const std::string& type)
     auto testFuncs = env->findProxy("PothosNumPy.TestFuncs");
 
     auto expectedOutputs = testFuncs.call(
-                               "generateNpyFile",
+                               "generate1DNpyFile",
                                filepath,
                                dtype);
     POTHOS_TEST_TRUE(
@@ -214,9 +231,9 @@ static void testNpySource(const std::string& type)
     POTHOS_TEST_EQUAL(
         dtype.name(),
         numpyNpySource.call("output", 0)
-                    .get("_port")
-                    .call("dtype")
-                    .call<std::string>("name"));
+                      .get("_port")
+                      .call("dtype")
+                      .call<std::string>("name"));
 
     auto collectorSink = Pothos::BlockRegistry::make(
                              "/blocks/collector_sink",
@@ -236,14 +253,90 @@ static void testNpySource(const std::string& type)
     }
     POTHOS_TEST_GT(collectorSink.call<Pothos::BufferChunk>("getBuffer").elements(), 0);
 
-    // Equality is not guaranteed with 64-bit integral types, so just
-    // make sure it executes.
-    if(std::string::npos == type.find("int64"))
+    PothosNumPyTests::testBufferChunk(
+        collectorSink.call("getBuffer"),
+        expectedOutputs.toObject().extract<Pothos::BufferChunk>());
+}
+
+static void testNpySource2D(const std::string& type)
+{
+    const Pothos::DType dtype(type);
+    std::cout << "Testing " << dtype.toString() << " (2D)..." << std::endl;
+
+    const std::string filepath = getTemporaryTestFile(dtype, ".npy");
+
+    //
+    // Generate our test file in NumPy and save our expected values.
+    //
+
+    auto env = Pothos::ProxyEnvironment::make("python");
+    auto testFuncs = env->findProxy("PothosNumPy.TestFuncs");
+
+    auto expectedOutputs = convert2DNumPyArrayToBufferChunks(testFuncs.call(
+                               "generate2DNpyFile",
+                               filepath,
+                               dtype));
+    POTHOS_TEST_TRUE(Poco::File(filepath).exists());
+
+    auto numpyNpySource = Pothos::BlockRegistry::make(
+                              "/numpy/npy_source",
+                              filepath,
+                              false /*repeat*/);
+    POTHOS_TEST_EQUAL(
+        filepath,
+        numpyNpySource.call<std::string>("filepath"));
+    POTHOS_TEST_FALSE(numpyNpySource.call<bool>("repeat"));
+
+    // Note: we need to get the Python class's internal port because the Python
+    // class's dtype() function returns the NumPy dtype.
+    for(size_t chan = 0; chan < kNumChannels; ++chan)
     {
-        PothosNumPyTests::testBufferChunk(
-            collectorSink.call("getBuffer"),
-            expectedOutputs.toObject().extract<Pothos::BufferChunk>());
+        POTHOS_TEST_EQUAL(
+            dtype.name(),
+            numpyNpySource.call("output", chan)
+                          .get("_port")
+                          .call("dtype")
+                          .call<std::string>("name"));
     }
+
+    std::vector<Pothos::Proxy> collectorSinks;
+    for(size_t chan = 0; chan < kNumChannels; ++chan)
+    {
+        collectorSinks.emplace_back(Pothos::BlockRegistry::make(
+                                        "/blocks/collector_sink",
+                                        dtype));
+    }
+
+    // Execute the topology.
+    {
+        Pothos::Topology topology;
+        for(size_t chan = 0; chan < kNumChannels; ++chan)
+        {
+            topology.connect(
+                numpyNpySource, chan,
+                collectorSinks[chan], 0);
+        }
+
+        topology.commit();
+
+        // When this block exits, the flowgraph will stop.
+        Poco::Thread::sleep(10);
+    }
+
+    for(size_t chan = 0; chan < expectedOutputs.size(); ++chan)
+    {
+        POTHOS_TEST_GT(collectorSinks[chan].call<Pothos::BufferChunk>("getBuffer").elements(), 0);
+
+        PothosNumPyTests::testBufferChunk(
+            collectorSinks[chan].call("getBuffer"),
+            expectedOutputs[chan]);
+    }
+}
+
+static void testNpySource(const std::string& type)
+{
+    testNpySource1D(type);
+    testNpySource2D(type);
 }
 
 static void testNpySink(const std::string& type)
@@ -349,8 +442,8 @@ static void testNpzSource(bool compressed)
         // Note: we need to get the Python object's internal port proxy because
         // the Python class returns a NumPy DType.
         auto dtype = numpyNpzSource.call("output", "0")
-                                 .get("_port")
-                                 .template call<Pothos::DType>("dtype");
+                                   .get("_port")
+                                   .template call<Pothos::DType>("dtype");
 
         std::cout << " * Testing " << dtype.name() << std::endl;
 

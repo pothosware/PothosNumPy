@@ -19,7 +19,7 @@ def checkArrayContents(expectedValues, actualValues):
         raise RuntimeError("actualValues must be a NumPy array.")
 
     if expectedValues.dtype != actualValues.dtype:
-        raise RuntimeError("Expected dtype {0}. Actual dtype {1}".format(expectedNumPyDType, actualValues.dtype))
+        raise RuntimeError("Expected dtype {0}. Actual dtype {1}".format(expectedValues.dtype, actualValues.dtype))
 
     if len(expectedValues) != len(actualValues):
         raise RuntimeError("Expected length {0}. Actual length {1}".format(len(expectedValues), len(actualValues)))
@@ -56,11 +56,10 @@ def checkNpzContents(filepath, expectedValues):
 # Generating outputs
 #
 
-def generateRandomValues(dtype):
+def generate1DRandomValues(dtype, arrLength):
     if type(dtype) is not numpy.dtype:
         dtype = Pothos.Buffer.dtype_to_numpy(dtype)
 
-    arrLength = 256
     def randFloats(size):
         return Random.NumPyRandom.exponential(1.0, size)
 
@@ -77,8 +76,25 @@ def generateRandomValues(dtype):
 
     return vals
 
-def generateNpyFile(filepath, dtype):
-    values = generateRandomValues(dtype)
+def generate2DRandomValues(dtype, nchans, arrLength):
+    if type(dtype) is not numpy.dtype:
+        dtype = Pothos.Buffer.dtype_to_numpy(dtype)
+
+    vals = numpy.ndarray(shape=(nchans, arrLength), dtype=dtype)
+    for chan in range(nchans):
+        vals[chan] = generate1DRandomValues(dtype, arrLength)
+
+    return vals
+
+def generate1DNpyFile(filepath, dtype):
+    values = generate1DRandomValues(dtype, 256)
+    numpy.save(filepath, values)
+
+    # Return values for validation
+    return values
+
+def generate2DNpyFile(filepath, dtype):
+    values = generate2DRandomValues(dtype, 4, 256)
     numpy.save(filepath, values)
 
     # Return values for validation
@@ -92,7 +108,7 @@ def generateNpzFile(filepath, compressed):
         "float32", "float64", "complex64", "complex128"
     ]
     for key in keys:
-        values[key] = generateRandomValues(numpy.dtype(key))
+        values[key] = generate1DRandomValues(numpy.dtype(key), 256)
 
     if compressed:
         numpy.savez_compressed(filepath, **values)

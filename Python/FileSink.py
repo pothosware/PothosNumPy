@@ -47,12 +47,6 @@ class NpyFileSink(BaseBlock):
         dtypeArgs = dict(supportAll=True)
         BaseBlock.__init__(self, "/numpy/npy_sink", numpy.save, dtype, None, dtypeArgs, None, list(), dict())
 
-        if "int64" in dtype.toString():
-            self.logger.warning(
-                "This block supports type {0}, but input values are not guaranteed " \
-                "to be preserved due to limitations of type conversions between " \
-                "C++ and Python.".format(dtype.toString()))
-
         self.__filepath = filepath
         self.__buffer = numpy.array([], dtype=self.numpyInputDType)
 
