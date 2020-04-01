@@ -204,6 +204,84 @@ static void proxyMapToNpzTestInputs(
 // Common test code
 //
 
+// Assumption: file has been generated, block initial values have been validated
+static void test1DSource(
+    const Pothos::Proxy& testBlock,
+    const Pothos::BufferChunk& expectedOutputs)
+{
+    // Note: we need to get the Python class's internal port because the Python
+    // class's dtype() function returns the NumPy dtype.
+    const auto dtype = testBlock.call("output", 0).get("_port").call<Pothos::DType>("dtype");
+
+    auto collectorSink = Pothos::BlockRegistry::make(
+                             "/blocks/collector_sink",
+                             dtype);
+
+    // Execute the topology.
+    {
+        Pothos::Topology topology;
+        topology.connect(
+            testBlock, 0,
+            collectorSink, 0);
+
+        topology.commit();
+
+        // When this block exits, the flowgraph will stop.
+        Poco::Thread::sleep(10);
+    }
+    POTHOS_TEST_GT(collectorSink.call<Pothos::BufferChunk>("getBuffer").elements(), 0);
+
+    PothosNumPyTests::testBufferChunk(
+        collectorSink.call("getBuffer"),
+        expectedOutputs);
+}
+
+// Assumption: file has been generated, block initial values have been validated
+static void test2DSource(
+    const Pothos::Proxy& testBlock,
+    const std::vector<Pothos::BufferChunk>& expectedOutputs)
+{
+    // Note: we need to get the Python class's internal port because the Python
+    // class's dtype() function returns the NumPy dtype.
+    const auto dtype = testBlock.call("output", 0).get("_port").call<Pothos::DType>("dtype");
+
+    std::vector<Pothos::Proxy> collectorSinks;
+    for(size_t port = 0; port < kNumChannels; ++port)
+    {
+        collectorSinks.emplace_back(Pothos::BlockRegistry::make(
+                                        "/blocks/collector_sink",
+                                        dtype));
+    }
+
+    // Execute the topology.
+    {
+        Pothos::Topology topology;
+
+        for(size_t port = 0; port < kNumChannels; ++port)
+        {
+            topology.connect(
+                testBlock, port,
+                collectorSinks[port], 0);
+        }
+
+        topology.commit();
+
+        // When this block exits, the flowgraph will stop.
+        Poco::Thread::sleep(10);
+    }
+
+    for(size_t port = 0; port < kNumChannels; ++port)
+    {
+        PothosNumPyTests::testBufferChunk(
+            collectorSinks[port].call("getBuffer"),
+            expectedOutputs[port]);
+    }
+}
+
+//
+// Test implementation
+//
+
 static void testNpySource1D(const std::string& type)
 {
     const Pothos::DType dtype(type);
@@ -249,27 +327,9 @@ static void testNpySource1D(const std::string& type)
                       .call("dtype")
                       .call<std::string>("name"));
 
-    auto collectorSink = Pothos::BlockRegistry::make(
-                             "/blocks/collector_sink",
-                             dtype);
-
-    // Execute the topology.
-    {
-        Pothos::Topology topology;
-        topology.connect(
-            numpyNpySource, 0,
-            collectorSink, 0);
-
-        topology.commit();
-
-        // When this block exits, the flowgraph will stop.
-        Poco::Thread::sleep(10);
-    }
-    POTHOS_TEST_GT(collectorSink.call<Pothos::BufferChunk>("getBuffer").elements(), 0);
-
-    PothosNumPyTests::testBufferChunk(
-        collectorSink.call("getBuffer"),
-        expectedOutputs.toObject().extract<Pothos::BufferChunk>());
+    test1DSource(
+        numpyNpySource,
+        expectedOutputs);
 }
 
 static void testNpySource2D(const std::string& type)
@@ -313,38 +373,9 @@ static void testNpySource2D(const std::string& type)
                           .call<std::string>("name"));
     }
 
-    std::vector<Pothos::Proxy> collectorSinks;
-    for(size_t chan = 0; chan < kNumChannels; ++chan)
-    {
-        collectorSinks.emplace_back(Pothos::BlockRegistry::make(
-                                        "/blocks/collector_sink",
-                                        dtype));
-    }
-
-    // Execute the topology.
-    {
-        Pothos::Topology topology;
-        for(size_t chan = 0; chan < kNumChannels; ++chan)
-        {
-            topology.connect(
-                numpyNpySource, chan,
-                collectorSinks[chan], 0);
-        }
-
-        topology.commit();
-
-        // When this block exits, the flowgraph will stop.
-        Poco::Thread::sleep(10);
-    }
-
-    for(size_t chan = 0; chan < expectedOutputs.size(); ++chan)
-    {
-        POTHOS_TEST_GT(collectorSinks[chan].call<Pothos::BufferChunk>("getBuffer").elements(), 0);
-
-        PothosNumPyTests::testBufferChunk(
-            collectorSinks[chan].call("getBuffer"),
-            expectedOutputs[chan]);
-    }
+    test2DSource(
+        numpyNpySource,
+        expectedOutputs);
 }
 
 static void testNpySource(const std::string& type)
@@ -427,26 +458,32 @@ static void testNpzSource1D(
 
     std::cout << " * Testing " << dtype.name() << " (1D)..." << std::endl;
 
-    auto collectorSink = Pothos::BlockRegistry::make(
-                             "/blocks/collector_sink",
-                             dtype);
+    test1DSource(
+        numpyNpzSource,
+        expectedOutputs);
+}
 
-    // Execute the topology.
-    {
-        Pothos::Topology topology;
+static void testNpzSource2D(
+    const std::string& filepath,
+    const std::string& key,
+    const std::vector<Pothos::BufferChunk>& expectedOutputs)
+{
+    auto numpyNpzSource = Pothos::BlockRegistry::make(
+                              "/numpy/npz_source",
+                              filepath,
+                              key,
+                              false /*repeat*/);
 
-        topology.connect(
-            numpyNpzSource, 0,
-            collectorSink, 0);
+    // Note: we need to get the Python object's internal port proxy because
+    // the Python class returns a NumPy DType.
+    auto dtype = numpyNpzSource.call("output", "0")
+                               .get("_port")
+                               .call<Pothos::DType>("dtype");
 
-        topology.commit();
+    std::cout << " * Testing " << dtype.name() << " (2D)..." << std::endl;
 
-        // When this block exits, the flowgraph will stop.
-        Poco::Thread::sleep(10);
-    }
-
-    PothosNumPyTests::testBufferChunk(
-        collectorSink.call("getBuffer"),
+    test2DSource(
+        numpyNpzSource,
         expectedOutputs);
 }
 
@@ -491,6 +528,12 @@ static void testNpzSource(bool compressed)
         const auto& key = testValues.first;
         const auto& expectedOutputs = testValues.second;
         testNpzSource1D(filepath, key, expectedOutputs);
+    }
+    for(const auto& testValues: testValues2D)
+    {
+        const auto& key = testValues.first;
+        const auto& expectedOutputs = testValues.second;
+        testNpzSource2D(filepath, key, expectedOutputs);
     }
 }
 
