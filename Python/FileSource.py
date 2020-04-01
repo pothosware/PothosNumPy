@@ -25,13 +25,20 @@ class FileSourceBaseBlock(BaseBlock):
         self.__repeat = repeat
 
         self.data = None
+        self.__is1D = True
 
-    def setupOutputFromDataDType(self):
+    def validateDataAndSetupOutput(self):
+        if len(self.data.shape) not in [1,2]:
+            raise RuntimeError("This block only supports 1D or 2D arrays.")
+
         dtype = Utility.DType(self.data.dtype.name)
         dtypeArgs = dict(supportAll=True)
         self.initDTypes(None, dtype, None, dtypeArgs)
 
-        self.setupOutput(0, dtype)
+        for port in range(self.data.shape[0]):
+            self.setupOutput(port, dtype)
+
+        self.__is1D = (1 == len(self.data.shape))
 
     def filepath(self):
         return self.__filepath
@@ -42,25 +49,59 @@ class FileSourceBaseBlock(BaseBlock):
     def setRepeat(self, repeat):
         self.__repeat = repeat
 
-    def work(self):
-        out0 = self.output(0).buffer()
-        if 0 == len(out0):
-            return
-
-        n = min(len(out0), (len(self.data) - self.__pos))
+    def getOutputLenAndNewPos(self, data, output):
+        n = min(len(output.buffer()), (len(data) - self.__pos))
 
         if 0 == n:
             if self.__repeat:
                 self.__pos = 0
-                n = min(len(out0), (len(self.data) - self.__pos))
+                n = min(len(output.buffer()), (len(data) - self.__pos))
             else:
-                return
+                return (-1, -1)
 
         newPos = self.__pos + n
-        out0[:n] = self.data[self.__pos:newPos].astype(self.numpyOutputDType)
+        return n, newPos
+
+    def work1D(self):
+        elems = self.workInfo().minElements
+        if 0 == elems:
+            return
+
+        output = self.output(0)
+
+        n, newPos = self.getOutputLenAndNewPos(self.data, output)
+        if -1 == n:
+            return
+
+        output.buffer()[:n] = self.data[self.__pos:newPos].astype(self.numpyOutputDType)
+        output.produce(n)
 
         self.__pos = newPos
-        self.output(0).produce(n)
+
+    def work2D(self):
+        elems = self.workInfo().minElements
+        if 0 == elems:
+            return
+
+        outputs = self.outputs()
+
+        # Since NumPy arrays cannot be jagged, it is safe to pass in the
+        # first buffer.
+        n, newPos = self.getOutputLenAndNewPos(self.data[0], outputs[0])
+        if -1 == n:
+            return
+
+        for (data, output) in zip(self.data, outputs):
+            output.buffer()[:n] = data[self.__pos:newPos].astype(self.numpyOutputDType)
+            output.produce(n)
+
+        self.__pos = newPos
+
+    def work(self):
+        if self.__is1D:
+            self.work1D()
+        else:
+            self.work2D()
 
 """
 /*
@@ -90,7 +131,7 @@ class NpyFileSource(FileSourceBaseBlock):
 
         # Note: "with numpy.load... as" only works in NumPy 1.15 and up
         self.data = numpy.load(filepath, "r")
-        self.setupOutputFromDataDType()
+        self.validateDataAndSetupOutput()
 
 """
 /*
@@ -129,7 +170,7 @@ class NpzFileSource(FileSourceBaseBlock):
             raise KeyError('Could not find key "{0}".'.format(key))
 
         self.data = npzContents[key]
-        self.setupOutputFromDataDType()
+        self.validateDataAndSetupOutput()
 
         self.__key = key
 
