@@ -9,7 +9,7 @@
 
 #include <string>
 
-namespace PothosNumPyTests
+namespace NPTests
 {
 
 //

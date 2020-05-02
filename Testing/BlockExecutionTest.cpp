@@ -19,7 +19,7 @@
 
 #include <iostream>
 
-namespace PothosNumPyTests
+namespace NPTests
 {
 
 //

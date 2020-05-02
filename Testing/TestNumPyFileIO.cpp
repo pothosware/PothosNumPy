@@ -52,7 +52,7 @@ static std::string getTemporaryTestFile(
 
 // This is random enough for our use case.
 template <typename T>
-static PothosNumPyTests::EnableIfAnyInt<T, std::vector<T>> getRandomInputs(size_t numElements)
+static NPTests::EnableIfAnyInt<T, std::vector<T>> getRandomInputs(size_t numElements)
 {
     static std::random_device rd;
     static std::mt19937 g(rd());
@@ -70,7 +70,7 @@ static PothosNumPyTests::EnableIfAnyInt<T, std::vector<T>> getRandomInputs(size_
 }
 
 template <typename T>
-static PothosNumPyTests::EnableIfFloat<T, std::vector<T>> getRandomInputs(size_t numElements)
+static NPTests::EnableIfFloat<T, std::vector<T>> getRandomInputs(size_t numElements)
 {
     static std::random_device rd;
     static std::mt19937 g(rd());
@@ -88,21 +88,21 @@ static PothosNumPyTests::EnableIfFloat<T, std::vector<T>> getRandomInputs(size_t
 }
 
 template <typename T>
-static PothosNumPyTests::EnableIfComplex<T, std::vector<T>> getRandomInputs(size_t numElements)
+static NPTests::EnableIfComplex<T, std::vector<T>> getRandomInputs(size_t numElements)
 {
     using Scalar = typename T::value_type;
 
-    return PothosNumPyTests::toComplexVector(getRandomInputs<Scalar>(numElements * 2));
+    return NPTests::toComplexVector(getRandomInputs<Scalar>(numElements * 2));
 }
 
 template <typename T>
-static inline PothosNumPyTests::EnableIfNotComplex<T, T> getEpsilon()
+static inline NPTests::EnableIfNotComplex<T, T> getEpsilon()
 {
     return T(1e-4);
 }
 
 template <typename T>
-static inline PothosNumPyTests::EnableIfComplex<T, T> getEpsilon()
+static inline NPTests::EnableIfComplex<T, T> getEpsilon()
 {
     using U = typename T::value_type;
 
@@ -115,7 +115,7 @@ static Pothos::BufferChunk getRandomInputs(
 {
     #define IfTypeGetRandomInputs(typeStr, ctype) \
         if(type == typeStr) \
-            return PothosNumPyTests::stdVectorToBufferChunk<ctype>( \
+            return NPTests::stdVectorToBufferChunk<ctype>( \
                        getRandomInputs<ctype>(numElements));
 
     IfTypeGetRandomInputs("int8", std::int8_t)
@@ -231,7 +231,7 @@ static void test1DSource(
     }
     POTHOS_TEST_GT(collectorSink.call<Pothos::BufferChunk>("getBuffer").elements(), 0);
 
-    PothosNumPyTests::testBufferChunk(
+    NPTests::testBufferChunk(
         collectorSink.call("getBuffer"),
         expectedOutputs);
 }
@@ -272,7 +272,7 @@ static void test2DSource(
 
     for(size_t port = 0; port < kNumChannels; ++port)
     {
-        PothosNumPyTests::testBufferChunk(
+        NPTests::testBufferChunk(
             collectorSinks[port].call("getBuffer"),
             expectedOutputs[port]);
     }

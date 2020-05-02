@@ -38,7 +38,7 @@ struct HFFTTestParams
 //
 
 template <typename T, typename U>
-static PothosNumPyTests::EnableIfBothComplex<T, U, BlockTestParams<T, U>> getFFTTestParams()
+static NPTests::EnableIfBothComplex<T, U, BlockTestParams<T, U>> getFFTTestParams()
 {
     return
     {
@@ -116,7 +116,7 @@ static PothosNumPyTests::EnableIfBothComplex<T, U, BlockTestParams<T, U>> getFFT
 }
 
 template <typename T, typename U>
-static PothosNumPyTests::EnableIfSecondComplex<T, U, BlockTestParams<T, U>> getRFFTTestParams()
+static NPTests::EnableIfSecondComplex<T, U, BlockTestParams<T, U>> getRFFTTestParams()
 {
     return
     {
@@ -177,7 +177,7 @@ static PothosNumPyTests::EnableIfSecondComplex<T, U, BlockTestParams<T, U>> getR
 }
 
 template <typename T>
-static PothosNumPyTests::EnableIfNotComplex<T, HFFTTestParams<T, T, std::complex<T>>> getHFFTTestParams()
+static NPTests::EnableIfNotComplex<T, HFFTTestParams<T, T, std::complex<T>>> getHFFTTestParams()
 {
     return
     {
@@ -317,13 +317,13 @@ static PothosNumPyTests::EnableIfNotComplex<T, HFFTTestParams<T, T, std::complex
 }
 
 template <typename T>
-static inline PothosNumPyTests::EnableIfNotComplex<T, T> getEpsilon()
+static inline NPTests::EnableIfNotComplex<T, T> getEpsilon()
 {
     return T(1e-4);
 }
 
 template <typename T>
-static inline PothosNumPyTests::EnableIfComplex<T, T> getEpsilon()
+static inline NPTests::EnableIfComplex<T, T> getEpsilon()
 {
     using U = typename T::value_type;
 
@@ -387,7 +387,7 @@ static void testFFT()
     // Load the feeder
     feeder.call(
         "feedBuffer",
-        PothosNumPyTests::stdVectorToBufferChunk(testParams.inputs));
+        NPTests::stdVectorToBufferChunk(testParams.inputs));
 
     // Run the topology
     {
@@ -404,13 +404,13 @@ static void testFFT()
 
     // Test the collectors
     std::cout << " * Testing " << fwdBlockRegistryPath << std::endl;
-    PothosNumPyTests::testBufferChunk(
+    NPTests::testBufferChunk(
         fwdCollector.call("getBuffer"),
-        PothosNumPyTests::stdVectorToBufferChunk(testParams.outputs));
+        NPTests::stdVectorToBufferChunk(testParams.outputs));
     std::cout << " * Testing " << invBlockRegistryPath << std::endl;
-    PothosNumPyTests::testBufferChunk(
+    NPTests::testBufferChunk(
         invCollector.call("getBuffer"),
-        PothosNumPyTests::stdVectorToBufferChunk(testParams.inputs));
+        NPTests::stdVectorToBufferChunk(testParams.inputs));
 }
 
 template <typename T>
@@ -454,7 +454,7 @@ static void testRFFT()
     // Load the feeder
     feeder.call(
         "feedBuffer",
-        PothosNumPyTests::stdVectorToBufferChunk(testParams.inputs));
+        NPTests::stdVectorToBufferChunk(testParams.inputs));
 
     // Run the topology
     {
@@ -471,13 +471,13 @@ static void testRFFT()
 
     // Test the collectors
     std::cout << " * Testing " << fwdBlockRegistryPath << std::endl;
-    PothosNumPyTests::testBufferChunk(
+    NPTests::testBufferChunk(
         fwdCollector.call("getBuffer"),
-        PothosNumPyTests::stdVectorToBufferChunk(testParams.outputs));
+        NPTests::stdVectorToBufferChunk(testParams.outputs));
     std::cout << " * Testing " << invBlockRegistryPath << std::endl;
-    PothosNumPyTests::testBufferChunk(
+    NPTests::testBufferChunk(
         invCollector.call("getBuffer"),
-        PothosNumPyTests::stdVectorToBufferChunk(testParams.inputs));
+        NPTests::stdVectorToBufferChunk(testParams.inputs));
 }
 
 template <typename T>
@@ -522,7 +522,7 @@ static void testHFFT()
     // Load the feeder
     feeder.call(
         "feedBuffer",
-        PothosNumPyTests::stdVectorToBufferChunk(testParams.inputs));
+        NPTests::stdVectorToBufferChunk(testParams.inputs));
 
     // Run the topology
     {
@@ -539,13 +539,13 @@ static void testHFFT()
 
     // Test the collectors
     std::cout << " * Testing " << fwdBlockRegistryPath << std::endl;
-    PothosNumPyTests::testBufferChunk(
+    NPTests::testBufferChunk(
         fwdCollector.call("getBuffer"),
-        PothosNumPyTests::stdVectorToBufferChunk(testParams.outputs));
+        NPTests::stdVectorToBufferChunk(testParams.outputs));
     std::cout << " * Testing " << invBlockRegistryPath << std::endl;
-    PothosNumPyTests::testBufferChunk(
+    NPTests::testBufferChunk(
         invCollector.call("getBuffer"),
-        PothosNumPyTests::stdVectorToBufferChunk(testParams.revOutputs));
+        NPTests::stdVectorToBufferChunk(testParams.revOutputs));
 }
 
 // TODO: test scalar into FFT

@@ -17,7 +17,7 @@
 #include <type_traits>
 #include <vector>
 
-namespace PothosNumPyTests
+namespace NPTests
 {
 
 //

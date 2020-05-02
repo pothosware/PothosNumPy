@@ -5,7 +5,7 @@
 
 #include <Pothos/Testing.hpp>
 
-namespace PothosNumPyTests
+namespace NPTests
 {
 
 template <typename T>
