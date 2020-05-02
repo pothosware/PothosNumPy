@@ -112,6 +112,7 @@ BUILD_PYTHON_MODULE(
 
         Testing/BlockExecutionTest.cpp
         Testing/BlockExecutionTestManual.cpp
+        Testing/TestAsType.cpp
         Testing/TestFFT.cpp
         Testing/TestLabels.cpp
         Testing/TestNumPyFileIO.cpp
