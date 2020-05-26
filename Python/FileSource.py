@@ -110,6 +110,8 @@ class FileSourceBaseBlock(BaseBlock):
  * Corresponding NumPy function: <b>numpy.load</b> (with .npy extension)
  *
  * |category /NumPy/File IO
+ * |category /File IO
+ * |category /Sources
  * |keywords load numpy binary file IO
  * |factory /numpy/npy_source(filepath,repeat)
  * |setter setRepeat(repeat)
@@ -140,6 +142,8 @@ class NpyFileSource(FileSourceBaseBlock):
  * Corresponding NumPy function: <b>numpy.load</b> (with .npz extension)
  *
  * |category /NumPy/File IO
+ * |category /File IO
+ * |category /Sources
  * |keywords load numpy binary file IO
  * |factory /numpy/npz_source(filepath,key,repeat)
  * |setter setRepeat(repeat)

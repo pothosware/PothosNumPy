@@ -1,7 +1,7 @@
 random/permutation:
         name: Permutation
         class: OneToOneBlock
-        categories: ["/NumPy/Random"]
+        categories: ["/NumPy/Random", "/Random"]
         prefix: Random.NumPyRandom
         factoryPrefix: "/numpy/random"
         blockType: [all]
@@ -13,7 +13,7 @@ random/integers:
         niceName: Random Integers
         class: SingleOutputSource
         subclass: True
-        categories: ["/NumPy/Random"]
+        categories: ["/NumPy/Random", "/Random"]
         prefix: Random
         factoryPrefix: "/numpy/random"
         blockType: [int, uint]
@@ -34,7 +34,7 @@ random/beta:
         niceName: Beta Distribution
         class: SingleOutputSource
         subclass: True
-        categories: ["/NumPy/Random"]
+        categories: ["/NumPy/Random", "/Random"]
         prefix: Random.NumPyRandom
         factoryPrefix: "/numpy/random"
         blockType: [float]

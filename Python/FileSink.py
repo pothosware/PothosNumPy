@@ -18,6 +18,8 @@ import os
  * Corresponding NumPy function: <b>numpy.save</b>
  *
  * |category /NumPy/File IO
+ * |category /File IO
+ * |category /Sinks
  * |keywords save numpy binary file IO
  * |factory /numpy/npy_sink(filepath,dtype,nchans,append)
  *
@@ -95,6 +97,8 @@ class NpyFileSink(BaseBlock):
  * Corresponding NumPy functions: <b>numpy.savez</b>, <b>numpy.savez_compressed</b>
  *
  * |category /NumPy/File IO
+ * |category /File IO
+ * |category /Sinks
  * |keywords save numpy binary file IO
  * |factory /numpy/npz_sink(filepath,key,dtype,nchans,compressed,append)
  *
