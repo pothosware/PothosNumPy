@@ -117,7 +117,7 @@ random/geometric:
 
 Bernoulli trials are experiments with one of two outcomes: success or failure (an example of such an experiment is flipping a coin). The geometric distribution models the number of trials that must be run in order to achieve success. It is therefore supported on the positive integers, <b>k = 1, 2, ....</b>"
         funcArgs:
-                - {name: P, dtype: float, default: 0.5, testValue1: 0.0, testValue2: 0.5, ">=": 0.0, "<=": 1.0, badValues: [-0.01, 1.01]}
+                - {name: P, dtype: float, default: 0.5, testValue1: 0.01, testValue2: 0.5, ">": 0.0, "<=": 1.0, badValues: [0.0, 1.01]}
 
 random/gumbel:
         name: Gumbel
