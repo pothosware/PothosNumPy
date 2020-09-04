@@ -43,7 +43,7 @@ def checkNpzContents(filepath, expectedValues):
     expectedKeys = list(expectedValues.keys())
     expectedKeys.sort() # In place
 
-    actualKeys = npzContents.keys()
+    actualKeys = list(npzContents.keys())
     actualKeys.sort() # In place
 
     if expectedKeys != actualKeys:
