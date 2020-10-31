@@ -197,9 +197,6 @@ class SaveZBlock(BaseBlock):
     def append(self):
         return self.__append
 
-    def setAppend(self, append):
-        self.__append = append
-
     def allKeys(self):
         return self.__allKeys
 
