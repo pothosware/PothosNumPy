@@ -9,7 +9,7 @@ add:
 multiply:
         copy: add
         name: Multiply
-        blockType: [float, complex]
+        blockType: [all]
         description: "Multiply arguments element-wise."
         keywords: [multiply, product, multiplication, math, arithmetic]
 

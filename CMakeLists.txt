@@ -111,8 +111,12 @@ BUILD_PYTHON_MODULE(
 
         Testing/BlockExecutionTest.cpp
         Testing/BlockExecutionTestManual.cpp
+        Testing/TestArithmeticBlocks.cpp
+        Testing/TestBitwise.cpp
+        Testing/TestConjugate.cpp
         Testing/TestFFT.cpp
         Testing/TestLabels.cpp
+        Testing/TestLog.cpp
         Testing/TestNumPyFileIO.cpp
         Testing/TestRegisteredCalls.cpp
         Testing/TestUtility.cpp
