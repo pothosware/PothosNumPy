@@ -1,5 +1,3 @@
-# TODO: fix documentation saying buffer is forwarded
-
 ptp:
         name: PTP
         nicename: Peak-to-Peak

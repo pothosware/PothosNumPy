@@ -300,7 +300,7 @@ def generateMakoVars(func,yaml):
 
     makoVars["classParams"] = ['"{0}/{1}"'.format(makoVars.get("factoryPrefix","/numpy"), func)] + [funcAsParam] + makoVars["classParams"]
 
-    makoVars["classParams"] += ["list()"] # TODO: don't pass funcArgs as param
+    makoVars["classParams"] += ["list()"]
     makoVars["classParams"] += ["funcKWargs" if "funcKWargs" in makoVars else "dict()"]
     if "args" in makoVars:
         makoVars["classParams"] += ["*args"]

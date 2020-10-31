@@ -58,7 +58,6 @@ class NToOneBlock(BaseBlock):
         allArrs = numpy.array([buf.buffer()[:N].view() for buf in self.inputs()], dtype=self.numpyInputDType)
         out = None
 
-        # TODO: what happens if a function doesn't take in *args or **kwargs?
         if self.callReduce:
             out = functools.reduce(self.func, allArrs, *self.funcArgs)
         else:
@@ -80,7 +79,6 @@ class NToOneBlock(BaseBlock):
         out0 = self.output(0).buffer()
         out = None
 
-        # TODO: what happens if a function doesn't take in *args or **kwargs?
         if self.callReduce:
             out = functools.reduce(self.func, allArrs, *self.funcArgs)
         else:
