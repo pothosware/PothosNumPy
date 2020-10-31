@@ -10,7 +10,6 @@ import Pothos
 import numpy
 import os
 
-# TODO: implement "append" option
 """
 /*
  * |PothosDoc .npy File Sink
@@ -54,13 +53,28 @@ class NpyFileSink(BaseBlock):
         dtypeArgs = dict(supportAll=True)
         BaseBlock.__init__(self, "/numpy/npy_sink", numpy.save, dtype, None, dtypeArgs, None, list(), dict())
 
-        if 1 == nchans:
-            self.logger.info("The \"nchans\" options is currently unimplemented.")
-
         self.__filepath = filepath
-        self.__buffer = numpy.array([], dtype=self.numpyInputDType)
+        self.__append = append
 
-        self.setupInput("0", dtype)
+        # If we're appending, make sure what's there matches our given DType
+        # and is of the correct type.
+        if os.path.exists(self.__filepath) and self.__append:
+            fileContents = numpy.load(filepath, "r")
+            if len(fileContents.shape) not in [1,2]:
+                raise RuntimeError("This block only supports 1D or 2D arrays.")
+
+            if fileContents.shape[0] != nchans:
+                raise ValueError("Mismatched # channels: {0} vs {1}".format(nchans, fileContents.shape[0]))
+
+            if self.numpyInputDType != fileContents.dtype:
+                raise ValueError("Mismatched dtypes: {0} vs {1}".format(self.numpyInputDType, fileContents.type))
+
+            self.__buffer = fileContents
+        else:
+            self.__buffer = numpy.array([], dtype=self.numpyInputDType)
+
+        for chan in range(nchans):
+            self.setupInput(chan, dtype)
 
     def deactivate(self):
         # The .npy file format is intended to take a single array write,
@@ -74,11 +88,7 @@ class NpyFileSink(BaseBlock):
         return self.__filepath
 
     def append(self):
-        self.logger.info("The \"append\" option is currently unimplemented.")
-        return False
-
-    def setAppend(self, append):
-        self.logger.info("The \"append\" option is currently unimplemented.")
+        return self.__append
 
     def work(self):
         if 0 == self.workInfo().minAllInElements:
@@ -146,7 +156,7 @@ class SaveZBlock(BaseBlock):
         dtypeArgs = dict(supportAll=True)
         BaseBlock.__init__(self, "/numpy/npz_sink", func, dtype, None, dtypeArgs, None, list(), dict())
 
-        if 1 == nchans:
+        if 1 != nchans:
             self.logger.info("The \"nchans\" options is currently unimplemented.")
 
         self.__buffers = dict()
