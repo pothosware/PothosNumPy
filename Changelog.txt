@@ -1,5 +1,10 @@
 This this the changelog file for the Pothos ArrayFire toolkit.
 
+Release 0.1.0 (2020-10-31)
+==========================
+
+- Initial release.
+
 Release 0.0.1 (2020-07-16)
 ==========================
 
