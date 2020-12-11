@@ -11,6 +11,7 @@ For signed integer inputs, the two's complement is returned. In a two's-compleme
 
 <b>[1]</b> Wikipedia, \"Two's complement\", https://en.wikipedia.org/wiki/Two's_complement"
         keywords: [bitwise, not]
+        skipExecTest: true
 
 bitwise_and:
         copy: invert
@@ -21,6 +22,7 @@ bitwise_and:
 
 Computes the bit-wise AND of the underlying binary representation of the integers in the input arrays. This ufunc implements the C/Python operator <b>&</b>."
         keywords: ["&"]
+        skipExecTest: true
 
 bitwise_or:
         copy: invert
@@ -31,6 +33,7 @@ bitwise_or:
 
 Computes the bit-wise OR of the underlying binary representation of the integers in the input arrays. This ufunc implements the C/Python operator <b>|</b>."
         keywords: ["|"]
+        skipExecTest: true
 
 bitwise_xor:
         copy: invert
@@ -41,3 +44,4 @@ bitwise_xor:
 
 Computes the bit-wise XOR of the underlying binary representation of the integers in the input arrays. This ufunc implements the C/Python operator <b>^</b>."
         keywords: ["^", exclusive, or]
+        skipExecTest: true

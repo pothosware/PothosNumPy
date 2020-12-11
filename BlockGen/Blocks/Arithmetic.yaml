@@ -5,6 +5,7 @@ add:
         blockType: [all]
         description: "Add arguments element-wise."
         keywords: [add, sum, addition, math, arithmetic, plus]
+        skipExecTest: true
 
 multiply:
         copy: add
@@ -12,6 +13,7 @@ multiply:
         blockType: [all]
         description: "Multiply arguments element-wise."
         keywords: [multiply, product, multiplication, math, arithmetic]
+        skipExecTest: true
 
 #ldexp:
 #        copy: add
@@ -25,6 +27,7 @@ subtract:
         blockType: [all]
         description: "Subtract arguments, element-wise."
         keywords: [subtract, difference, minus, math, arithmetic]
+        skipExecTest: true
 
 divide:
         copy: subtract
@@ -34,6 +37,7 @@ divide:
 
 Instead of the Python traditional 'floor division', this returns a true division. True division adjusts the output type to present the best answer, regardless of input types."
         keywords: [divide, quotient, division, math, arithmetic]
+        skipExecTest: true
 
 true_divide:
         copy: subtract
