@@ -50,50 +50,6 @@ static std::string getTemporaryTestFile(
     return tempTestFile.toString();
 }
 
-// This is random enough for our use case.
-template <typename T>
-static NPTests::EnableIfAnyInt<T, std::vector<T>> getRandomInputs(size_t numElements)
-{
-    static std::random_device rd;
-    static std::mt19937 g(rd());
-    static std::uniform_int_distribution<T> dist(
-               std::numeric_limits<T>::min(),
-               std::numeric_limits<T>::max());
-
-    std::vector<T> randomInputs;
-    for(size_t i = 0; i < numElements; ++i)
-    {
-        randomInputs.emplace_back(dist(g));
-    }
-
-    return randomInputs;
-}
-
-template <typename T>
-static NPTests::EnableIfFloat<T, std::vector<T>> getRandomInputs(size_t numElements)
-{
-    static std::random_device rd;
-    static std::mt19937 g(rd());
-    static std::uniform_real_distribution<T> dist(
-               std::numeric_limits<T>::min(),
-               std::numeric_limits<T>::max());
-
-    std::vector<T> randomInputs;
-    for(size_t i = 0; i < numElements; ++i)
-    {
-        randomInputs.emplace_back(dist(g));
-    }
-
-    return randomInputs;
-}
-
-template <typename T>
-static NPTests::EnableIfComplex<T, std::vector<T>> getRandomInputs(size_t numElements)
-{
-    using Scalar = typename T::value_type;
-
-    return NPTests::toComplexVector(getRandomInputs<Scalar>(numElements * 2));
-}
 
 template <typename T>
 static inline NPTests::EnableIfNotComplex<T, T> getEpsilon()
@@ -107,32 +63,6 @@ static inline NPTests::EnableIfComplex<T, T> getEpsilon()
     using U = typename T::value_type;
 
     return T{getEpsilon<U>(), getEpsilon<U>()};
-}
-
-static Pothos::BufferChunk getRandomInputs(
-    const std::string& type,
-    size_t numElements)
-{
-    #define IfTypeGetRandomInputs(typeStr, ctype) \
-        if(type == typeStr) \
-            return NPTests::stdVectorToBufferChunk<ctype>( \
-                       getRandomInputs<ctype>(numElements));
-
-    IfTypeGetRandomInputs("int8", std::int8_t)
-    IfTypeGetRandomInputs("int16", std::int16_t)
-    IfTypeGetRandomInputs("int32", std::int32_t)
-    IfTypeGetRandomInputs("int64", std::int64_t)
-    IfTypeGetRandomInputs("uint8", std::uint8_t)
-    IfTypeGetRandomInputs("uint16", std::uint16_t)
-    IfTypeGetRandomInputs("uint32", std::uint32_t)
-    IfTypeGetRandomInputs("uint64", std::uint64_t)
-    IfTypeGetRandomInputs("float32", float)
-    IfTypeGetRandomInputs("float64", double)
-    IfTypeGetRandomInputs("complex_float32", std::complex<float>)
-    IfTypeGetRandomInputs("complex_float64", std::complex<double>)
-
-    // Should never get here
-    return Pothos::BufferChunk();
 }
 
 static std::vector<Pothos::BufferChunk> convert2DNumPyArrayToBufferChunks(const Pothos::Proxy& numpyArray)
@@ -392,7 +322,7 @@ static void testNpySink(const std::string& type)
     std::cout << "Testing " << dtype.toString() << std::endl;
 
     const std::string filepath = getTemporaryTestFile(dtype, ".npy");
-    const auto randomInputs = getRandomInputs(type, numElements);
+    const auto randomInputs = NPTests::getRandomInputs(type, numElements);
 
     //
     // Write known values to the .NPY file.
@@ -637,7 +567,7 @@ static void testNpzSink(bool compressed)
     {
         testInputs.emplace(
             type,
-            getRandomInputs(type, numElements));
+            NPTests::getRandomInputs(type, numElements));
     }
 
     //

@@ -5,8 +5,81 @@
 
 #include <Pothos/Testing.hpp>
 
+#include <random>
+
 namespace NPTests
 {
+
+// This is random enough for our use case.
+template <typename T>
+static EnableIfAnyInt<T, std::vector<T>> getRandomInputs(size_t numElements)
+{
+    static std::random_device rd;
+    static std::mt19937 g(rd());
+    static std::uniform_int_distribution<T> dist(
+               std::numeric_limits<T>::min(),
+               std::numeric_limits<T>::max());
+
+    std::vector<T> randomInputs;
+    for(size_t i = 0; i < numElements; ++i)
+    {
+        randomInputs.emplace_back(dist(g));
+    }
+
+    return randomInputs;
+}
+
+template <typename T>
+static EnableIfFloat<T, std::vector<T>> getRandomInputs(size_t numElements)
+{
+    static std::random_device rd;
+    static std::mt19937 g(rd());
+    static std::uniform_real_distribution<T> dist(
+               std::numeric_limits<T>::min(),
+               std::numeric_limits<T>::max());
+
+    std::vector<T> randomInputs;
+    for(size_t i = 0; i < numElements; ++i)
+    {
+        randomInputs.emplace_back(dist(g));
+    }
+
+    return randomInputs;
+}
+
+template <typename T>
+static EnableIfComplex<T, std::vector<T>> getRandomInputs(size_t numElements)
+{
+    using Scalar = typename T::value_type;
+
+    return toComplexVector(getRandomInputs<Scalar>(numElements * 2));
+}
+
+Pothos::BufferChunk getRandomInputs(
+    const std::string& type,
+    size_t numElements)
+{
+    #define IfTypeGetRandomInputs(typeStr, ctype) \
+        if(type == typeStr) \
+            return stdVectorToBufferChunk<ctype>( \
+                       getRandomInputs<ctype>(numElements));
+
+    IfTypeGetRandomInputs("int8", std::int8_t)
+    IfTypeGetRandomInputs("int16", std::int16_t)
+    IfTypeGetRandomInputs("int32", std::int32_t)
+    IfTypeGetRandomInputs("int64", std::int64_t)
+    IfTypeGetRandomInputs("uint8", std::uint8_t)
+    IfTypeGetRandomInputs("uint16", std::uint16_t)
+    IfTypeGetRandomInputs("uint32", std::uint32_t)
+    IfTypeGetRandomInputs("uint64", std::uint64_t)
+    IfTypeGetRandomInputs("float32", float)
+    IfTypeGetRandomInputs("float64", double)
+    IfTypeGetRandomInputs("complex_float32", std::complex<float>)
+    IfTypeGetRandomInputs("complex_float64", std::complex<double>)
+
+    // Should never get here
+    return Pothos::BufferChunk();
+}
 
 template <typename T>
 static constexpr EnableIfFloat<T,T> epsilon() {return T(1e-4);}

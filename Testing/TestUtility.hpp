@@ -160,6 +160,10 @@ static std::vector<T> linspace(T a, T b, size_t N)
     return xs;
 }
 
+Pothos::BufferChunk getRandomInputs(
+    const std::string& type,
+    size_t numElements);
+
 void testBufferChunk(
     const Pothos::BufferChunk& expectedBufferChunk,
     const Pothos::BufferChunk& actualBufferChunk);

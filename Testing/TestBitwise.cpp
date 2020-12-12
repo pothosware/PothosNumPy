@@ -6,8 +6,6 @@
 #include <Pothos/Framework.hpp>
 #include <Pothos/Testing.hpp>
 
-#include <Poco/RandomStream.h>
-
 #include <iostream>
 #include <vector>
 
@@ -16,16 +14,6 @@
 //
 
 static constexpr size_t bufferLen = 64;
-
-template <typename T>
-static Pothos::BufferChunk getTestInputs()
-{
-    Pothos::BufferChunk bufferChunk(typeid(T), bufferLen);
-    Poco::RandomBuf randomBuf;
-    randomBuf.readFromDevice(bufferChunk, bufferChunk.length);
-
-    return bufferChunk;
-}
 
 //
 // Test implementations
@@ -36,7 +24,7 @@ static void testInvert()
 {
     const Pothos::DType dtype(typeid(T));
 
-    auto input = getTestInputs<T>();
+    auto input = NPTests::getRandomInputs(dtype.name(), bufferLen);
     Pothos::BufferChunk expectedOutput(typeid(T), input.elements());
     for (size_t elem = 0; elem < expectedOutput.elements(); ++elem)
     {
@@ -76,7 +64,7 @@ static void testBinaryBlocks()
     testInvert<T>();
 
     std::vector<Pothos::BufferChunk> inputs;
-    for (size_t i = 0; i < numInputs; ++i) inputs.emplace_back(getTestInputs<T>());
+    for (size_t i = 0; i < numInputs; ++i) inputs.emplace_back(NPTests::getRandomInputs(dtype.name(), bufferLen));
 
     Pothos::BufferChunk expectedAndOutput(dtype, bufferLen);
     Pothos::BufferChunk expectedOrOutput(dtype, bufferLen);
