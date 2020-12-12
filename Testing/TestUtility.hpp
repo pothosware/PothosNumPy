@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <complex>
 #include <cstring>
+#include <set>
 #include <sstream>
 #include <string>
 #include <type_traits>
@@ -171,6 +172,24 @@ static std::vector<T> linspace(T a, T b, size_t N)
     for (x = xs.begin(), val = a; x != xs.end(); ++x, val += h)
         *x = val;
     return xs;
+}
+
+template <typename T>
+static std::vector<T> getUniqueValues(const std::vector<T>& input)
+{
+    std::set<T> intermediate;
+    std::copy(
+        input.begin(),
+        input.end(),
+        std::inserter(intermediate, intermediate.end()));
+
+    std::vector<T> output;
+    std::copy(
+        intermediate.begin(),
+        intermediate.end(),
+        std::back_inserter(output));
+
+    return output;
 }
 
 Pothos::BufferChunk getRandomInputs(

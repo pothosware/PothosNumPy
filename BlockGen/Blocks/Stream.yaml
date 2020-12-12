@@ -56,10 +56,10 @@ setdiff1d:
         copy: unique
         name: SetDiff1D
         niceName: Set Difference
-        class: NToOneBlock
-        kwargs: [useDType=False, callPostBuffer=True, callReduce=True]
+        class: TwoToOneBlock
+        kwargs: [useDType=False, callPostBuffer=True]
         skipExecTest: True
-        description: "Find the set difference of all input arrays."
+        description: "Find the set difference of two input arrays."
 
 setxor1d:
         copy: unique
