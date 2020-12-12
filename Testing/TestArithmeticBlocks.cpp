@@ -218,6 +218,75 @@ static NPTests::EnableIfComplex<T, ArithmeticTestValues> getDivTestValues()
 }
 
 template <typename T>
+static NPTests::EnableIfNotComplex<T, ArithmeticTestValues> getFloorDivTestValues()
+{
+    constexpr auto numInputs = 2;
+
+    static const Pothos::DType dtype(typeid(T));
+
+    ArithmeticTestValues testValues;
+    testValues.setup<T>(numInputs, bufferLen);
+
+    for (size_t elem = 0; elem < bufferLen; ++elem)
+    {
+        testValues.inputs[0].as<T*>()[elem] = static_cast<T>(elem);
+        testValues.inputs[1].as<T*>()[elem] = static_cast<T>((elem % 2) + 1);
+
+        if (std::is_signed<T>::value) testValues.inputs[1].as<T*>()[elem] *= -1;
+
+        testValues.expectedOutputs.as<T*>()[elem] = std::floor(testValues.inputs[0].as<T*>()[elem] /
+                                                               testValues.inputs[1].as<T*>()[elem]);
+    }
+
+    return testValues;
+}
+
+template <typename T>
+static NPTests::EnableIfNotComplex<T, ArithmeticTestValues> getRemainderTestValues()
+{
+    constexpr auto numInputs = 2;
+
+    static const Pothos::DType dtype(typeid(T));
+
+    ArithmeticTestValues testValues;
+    testValues.setup<T>(numInputs, bufferLen);
+
+    for (size_t elem = 0; elem < bufferLen; ++elem)
+    {
+        testValues.inputs[0].as<T*>()[elem] = static_cast<T>(elem);
+        testValues.inputs[1].as<T*>()[elem] = T(5);
+
+        testValues.expectedOutputs.as<T*>()[elem] = static_cast<unsigned long long>(std::floor(testValues.inputs[0].as<T*>()[elem]))
+                                                  % static_cast<unsigned long long>(std::floor(testValues.inputs[1].as<T*>()[elem]));
+    }
+
+    return testValues;
+}
+
+template <typename T>
+static NPTests::EnableIfNotComplex<T, ArithmeticTestValues> getFModTestValues()
+{
+    constexpr auto numInputs = 2;
+
+    static const Pothos::DType dtype(typeid(T));
+
+    ArithmeticTestValues testValues;
+    testValues.setup<T>(numInputs, bufferLen);
+
+    for (size_t elem = 0; elem < bufferLen; ++elem)
+    {
+        testValues.inputs[0].as<T*>()[elem] = static_cast<T>(elem);
+        testValues.inputs[1].as<T*>()[elem] = T(5);
+        if(std::is_signed<T>::value && (elem % 2)) testValues.inputs[1].as<T*>()[elem] *= -1;
+
+        testValues.expectedOutputs.as<T*>()[elem] = static_cast<long long>(std::floor(testValues.inputs[0].as<T*>()[elem]))
+                                                  % static_cast<long long>(std::floor(testValues.inputs[1].as<T*>()[elem]));
+    }
+
+    return testValues;
+}
+
+template <typename T>
 static void testArithmeticBlock(
     const std::string& blockPath,
     bool useNumInputsParam,
@@ -272,7 +341,7 @@ static void testArithmeticBlock(
 }
 
 template <typename T>
-static void testArithmetic()
+static void testArithmeticCommon()
 {
     std::cout << "Testing " << Pothos::DType(typeid(T)).toString() << "..." << std::endl;
 
@@ -282,6 +351,23 @@ static void testArithmetic()
 
     // NumPy has no divide for integral types.
     if(!std::is_integral<T>::value) testArithmeticBlock<T>("/numpy/divide", false, getDivTestValues<T>());
+    if(!std::is_integral<T>::value) testArithmeticBlock<T>("/numpy/true_divide", false, getDivTestValues<T>());
+}
+
+template <typename T>
+static NPTests::EnableIfNotComplex<T, void> testArithmetic()
+{
+    testArithmeticCommon<T>();
+
+    if(!std::is_integral<T>::value) testArithmeticBlock<T>("/numpy/floor_divide", false, getFloorDivTestValues<T>());
+    testArithmeticBlock<T>("/numpy/remainder", false, getRemainderTestValues<T>());
+    testArithmeticBlock<T>("/numpy/fmod", false, getFModTestValues<T>());
+}
+
+template <typename T>
+static NPTests::EnableIfComplex<T, void> testArithmetic()
+{
+    testArithmeticCommon<T>();
 }
 
 POTHOS_TEST_BLOCK("/numpy/tests", test_arithmetic_blocks)
