@@ -19,6 +19,7 @@ exp2:
 log:
         copy: exp
         name: Log
+        skipExecTest: true
         description: "Natural logarithm, element-wise.
 
 The natural logarithm log is the inverse of the exponential function, so that <b>log(exp(x)) = x</b>. The natural logarithm is logarithm in base <b>e</b>."
@@ -26,16 +27,19 @@ The natural logarithm log is the inverse of the exponential function, so that <b
 log10:
         copy: exp
         name: Log10
+        skipExecTest: true
         description: "Return the base 10 logarithm of the input array, element-wise."
 
 log2:
         copy: exp
         name: Log2
+        skipExecTest: true
         description: "Base-2 logarithm of <b>x</b>."
 
 log1p:
         copy: exp
         name: Log1P
+        skipExecTest: true
         niceName: "Log(x + 1)"
         description: "Return the natural logarithm of one plus the input array, element-wise.
 
