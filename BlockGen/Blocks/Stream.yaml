@@ -47,25 +47,28 @@ intersect1d:
         copy: unique
         name: Intersect1D
         niceName: Set Intersection
-        class: TwoToOneBlock
+        class: NToOneBlock
+        kwargs: [useDType=False, callPostBuffer=True, callReduce=True]
         skipExecTest: True
-        description: "Find the intersection of two arrays."
+        description: "Find the intersection of all input arrays."
 
 setdiff1d:
         copy: unique
         name: SetDiff1D
         niceName: Set Difference
-        class: TwoToOneBlock
+        class: NToOneBlock
+        kwargs: [useDType=False, callPostBuffer=True, callReduce=True]
         skipExecTest: True
-        description: "Find the set difference of two arrays."
+        description: "Find the set difference of all input arrays."
 
 setxor1d:
         copy: unique
         name: SetXor1D
         niceName: Set XOR
-        class: TwoToOneBlock
+        class: NToOneBlock
+        kwargs: [useDType=False, callPostBuffer=True, callReduce=True]
         skipExecTest: True
-        description: "Find the set exclusive-or of two arrays."
+        description: "Find the set exclusive-or of all input arrays."
 
 union1d:
         copy: unique
@@ -74,7 +77,7 @@ union1d:
         class: NToOneBlock
         kwargs: [useDType=False, callPostBuffer=True, callReduce=True]
         skipExecTest: True
-        description: "Find the union of two arrays."
+        description: "Find the union of all input arrays."
 
 sort:
         copy: unique
