@@ -43,33 +43,6 @@ ravel:
         description: "Return a contiguous flattened array."
         keywords: [flat, merge]
 
-intersect1d:
-        copy: unique
-        name: Intersect1D
-        niceName: Set Intersection
-        class: NToOneBlock
-        kwargs: [useDType=False, callPostBuffer=True, callReduce=True]
-        skipExecTest: True
-        description: "Find the intersection of all input arrays."
-
-#setdiff1d:
-#        copy: unique
-#        name: SetDiff1D
-#        niceName: Set Difference
-#        class: TwoToOneBlock
-#        kwargs: [useDType=False, callPostBuffer=True]
-#        skipExecTest: True
-#        description: "Find the set difference of two input arrays."
-
-setxor1d:
-        copy: unique
-        name: SetXor1D
-        niceName: Set XOR
-        class: NToOneBlock
-        kwargs: [useDType=False, callPostBuffer=True, callReduce=True]
-        skipExecTest: True
-        description: "Find the set exclusive-or of all input arrays."
-
 union1d:
         copy: unique
         name: Union1D

@@ -119,7 +119,6 @@ BUILD_PYTHON_MODULE(
         Testing/TestLog.cpp
         Testing/TestNumPyFileIO.cpp
         Testing/TestRegisteredCalls.cpp
-        Testing/TestSetXOr1D.cpp
         Testing/TestTrigonometric.cpp
         Testing/TestUnion1D.cpp
         Testing/TestUnique.cpp

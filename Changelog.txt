@@ -1,5 +1,10 @@
 This this the changelog file for the Pothos ArrayFire toolkit.
 
+Release 0.1.1 (pending)
+==========================
+
+- INCOMPATIBILITY: removed intersect1d, setdiff1d, setxor1d
+
 Release 0.1.0 (2020-10-31)
 ==========================
 
