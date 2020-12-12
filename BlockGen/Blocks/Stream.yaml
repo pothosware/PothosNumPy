@@ -71,7 +71,8 @@ union1d:
         copy: unique
         name: Union1D
         niceName: Set Union
-        class: TwoToOneBlock
+        class: NToOneBlock
+        kwargs: [useDType=False, callPostBuffer=True, callReduce=True]
         skipExecTest: True
         description: "Find the union of two arrays."
 

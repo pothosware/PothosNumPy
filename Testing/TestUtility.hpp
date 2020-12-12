@@ -177,6 +177,17 @@ Pothos::BufferChunk getRandomInputs(
     const std::string& type,
     size_t numElements);
 
+void getNonUniqueRandomTestInputs(
+    const std::string& type,
+    size_t numElements,
+    Pothos::BufferChunk* pNonUniqueInputs);
+
+void getNonUniqueRandomTestInputs(
+    const std::string& type,
+    size_t numInputs,
+    size_t numElements,
+    std::vector<Pothos::BufferChunk>* pNonUniqueInputs);
+
 void testBufferChunk(
     const Pothos::BufferChunk& expectedBufferChunk,
     const Pothos::BufferChunk& actualBufferChunk);
