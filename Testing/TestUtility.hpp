@@ -93,6 +93,19 @@ static inline EnableIfComplex<T, void> testEqual(T x, T y)
 }
 
 template <typename T>
+static std::vector<T> bufferChunkToStdVector(const Pothos::BufferChunk& bufferChunkIn)
+{
+    std::vector<T> ret(bufferChunkIn.elements());
+    POTHOS_TEST_EQUAL((ret.size() * sizeof(T)), bufferChunkIn.length);
+    std::memcpy(
+        ret.data(),
+        bufferChunkIn.as<const void*>(),
+        bufferChunkIn.length);
+
+    return ret;
+}
+
+template <typename T>
 static Pothos::BufferChunk stdVectorToBufferChunk(const std::vector<T>& vectorIn)
 {
     static const Pothos::DType dtype(typeid(T));

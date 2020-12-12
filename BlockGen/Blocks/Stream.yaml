@@ -3,6 +3,7 @@ unique:
         class: OneToOneBlock
         categories: ["/NumPy/Stream"]
         blockType: [all]
+        skipExecTest: true 
         kwargs: [useDType=False, callPostBuffer=True]
         description: "Returns the sorted unique elements of an array."
 

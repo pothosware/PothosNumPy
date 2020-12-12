@@ -120,6 +120,8 @@ BUILD_PYTHON_MODULE(
         Testing/TestNumPyFileIO.cpp
         Testing/TestRegisteredCalls.cpp
         Testing/TestTrigonometric.cpp
+        Testing/TestUnion1D.cpp
+        Testing/TestUnique.cpp
         Testing/TestUtility.cpp
     DOC_SOURCES
         Python/FFT.py
