@@ -235,13 +235,11 @@ void testBufferChunk(
     #define IfTypeThenCompareFloat(typeStr, cType) \
         if(expectedBufferChunk.dtype.name() == typeStr) \
         { \
-            for(size_t i = 0; i < expectedBufferChunk.elements(); ++i) \
-            { \
-                POTHOS_TEST_CLOSE( \
-                    expectedBufferChunk.as<const cType*>()[i], \
-                    actualBufferChunk.as<const cType*>()[i], \
-                    epsilon<cType>()); \
-            } \
+            POTHOS_TEST_CLOSEA( \
+                expectedBufferChunk.as<const cType*>(), \
+                actualBufferChunk.as<const cType*>(), \
+                epsilon<cType>(), \
+                expectedBufferChunk.elements()); \
             return; \
         }
     #define IfTypeThenCompareComplex(typeStr, cType) \
