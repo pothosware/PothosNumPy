@@ -52,14 +52,14 @@ intersect1d:
         skipExecTest: True
         description: "Find the intersection of all input arrays."
 
-setdiff1d:
-        copy: unique
-        name: SetDiff1D
-        niceName: Set Difference
-        class: TwoToOneBlock
-        kwargs: [useDType=False, callPostBuffer=True]
-        skipExecTest: True
-        description: "Find the set difference of two input arrays."
+#setdiff1d:
+#        copy: unique
+#        name: SetDiff1D
+#        niceName: Set Difference
+#        class: TwoToOneBlock
+#        kwargs: [useDType=False, callPostBuffer=True]
+#        skipExecTest: True
+#        description: "Find the set difference of two input arrays."
 
 setxor1d:
         copy: unique
