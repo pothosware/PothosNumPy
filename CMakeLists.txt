@@ -117,6 +117,7 @@ BUILD_PYTHON_MODULE(
         Testing/TestFFT.cpp
         Testing/TestLabels.cpp
         Testing/TestLog.cpp
+        Testing/TestNaNToNum.cpp
         Testing/TestNumPyFileIO.cpp
         Testing/TestPowRoot.cpp
         Testing/TestRegisteredCalls.cpp
