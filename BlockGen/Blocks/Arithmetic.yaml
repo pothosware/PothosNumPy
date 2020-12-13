@@ -125,6 +125,7 @@ absolute:
         description: "Calculate the absolute value element-wise."
         alias: [abs]
         keywords: [absolute, value, math, arithmetic]
+        skipExecTest: true
 
 fabs:
         name: FAbs
@@ -134,3 +135,4 @@ fabs:
 
 This function returns the absolute values (positive magnitude) of the data in x. Complex values are not handled, use <b>/numpy/absolute</b> to find the absolute values of complex data."
         keywords: [absolute, value, math, arithmetic]
+        skipExecTest: true

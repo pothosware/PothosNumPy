@@ -4,6 +4,7 @@ rint:
         categories: ["/NumPy/Rounding"]
         class: OneToOneBlock
         blockType: [float, complex]
+        skipExecTest: true
         description: "Round elements of the array to the nearest integer."
 
 ceil:
@@ -11,6 +12,7 @@ ceil:
         categories: ["/NumPy/Rounding"]
         class: OneToOneBlock
         blockType: [float]
+        skipExecTest: true
         description: "Return the ceiling of the input, element-wise.
 
 The ceil of the scalar <b>x</b> is the smallest integer <b>i</b>, such that <b>i >= x</b>."
@@ -19,6 +21,7 @@ The ceil of the scalar <b>x</b> is the smallest integer <b>i</b>, such that <b>i
 floor:
         copy: ceil
         name: Floor
+        skipExecTest: true
         description: "Return the floor of the input, element-wise.
 
 The floor of the scalar <b>x</b> is the largest integer <b>i</b>, such that <b>i <= x</b>."
@@ -29,6 +32,7 @@ trunc:
         copy: ceil
         name: Trunc
         niceName: Truncate
+        skipExecTest: true
         description: "Return the truncated value of the input, element-wise.
 
 The truncated value of the scalar <b>x</b> is the nearest integer <b>i</b> which is closer to zero than <b>x</b> is. In short, the fractional part of the signed number <b>x</b> is discarded."

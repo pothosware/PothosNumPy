@@ -120,6 +120,7 @@ BUILD_PYTHON_MODULE(
         Testing/TestNumPyFileIO.cpp
         Testing/TestPowRoot.cpp
         Testing/TestRegisteredCalls.cpp
+        Testing/TestStreamManipBlocks.cpp
         Testing/TestTrigonometric.cpp
         Testing/TestUnion1D.cpp
         Testing/TestUnique.cpp

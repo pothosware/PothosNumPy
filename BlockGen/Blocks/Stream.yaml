@@ -21,6 +21,7 @@ positive:
         class: OneToOneBlock
         categories: ["/NumPy/Stream"]
         blockType: [int, float, complex]
+        skipExecTest: true
         description: "Numeric positive, element-wise."
 
 trim_zeros:
@@ -33,6 +34,7 @@ trim_zeros:
 negative:
         copy: positive
         name: Negative
+        skipExecTest: true
         description: "Numeric negative, element-wise."
 
 ravel:
