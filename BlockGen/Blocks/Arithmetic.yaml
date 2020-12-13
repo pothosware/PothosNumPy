@@ -48,6 +48,7 @@ true_divide:
 
 Instead of the Python traditional 'floor division', this returns a true division. True division adjusts the output type to present the best answer, regardless of input types."
         keywords: [divide, quotient, division, math, arithmetic]
+        skipExecTest: true
 
 floor_divide:
         copy: subtract
@@ -58,6 +59,7 @@ floor_divide:
 
 It is equivalent to the Python // operator and pairs with the Python % (remainder), function so that <b>a = a % b + b * (a // b)</b> up to roundoff."
         keywords: [divide, quotient, division, math, arithmetic]
+        skipExecTest: true
 
 remainder:
         copy: subtract
@@ -69,6 +71,7 @@ remainder:
 
 Computes the remainder complementary to the <b>/numpy/floor_divide</b> block. It is equivalent to the Python modulus operator <b>x1 % x2</b> and has the same sign as the divisor x2. The MATLAB function equivalent to <b>/numpy/remainder</b> is <b>mod</b>."
         keywords: [divide, remainder, division, math, arithmetic]
+        skipExecTest: true
 
 fmod:
         copy: subtract
@@ -78,6 +81,7 @@ fmod:
 
 This is the NumPy implementation of the C library function <b>fmod</b>, the remainder has the same sign as the dividend <b>x1</b>. It is equivalent to the Matlab(TM) <b>rem</b> function and should not be confused with the Python modulus operator <b>x1 % x2</b>."
         keywords: [divide, remainder, division, math, arithmetic]
+        skipExecTest: true
 
 reciprocal:
         name: Reciprocal
@@ -95,6 +99,7 @@ sqrt:
         niceName: Square Root
         description: "Return the non-negative square-root of an array, element-wise."
         keywords: [square, root, math, arithmetic]
+        skipExecTest: true
 
 cbrt:
         name: CbRt
@@ -103,6 +108,7 @@ cbrt:
         niceName: Cube Root
         description: "Return the cube-root of an array, element-wise."
         keywords: [cube, root, math, arithmetic]
+        skipExecTest: true
 
 square:
         name: Square
@@ -110,6 +116,7 @@ square:
         blockType: [all]
         description: "Return the element-wise square of the input."
         keywords: [square, math, arithmetic]
+        skipExecTest: true
 
 absolute:
         name: Absolute
