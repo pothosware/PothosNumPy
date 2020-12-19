@@ -123,34 +123,6 @@ static Pothos::BufferChunk stdVectorToBufferChunk(const std::vector<T>& vectorIn
     return ret;
 }
 
-template <typename In, typename Out>
-static std::vector<Out> staticCastVector(const std::vector<In>& vectorIn)
-{
-    std::vector<Out> vectorOut;
-    vectorOut.reserve(vectorIn.size());
-    std::transform(
-        vectorIn.begin(),
-        vectorIn.end(),
-        std::back_inserter(vectorOut),
-        [](In val){return static_cast<Out>(val);});
-
-    return vectorOut;
-}
-
-template <typename In, typename Out>
-static std::vector<Out> reinterpretCastVector(const std::vector<In>& vectorIn)
-{
-    static_assert(sizeof(In) == sizeof(Out), "sizeof(In) != sizeof(Out)");
-
-    std::vector<Out> vectorOut(vectorIn.size());
-    std::memcpy(
-        (void*)vectorOut.data(),
-        (const void*)vectorIn.data(),
-        vectorIn.size() * sizeof(In));
-
-    return vectorOut;
-}
-
 // Assumption: vectorIn is an even size
 template <typename T>
 static std::vector<std::complex<T>> toComplexVector(const std::vector<T>& vectorIn)
