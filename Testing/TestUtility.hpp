@@ -99,7 +99,7 @@ static std::vector<T> bufferChunkToStdVector(const Pothos::BufferChunk& bufferCh
     std::vector<T> ret(bufferChunkIn.elements());
     POTHOS_TEST_EQUAL((ret.size() * sizeof(T)), bufferChunkIn.length);
     std::memcpy(
-        ret.data(),
+        (void*)ret.data(),
         bufferChunkIn.as<const void*>(),
         bufferChunkIn.length);
 
@@ -115,7 +115,10 @@ static Pothos::BufferChunk stdVectorToBufferChunk(const std::vector<T>& vectorIn
                    dtype,
                    (vectorIn.size() / dtype.dimension()));
     auto* buf = ret.as<T*>();
-    std::memcpy(buf, vectorIn.data(), ret.length);
+    std::memcpy(
+        (void*)buf,
+        (const void*)vectorIn.data(),
+        ret.length);
 
     return ret;
 }
@@ -141,8 +144,8 @@ static std::vector<Out> reinterpretCastVector(const std::vector<In>& vectorIn)
 
     std::vector<Out> vectorOut(vectorIn.size());
     std::memcpy(
-        vectorOut.data(),
-        vectorIn.data(),
+        (void*)vectorOut.data(),
+        (const void*)vectorIn.data(),
         vectorIn.size() * sizeof(In));
 
     return vectorOut;
@@ -154,8 +157,8 @@ static std::vector<std::complex<T>> toComplexVector(const std::vector<T>& vector
 {
     std::vector<std::complex<T>> vectorOut(vectorIn.size() / 2);
     std::memcpy(
-        vectorOut.data(),
-        vectorIn.data(),
+        (void*)vectorOut.data(),
+        (const void*)vectorIn.data(),
         vectorIn.size() * sizeof(T));
 
     return vectorOut;
