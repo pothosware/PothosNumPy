@@ -1,9 +1,10 @@
-This this the changelog file for the Pothos ArrayFire toolkit.
+This this the changelog file for the Pothos NumPy toolkit.
 
-Release 0.1.1 (pending)
+Release 0.1.1 (2021-01-01)
 ==========================
 
 - INCOMPATIBILITY: removed intersect1d, setdiff1d, setxor1d
+- Bugfixes, vastly improved test coverage
 
 Release 0.1.0 (2020-10-31)
 ==========================
