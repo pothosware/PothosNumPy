@@ -7,25 +7,21 @@
 
 #include <Poco/Random.h>
 
-#include <random>
-
 namespace NPTests
 {
 
-// This is random enough for our use case.
+static Poco::Random rng;
+
 template <typename T>
 static EnableIfAnyInt<T, std::vector<T>> getRandomInputs(size_t numElements)
 {
-    static std::random_device rd;
-    static std::mt19937 g(rd());
-    static std::uniform_int_distribution<T> dist(
-               std::numeric_limits<T>::min(),
-               std::numeric_limits<T>::max());
-
     std::vector<T> randomInputs;
     for(size_t i = 0; i < numElements; ++i)
     {
-        randomInputs.emplace_back(dist(g));
+        T val = rng.next(100);
+        if(std::is_signed<T>::value) val -= T(50);
+
+        randomInputs.emplace_back(val);
     }
 
     return randomInputs;
@@ -34,16 +30,10 @@ static EnableIfAnyInt<T, std::vector<T>> getRandomInputs(size_t numElements)
 template <typename T>
 static EnableIfFloat<T, std::vector<T>> getRandomInputs(size_t numElements)
 {
-    static std::random_device rd;
-    static std::mt19937 g(rd());
-    static std::uniform_real_distribution<T> dist(
-               std::numeric_limits<T>::min(),
-               std::numeric_limits<T>::max());
-
     std::vector<T> randomInputs;
     for(size_t i = 0; i < numElements; ++i)
     {
-        randomInputs.emplace_back(dist(g));
+        randomInputs.emplace_back(rng.nextFloat());
     }
 
     return randomInputs;

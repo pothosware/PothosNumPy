@@ -107,7 +107,7 @@ static void testAutoBlockExecutionFunc${numParams}Param(
                         ,param${paramNum}Value1
 %endfor
                         );
-        testBlock.template call(setter${setParamNum}, param${setParamNum}Value2);
+        testBlock.call(setter${setParamNum}, param${setParamNum}Value2);
         NPTests::testEqual(param${setParamNum}Value2, testBlock.template call<Param${setParamNum}Type>(getter${setParamNum}));
     }
 %endfor
@@ -123,7 +123,7 @@ static void testAutoBlockExecutionFunc${numParams}Param(
         for(const Param${badParamNum}Type& invalidParam: param${badParamNum}InvalidValues)
         {
             POTHOS_TEST_THROWS(
-                testBlock.template call(setter${badParamNum}, invalidParam),
+                testBlock.call(setter${badParamNum}, invalidParam),
                 Pothos::ProxyExceptionMessage);
         }
     }
