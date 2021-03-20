@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Nicholas Corgan
+# Copyright (c) 2019,2021 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
 from . import Utility
@@ -8,8 +8,16 @@ import Pothos
 import logging
 import numpy
 
+__NUMPY_VERSION__ = "@NUMPY_VERSION@"
+
 class BaseBlock(Pothos.Block):
     def __init__(self, blockPath, func, inputDType, outputDType, inputDTypeArgs, outputDTypeArgs, funcArgs, funcKWargs, *args, **kwargs):
+        if numpy.__version__ != __NUMPY_VERSION__:
+            raise RuntimeError(
+                """The version of NumPy on this system is {0}, but this installation of """
+                """PothosNumPy was built against NumPy {1}. Rebuild this module against """
+                """the version of NumPy used on this system.""".format(numpy.__version__, __NUMPY_VERSION__))
+
         Pothos.Block.__init__(self)
 
         # Or else the name of all blocks will be /blocks/python_block

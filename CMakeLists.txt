@@ -79,15 +79,15 @@ include_directories(
     ${JSON_HPP_INCLUDE_DIR})
 
 configure_file(
-    Python/__init__.py.in
-    ${CMAKE_CURRENT_BINARY_DIR}/Python/__init__.py)
+    Python/BaseBlock.py.in
+    ${CMAKE_CURRENT_BINARY_DIR}/Python/BaseBlock.py)
 
 include(BuildPythonModule)
 BUILD_PYTHON_MODULE(
     TARGET NumPyBlocks
     DESTINATION PothosNumPy
     SOURCES
-        Python/BaseBlock.py
+        Python/__init__.py
         Python/FFT.py
         Python/ForwardAndPostLabelBlock.py
         Python/FileSink.py
@@ -101,7 +101,7 @@ BUILD_PYTHON_MODULE(
         Python/TwoToOneBlock.py
         Python/Utility.py
         Python/Window.py
-        ${CMAKE_CURRENT_BINARY_DIR}/Python/__init__.py
+        ${CMAKE_CURRENT_BINARY_DIR}/Python/BaseBlock.py
         ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/BlockEntryPoints.py
     CPP_SOURCES
         ${CMAKE_CURRENT_BINARY_DIR}/BlockGen/Factory.cpp
