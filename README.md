@@ -1,6 +1,6 @@
 # NumPy Pothos Blocks
 
-This toolkit adds 100+ Pothos blocks that wrap the majority of NumPy's API, as well as providing interfaces to NumPy's numeric info classes, accessible outside Pothos flowgraphs.
+This toolkit adds 100+ Pothos blocks that wrap the majority of NumPy's API, as well as providing interfaces to NumPy's numeric info classes.
 
 ## Documentation
 
