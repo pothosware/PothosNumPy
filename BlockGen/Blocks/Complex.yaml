@@ -1,6 +1,6 @@
 angle:
         name: Angle
-        categories: ["/NumPy/Complex"]
+        categories: ["/NumPy/Complex", "/Math/NumPy"]
         class: OneToOneBlock
         blockPattern: ComplexToScalar
         kwargs: [useDType=False]
@@ -22,7 +22,7 @@ imag:
 conjugate:
         name: Conjugate
         niceName: Complex Conjugate
-        categories: ["/NumPy/Complex"]
+        categories: ["/NumPy/Complex", "/Math/NumPy"]
         class: OneToOneBlock
         blockType: [complex]
         alias: [conj]

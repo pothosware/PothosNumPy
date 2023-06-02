@@ -41,6 +41,7 @@ The input buffer is forwarded without copying, and the calculated variance is po
 
 max:
         copy: ptp
+        categories: ["/NumPy/Stats", "/Stream/NumPy"]
         name: Max
         findIndexFunc: (numpy.nanargmax if ignoreNaN else numpy.argmax)
         label: "MAX"
@@ -53,6 +54,7 @@ The input buffer is forwarded without copying, and the calculated value is poste
 min:
         copy: ptp
         name: Min
+        categories: ["/NumPy/Stats", "/Stream/NumPy"]
         findIndexFunc: (numpy.nanargmin if ignoreNaN else numpy.argmin)
         label: "MIN"
         alias: [amin]
@@ -63,6 +65,7 @@ The input buffer is forwarded without copying, and the calculated value is poste
 
 count_nonzero:
         copy: ptp
+        categories: ["/NumPy/Stats", "/Stream/NumPy"]
         name: CountNonZero
         niceName: Count Non-Zeros
         label: "NONZERO"
@@ -74,7 +77,7 @@ convolve:
         name: Convolve
         class: TwoToOneBlock
         subclass: True
-        categories: ["/NumPy/Stats"]
+        categories: ["/NumPy/Stats", "/Stream/NumPy"]
         blockType: [float,complex]
         kwargs: [useDType=False,callPostBuffer=True]
         funcArgs:

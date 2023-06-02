@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020 Nicholas Corgan
+# Copyright (c) 2019-2020,2023 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
 from .BaseBlock import *
@@ -17,8 +17,8 @@ import os
  * Corresponding NumPy function: <b>numpy.save</b>
  *
  * |category /NumPy/File IO
- * |category /File IO
- * |category /Sinks
+ * |category /File IO/NumPy
+ * |category /Sinks/NumPy
  * |keywords save numpy binary file IO
  * |factory /numpy/npy_sink(filepath,dtype,nchans,append)
  *
@@ -107,7 +107,7 @@ class NpyFileSink(BaseBlock):
  * Corresponding NumPy functions: <b>numpy.savez</b>, <b>numpy.savez_compressed</b>
  *
  * |category /NumPy/File IO
- * |category /File IO
+ * |category /File IO/NumPy
  * |category /Sinks
  * |keywords save numpy binary file IO
  * |factory /numpy/npz_sink(filepath,key,dtype,nchans,compressed,append)

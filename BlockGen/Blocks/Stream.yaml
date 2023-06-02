@@ -1,7 +1,7 @@
 unique:
         name: Unique
         class: OneToOneBlock
-        categories: ["/NumPy/Stream"]
+        categories: ["/NumPy/Stream", "/Stream/NumPy"]
         blockType: [all]
         skipExecTest: true 
         kwargs: [useDType=False, callPostBuffer=True]
@@ -11,7 +11,7 @@ copysign:
         name: CopySign
         niceName: Copy Sign
         class: TwoToOneBlock
-        categories: ["/NumPy/Stream"]
+        categories: ["/NumPy/Stream", "/Stream/NumPy"]
         blockType: [int, float]
         kwargs: [useDType=False]
         description: "Change the sign of port 0 to that of port 1, element-wise."
@@ -19,7 +19,7 @@ copysign:
 positive:
         name: Positive
         class: OneToOneBlock
-        categories: ["/NumPy/Stream"]
+        categories: ["/NumPy/Stream", "/Stream/NumPy"]
         blockType: [int, float, complex]
         skipExecTest: true
         description: "Numeric positive, element-wise."
@@ -70,7 +70,7 @@ sort_complex:
 flip:
         name: Flip
         class: OneToOneBlock
-        categories: ["/NumPy/Stream"]
+        categories: ["/NumPy/Stream", "/Stream/NumPy"]
         blockType: [all]
         kwargs: [useDType=False, callPostBuffer=True]
         funcKWargs:
@@ -81,7 +81,7 @@ roll:
         name: Roll
         class: OneToOneBlock
         subclass: True
-        categories: ["/NumPy/Stream"]
+        categories: ["/NumPy/Stream", "/Stream/NumPy"]
         blockType: [all]
         kwargs: [useDType=False, callPostBuffer=True]
         funcArgs:
@@ -95,7 +95,7 @@ partition:
         name: Partition
         class: OneToOneBlock
         subclass: True
-        categories: ["/NumPy/Stream"]
+        categories: ["/NumPy/Stream", "/Stream/NumPy"]
         blockType: [all]
         kwargs: [useDType=False, callPostBuffer=True]
         funcArgs:
@@ -108,7 +108,7 @@ nan_to_num:
         name: NanToNum
         niceName: NaN to Num
         class: OneToOneBlock
-        categories: ["/NumPy/Stream"]
+        categories: ["/NumPy/Stream", "/Stream/NumPy"]
         blockType: [all]
         kwargs: [useDType=False]
         description: "Replace NaN with zero and infinity with large finite numbers."
@@ -117,7 +117,7 @@ nan_to_num:
 #        name: Clip
 #        class: NToOneBlock
 #        subclass: True
-#        categories: ["/NumPy/Stream"]
+#        categories: ["/NumPy/Stream", "/Stream/NumPy"]
 #        blockType: [all]
 #        kwargs: [useDType=False]
 #        funcArgs:

@@ -1,7 +1,7 @@
 sin:
         name: Sin
         niceName: Sine
-        categories: ["/NumPy/Trig"]
+        categories: ["/NumPy/Trig", "/Math/NumPy"]
         class: OneToOneBlock
         blockType: [float]
         skipExecTest: true

@@ -1,7 +1,7 @@
 i0:
         name: I0
         niceName: "Modified Bessel (first kind)"
-        categories: ["/NumPy/Special"]
+        categories: ["/NumPy/Special", "/Math/NumPy"]
         class: OneToOneBlock
         blockType: [float]
         kwargs: [useDType=False]

@@ -1,7 +1,7 @@
 rint:
         name: RInt
         niceName: Round
-        categories: ["/NumPy/Rounding"]
+        categories: ["/NumPy/Rounding", "/Stream/NumPy"]
         class: OneToOneBlock
         blockType: [float, complex]
         skipExecTest: true
@@ -9,7 +9,7 @@ rint:
 
 ceil:
         name: Ceil
-        categories: ["/NumPy/Rounding"]
+        categories: ["/NumPy/Rounding", "/Stream/NumPy"]
         class: OneToOneBlock
         blockType: [float]
         skipExecTest: true

@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020 Nicholas Corgan
+# Copyright (c) 2019-2020,2023 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
 from .BaseBlock import *
@@ -49,7 +49,7 @@ class FFTClass(BaseBlock):
 
 """
 /*
- * |PothosDoc FFT
+ * |PothosDoc FFT (NumPy)
  *
  * Compute the one-dimensional discrete Fourier Transform.
  *
@@ -64,6 +64,7 @@ class FFTClass(BaseBlock):
  * Corresponding NumPy function: <b>numpy.fft.fft</b>
  *
  * |category /NumPy/FFT
+ * |category /FFT/NumPy
  * |keywords fft discrete fast fourier transform
  * |factory /numpy/fft/fft(dtype,numBins)
  *
@@ -96,7 +97,7 @@ def FFT(dtype, numBins):
 
 """
 /*
- * |PothosDoc Inverse FFT
+ * |PothosDoc Inverse FFT (NumPy)
  *
  * Compute the one-dimensional inverse discrete Fourier Transform.
  *
@@ -119,6 +120,7 @@ def FFT(dtype, numBins):
  * Corresponding NumPy function: <b>numpy.fft.ifft</b>
  *
  * |category /NumPy/FFT
+ * |category /FFT/NumPy
  * |keywords fft ifft inverse discrete fast fourier transform
  * |factory /numpy/fft/ifft(dtype,numBins)
  *
@@ -150,7 +152,7 @@ def IFFT(dtype, numBins):
 
 """
 /*
- * |PothosDoc Real FFT
+ * |PothosDoc Real FFT (NumPy)
  *
  * Compute the one-dimensional discrete Fourier Transform for real input.
  *
@@ -180,6 +182,7 @@ def IFFT(dtype, numBins):
  * Corresponding NumPy function: <b>numpy.fft.rfft</b>
  *
  * |category /NumPy/FFT
+ * |category /FFT/NumPy
  * |keywords fft rfft real discrete fast fourier transform
  * |factory /numpy/fft/rfft(dtype,numBins)
  *
@@ -211,7 +214,7 @@ def RFFT(dtype, numBins):
 
 """
 /*
- * |PothosDoc Inverse Real FFT
+ * |PothosDoc Inverse Real FFT (NumPy)
  *
  * Compute the inverse of the n-point DFT for real input.
  *
@@ -228,6 +231,7 @@ def RFFT(dtype, numBins):
  * Corresponding NumPy function: <b>numpy.fft.rifft</b>
  *
  * |category /NumPy/FFT
+ * |category /FFT/NumPy
  * |keywords fft rfft rifft real inverse discrete fast fourier transform
  * |factory /numpy/fft/irfft(dtype,numBins)
  *
@@ -259,15 +263,16 @@ def IRFFT(dtype, numBins):
 
 """
 /*
- * |PothosDoc Hermetian FFT
+ * |PothosDoc Hermetian FFT (NumPy)
  *
  * Compute the FFT of a signal that has Hermitian symmetry, i.e., a real
  * spectrum. Here the signal has Hermitian symmetry in the time domain and
  * is real in the frequency domain.
  *
- * Corresponding NumPy function: <b>numpy.fft.fft</b>
+ * Corresponding NumPy function: <b>numpy.fft.hfft</b>
  *
  * |category /NumPy/FFT
+ * |category /FFT/NumPy
  * |keywords fft hfft hermetian discrete fast fourier transform
  * |factory /numpy/fft/hfft(dtype,numBins)
  *
@@ -299,15 +304,16 @@ def HFFT(dtype, numBins):
 
 """
 /*
- * |PothosDoc Inverse Hermetian FFT
+ * |PothosDoc Inverse Hermetian FFT (NumPy)
  *
  * Compute the inverse FFT of a signal that has Hermitian symmetry, i.e., a
  * real spectrum. Here the signal has Hermitian symmetry in the time domain and
  * is real in the frequency domain.
  *
- * Corresponding NumPy function: <b>numpy.fft.fft</b>
+ * Corresponding NumPy function: <b>numpy.fft.hfft</b>
  *
  * |category /NumPy/FFT
+ * |category /FFT/NumPy
  * |keywords fft hfft ihfft inverse hermetian discrete fast fourier transform
  * |factory /numpy/fft/ihfft(dtype,numBins)
  *

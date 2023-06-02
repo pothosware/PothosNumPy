@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020 Nicholas Corgan
+# Copyright (c) 2019-2020,2023 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
 from .Source import *
@@ -61,7 +61,7 @@ class WindowBlock(SingleOutputSource):
 
 """
 /*
- * |PothosDoc Window
+ * |PothosDoc Window (NumPy)
  *
  * Corresponding NumPy functions:
  * <ol>
@@ -73,6 +73,7 @@ class WindowBlock(SingleOutputSource):
  * </ol>
  *
  * |category /NumPy/Filter
+ * |category /Filter/NumPy
  * |keywords numpy filter window bartlett blackman hamming hanning kaiser
  * |factory /numpy/window(dtype,windowType)
  *

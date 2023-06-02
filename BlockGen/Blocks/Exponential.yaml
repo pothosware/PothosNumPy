@@ -1,6 +1,6 @@
 exp:
         name: Exp
-        categories: ["/NumPy/Exponential"]
+        categories: ["/NumPy/Exponential", "/Math/NumPy"]
         class: OneToOneBlock
         blockType: [float, complex]
         description: "Calculate the exponential of all elements in the input array."

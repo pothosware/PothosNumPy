@@ -1,7 +1,7 @@
 ones:
         name: Ones
         class: SingleOutputSource
-        categories: ["/NumPy/Sources"]
+        categories: ["/NumPy/Sources", "/Sources/NumPy"]
         blockType: [all]
         description: "Return a new array of given shape and type, filled with ones."
         keywords: [constant]
@@ -47,7 +47,7 @@ linspace:
         name: LinSpace
         class: FixedSingleOutputSource
         subclass: True
-        categories: ["/NumPy/Sources"]
+        categories: ["/NumPy/Sources", "/Sources/NumPy"]
         blockType: [int, uint, float]
         kwargs: [useDType=True, callPostBuffer=True, useShape=False]
         description: "Return evenly spaced numbers over a specified interval.

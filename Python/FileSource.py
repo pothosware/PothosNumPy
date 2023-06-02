@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020 Nicholas Corgan
+# Copyright (c) 2019-2020,2023 Nicholas Corgan
 # SPDX-License-Identifier: BSD-3-Clause
 
 from .BaseBlock import *
@@ -110,8 +110,8 @@ class FileSourceBaseBlock(BaseBlock):
  * Corresponding NumPy function: <b>numpy.load</b> (with .npy extension)
  *
  * |category /NumPy/File IO
- * |category /File IO
- * |category /Sources
+ * |category /File IO/NumPy
+ * |category /Sources/NumPy
  * |keywords load numpy binary file IO
  * |factory /numpy/npy_source(filepath,repeat)
  * |setter setRepeat(repeat)
@@ -142,8 +142,8 @@ class NpyFileSource(FileSourceBaseBlock):
  * Corresponding NumPy function: <b>numpy.load</b> (with .npz extension)
  *
  * |category /NumPy/File IO
- * |category /File IO
- * |category /Sources
+ * |category /File IO/NumPy
+ * |category /Sources/NumPy
  * |keywords load numpy binary file IO
  * |factory /numpy/npz_source(filepath,key,repeat)
  * |setter setRepeat(repeat)

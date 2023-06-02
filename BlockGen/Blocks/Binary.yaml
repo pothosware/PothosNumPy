@@ -1,6 +1,6 @@
 invert:
         name: Invert
-        categories: ["/NumPy/Binary"]
+        categories: ["/NumPy/Binary", "/Digital/NumPy"]
         class: OneToOneBlock
         blockType: [int, uint]
         description: "Compute bit-wise inversion, or bit-wise NOT, element-wise.

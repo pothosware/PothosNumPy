@@ -78,7 +78,7 @@ def populateTemplates():
 def processYAMLFile(yamlPath):
     yml = None
     with open(yamlPath) as f:
-        yml = yaml.load(f.read())
+        yml = yaml.load(f.read(), yaml.Loader)
 
     if not yml:
         raise RuntimeError("No YAML found in {0}".format(yamlPath))
@@ -332,7 +332,7 @@ def addParameterBoundsToDesc(desc, funcArg):
 
 def makoVarsToBlockDesc(makoVars):
     desc = dict()
-    desc["name"] = makoVars.get("niceName", makoVars["name"])
+    desc["name"] = makoVars.get("niceName", makoVars["name"]) + " (NumPy)"
     desc["path"] = "/numpy/"+makoVars["blockRegistryPath"]
     desc["args"] = makoVars["factoryParams"]
     desc["keywords"] = makoVars["keywords"]
@@ -472,7 +472,7 @@ def generateCppOutput(allMakoVars):
     # Add C++-only blocks.
     factoryOnlyYAMLPath = os.path.join(BlocksDir, "FactoryOnly.yaml")
     with open(factoryOnlyYAMLPath) as f:
-        factoryOnlyYAML = yaml.load(f.read())
+        factoryOnlyYAML = yaml.load(f.read(), yaml.Loader)
 
     for k,v in factoryOnlyYAML.items():
         factories += [generateCppFactory(k,v["name"])]

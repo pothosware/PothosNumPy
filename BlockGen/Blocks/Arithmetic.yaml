@@ -1,6 +1,6 @@
 add:
         name: Add
-        categories: ["/NumPy/Arithmetic"]
+        categories: ["/NumPy/Arithmetic", "/Math/NumPy"]
         class: NToOneBlock
         blockType: [all]
         description: "Add arguments element-wise."
@@ -22,7 +22,7 @@ multiply:
 
 subtract:
         name: Subtract
-        categories: ["/NumPy/Arithmetic"]
+        categories: ["/NumPy/Arithmetic", "/Math/NumPy"]
         class: TwoToOneBlock
         blockType: [all]
         description: "Subtract arguments, element-wise."
@@ -85,7 +85,7 @@ This is the NumPy implementation of the C library function <b>fmod</b>, the rema
 
 reciprocal:
         name: Reciprocal
-        categories: ["/NumPy/Arithmetic"]
+        categories: ["/NumPy/Arithmetic", "/Math/NumPy"]
         class: OneToOneBlock
         blockType: [float, complex]
         description: "Return the reciprocal of the argument, element-wise.
